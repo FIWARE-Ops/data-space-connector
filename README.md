@@ -1,2 +1,4 @@
-# data-space-connector
-FIWARE Data Space Connector
+# FIWARE Data Space Connector
+
+Connector bundling all components
+

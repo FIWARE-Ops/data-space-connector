@@ -1,0 +1,9 @@
+apiVersion: v2
+name: fiware-platform
+description: Helm chart to deploy the FIWARE Data pace Connector
+type: application
+version: 1.0.0
+maintainers:
+  - name: Dennis Wendland
+    email: dennis.wendland@fiware.org
+    

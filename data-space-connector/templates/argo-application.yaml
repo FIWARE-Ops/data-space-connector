@@ -1,0 +1,111 @@
+{{- if .Values.applications }}
+{{- $secrets := .Values.secretsEnabled }}
+{{- $release := .Values.release }}
+{{- $source := .Values.source }}
+{{- $team := .Values.team }}
+{{- $host := .Values.host }}
+{{- $tlsSecret := .Values.tlsSecret }}
+{{- $argoNamespace := .Values.argoNamespace -}}
+{{- range $app := .Values.applications }}
+{{- if $app.source }}
+{{- $source = $app.source }}
+{{- end }}
+{{- if $app.enabled }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+{{- if or (eq $release "ci-cd") (eq $release "cluster-ops") (eq $release "pm") }}
+  name: {{ .name }}
+{{- else }}
+  name: {{ $release }}-{{ .name }}
+{{- end }}
+{{- if $argoNamespace }}
+  namespace: {{ $argoNamespace }}
+{{- end }}
+  labels:
+    destination-namespace: {{ .destination }}
+    purpose: {{ .purpose }}
+{{- if .values }}
+{{- if .values.fullnameOverride }}
+{{- if contains .values.fullnameOverride .name }}
+    app.kubernetes.io/instance: {{ .values.fullnameOverride }}
+{{- end }}
+{{- else }}
+    app.kubernetes.io/instance: {{ .name }}
+{{- end }}
+{{- end }}
+spec:
+  destination:
+    namespace: {{ .destination | default (printf "%s-%s" $team $release) }}
+    server: {{ .cluster_api | default "https://kubernetes.default.svc" }}
+  project: {{ .project | default "default" }}
+  source:
+{{- if or .helm_values .values }}
+    helm:
+{{- if .helm_values }}
+      valueFiles:
+{{- toYaml .helm_values | nindent 8 }}
+{{- if $app.secretsReady }}
+{{- if $secrets }}
+        - values-secured.yaml
+{{- else }}
+        - values-unsecured.yaml
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if or (.values) ($host) ($tlsSecret) (.overwriteHost) (.overwriteSecret) }}
+      values: |
+{{- if or ($host) ($tlsSecret) (.overwriteHost) (.overwriteSecret) }}
+        route:
+{{- if .overwriteSecret }}
+          annotations: 
+            cert-utils-operator.redhat-cop.io/certs-from-secret: {{ .overwriteSecret }}
+{{- else if ($tlsSecret) }}      
+          annotations: 
+            cert-utils-operator.redhat-cop.io/certs-from-secret: {{ $tlsSecret }}
+{{- end }}
+{{- if .overwriteHost }}
+          host: {{ .overwriteHost }}
+{{- else if ($host) }}      
+          host: {{ .name }}.{{ $host }}
+{{- end }}
+{{- end }}
+{{- if (.values) }}      
+{{- toYaml .values | nindent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .releaseName .name }}
+      releaseName: {{ .releaseName | default .name }}
+{{- end }}
+{{- end }}
+    {{- if .source_path }}
+    path: {{ .source_path | default "." }}
+    {{- end }}
+    repoURL: {{ $source }}
+    targetRevision: {{ .source_ref | default "main" | quote }}
+    {{- if not .source_path }}
+    chart: {{ .chart_name | default .name }}
+    {{- end }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Validate=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+        - /spec/template/spec/containers/0/image
+        - /spec/template/spec/containers/1/image
+    - group: integreatly.org
+      kind: GrafanaDataSource
+      jsonPointers:
+        - /spec/datasources/0/secureJsonData/httpHeaderValue1
+{{- end }}
+{{- end }}
+{{- end }}

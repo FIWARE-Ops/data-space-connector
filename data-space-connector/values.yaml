@@ -1,0 +1,26 @@
+source: https://github.com/FIWARE-Ops/data-space-connector
+release: demo
+destination_namespace: &destination dsc-demo
+purpose: &purpose dsc-env
+branch: &branch main
+secretsEnabled: &secretsEnabled false
+host: &host
+tlsSecret: &tlsSecret
+
+applications:
+
+  - name: mysql
+    enabled: true
+    source_path: applications/mysql
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
+  - name: credentials-config-service
+    enabled: true
+    source_path: applications/credentials-config-service
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml

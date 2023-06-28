@@ -1,0 +1,9 @@
+mysql:
+  fullnameOverride: mysql-dsc
+  auth:
+    # Should use a Secret on production deployments
+    rootPassword: "<mysql-password>"
+  initdbScripts:
+    create.sql: |
+      CREATE DATABASE til;
+      CREATE DATABASE ccs;
