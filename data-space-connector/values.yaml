@@ -17,6 +17,22 @@ applications:
     helm_values:
     - values.yaml
 
+  - name: mongodb
+    enabled: true
+    source_path: applications/mongodb
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
+  - name: orion
+    enabled: true
+    source_path: applications/orion
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
   - name: credentials-config-service
     enabled: true
     source_path: applications/credentials-config-service
