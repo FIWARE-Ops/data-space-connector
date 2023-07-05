@@ -25,6 +25,14 @@ applications:
     helm_values:
     - values.yaml
 
+  - name: postgres
+    enabled: true
+    source_path: applications/postgres
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
   - name: orion
     enabled: true
     source_path: applications/orion
