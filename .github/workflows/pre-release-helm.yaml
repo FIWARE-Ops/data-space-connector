@@ -64,11 +64,12 @@ jobs:
         # prepare yaml parser
         - uses: actions/setup-python@v4
           with:
-            python-version: '3.10' 
+            python-version: '3.11' 
         
         - name: Install yq
           run: |
             pip3 install yq
+            yq -V
 
         - name: Generate Chart.yaml
           run: | 
