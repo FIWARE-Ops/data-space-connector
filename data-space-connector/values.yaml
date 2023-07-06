@@ -48,3 +48,11 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: trusted-issuers-list
+    enabled: true
+    source_path: applications/trusted-issuers-list
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml

@@ -1,17 +1,16 @@
-credentials-config-service:
+trusted-issuers-list:
 
   # Image
   deployment:
-    image: 
-      repository: quay.io/fiware/credentials-config-service
-      tag: 0.0.1
+    image:  
+      tag: 0.0.3
 
   # Database config
   database:
     persistence: true
     host: mysql-dsc
-    name: ccs
-    
+    name: til
+
     # Should use Secret in production environment
     username: root
     password: "<mysql-password>"

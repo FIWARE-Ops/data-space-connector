@@ -1,0 +1,12 @@
+apiVersion: v2
+name: packetdelivery-til
+description: Chart holder for argo-cd
+
+type: application
+version: 0.1.0
+appVersion: "0.0.3"
+
+dependencies:
+  - name: trusted-issuers-list
+    version: 0.1.0
+    repository: https://fiware.github.io/helm-charts
