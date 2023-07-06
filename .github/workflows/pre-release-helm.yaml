@@ -1,0 +1,99 @@
+name: Pre-Release
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
+
+jobs:
+    generate-version:
+      runs-on: ubuntu-latest
+
+      outputs:
+        version: ${{ steps.out.outputs.version }}
+
+      steps:
+        - uses: actions/checkout@v2
+
+        - id: bump
+          uses: zwaldowski/match-label-action@v1
+          with:
+            allowed: major,minor,patch
+
+        - uses: zwaldowski/semver-release-action@v2
+          with:
+            dry_run: true
+            bump: ${{ steps.bump.outputs.match }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Get PR Number
+          id: pr_number
+          run: echo "::set-output name=nr::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+
+        - name: Set version output
+          id: out
+          run: echo "::set-output name=version::$(echo ${VERSION}-PRE-${{ steps.pr_number.outputs.nr }})"
+
+    deploy:
+
+      needs: [ "generate-version" ]
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v2
+
+        - name: Fetch history
+          run: git fetch --prune --unshallow
+
+        - name: Configure Git
+          run: |
+            git config user.name "$GITHUB_ACTOR"
+            git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          
+        # See https://github.com/helm/chart-releaser-action/issues/6
+        - name: Install Helm
+          run: |
+            curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+            chmod 700 get_helm.sh
+            ./get_helm.sh
+
+        # prepare yaml parser
+        - uses: actions/setup-go@v4
+        - name: Install yq
+          run: |
+            go install github.com/mikefarah/yq/v4@latest
+            yq --version
+
+        - name: Generate Chart.yaml
+          run: | 
+            ./generate.sh ${{ needs.generate-version.outputs.version }}
+
+
+        - name: Install releaser
+          run: |
+            wget https://github.com/helm/chart-releaser/releases/download/v1.6.0/chart-releaser_1.6.0_linux_amd64.tar.gz          
+            tar -xvzf chart-releaser_1.6.0_linux_amd64.tar.gz
+            ./cr package charts/data-space-connector
+            ./cr upload --owner ${GITHUB_REPOSITORY_OWNER} --git-repo data-space-connector --packages-with-index --token ${{ secrets.GITHUB_TOKEN }} --push --skip-existing
+            ./cr index --owner ${GITHUB_REPOSITORY_OWNER} --git-repo data-space-connector  --packages-with-index --index-path . --token ${{ secrets.GITHUB_TOKEN }} --push
+
+    git-release:
+      needs: ["generate-version","deploy"]
+      runs-on: ubuntu-latest
+
+      steps:
+
+        - uses: actions/checkout@v2
+
+        - uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: ${{ needs.generate-version.outputs.version }}
+            prerelease: true
+            title: ${{ needs.generate-version.outputs.version }}
+            files: |
+              LICENSE

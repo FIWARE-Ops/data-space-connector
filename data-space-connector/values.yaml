@@ -1,3 +1,5 @@
+# should argo-cd applications be created?
+argoApplications: true
 source: https://github.com/FIWARE-Ops/data-space-connector
 release: demo
 destination_namespace: &destination dsc-demo
@@ -35,7 +37,7 @@ applications:
 
   - name: orion
     enabled: true
-    source_path: applications/orion
+    source_path: applications/orion-ld
     source_ref: *branch
     destination: *destination
     helm_values:
