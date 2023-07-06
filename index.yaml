@@ -1,0 +1,46 @@
+apiVersion: v1
+entries:
+  data-space-connector:
+  - apiVersion: v2
+    created: "2023-07-06T13:53:29.021229395Z"
+    dependencies:
+    - name: mysql
+      repository: file://./charts/mysql
+      version: 9.4.4
+    - name: verifier
+      repository: file://./charts/verifier
+      version: 1.0.9
+    - name: keycloak
+      repository: file://./charts/keycloak
+      version: 13.0.3
+    - name: mongodb
+      repository: file://./charts/mongodb
+      version: 0.1.0
+    - name: credentials-config-service
+      repository: file://./charts/credentials-config-service
+      version: 0.0.1
+    - name: trusted-issuers-list
+      repository: file://./charts/trusted-issuers-list
+      version: 0.1.0
+    - name: postgres
+      repository: file://./charts/postgres
+      version: 12.1.13
+    - name: orion-ld
+      repository: file://./charts/orion-ld
+      version: 1.2.2
+    - name: walt-id
+      repository: file://./charts/walt-id
+      version: 0.0.16
+    description: Helm chart to deploy the FIWARE Data Space Connector
+    digest: cd4194047414ac6b06feb3c374aea22d31f41cd51f1d15cfc2c6d678b277fe3d
+    maintainers:
+    - email: dennis.wendland@fiware.org
+      name: Dennis Wendland
+    - email: stefan.wiedemann@fiware.org
+      name: Stefan Wiedemann
+    name: data-space-connector
+    type: application
+    urls:
+    - data-space-connector-0.0.1-PRE-1.tgz
+    version: 0.0.1-PRE-1
+generated: "2023-07-06T13:53:29.021249195Z"
