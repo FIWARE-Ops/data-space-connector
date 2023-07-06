@@ -1,0 +1,30 @@
+vcverifier:
+  
+  deployment:
+
+    # Image
+    image:
+      repository: quay.io/fiware/vcverifier
+      tag: 2.0.4
+      pullPolicy: Always
+
+    # Logging
+    logging: 
+      level: DEBUG
+      pathsToSkip: 
+        - "/health"
+
+    # Walt-id config
+    ssikit:
+      auditorUrl: http://walt-id-vcwaltid:7003
+
+    # Verifier config
+    verifier:
+      # URL endpoint of data space trusted issuers registry
+      tirAddress: https://tir.dataspace.com/v3/issuers
+      # DID of organisation
+      did: did:web:my-did:did
+
+    # Config service
+    configRepo:
+      configEndpoint: http://dsba-packet-delivery-ccs-credentials-config-service:8080/
