@@ -42,7 +42,6 @@ jobs:
 
       needs: [ "generate-version" ]
       runs-on: ubuntu-latest
-      if: github.event_name == 'push'
 
       steps:
         - name: Checkout
