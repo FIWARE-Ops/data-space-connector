@@ -1,0 +1,62 @@
+# Organisation DID
+did: did:web:my-did:did
+
+# Walt-id config
+vcwaltid:
+
+  # Image
+  deployment:
+    image:  
+      repository: quay.io/fiware/waltid
+      tag: 1.14.1-SNAPSHOT
+      pullPolicy: Always
+
+  # API config
+  api:
+    core: 
+      enabled: true
+    auditor: 
+      enabled: true
+    signatory: 
+      enabled: true
+    custodian: 
+      enabled: true
+    essif: 
+      enabled: true
+
+  # Persistence
+  persistence: 
+    enabled: true
+    pvc:
+      size: 1Gi
+
+  # List of templates to be created
+  templates:
+    GaiaXParticipantCredential.json: |
+      {
+        "@context": [
+          "https://www.w3.org/2018/credentials/v1",
+          "https://registry.lab.dsba.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/trustframework#"
+        ],
+        "type": [
+          "VerifiableCredential"
+        ],
+        "id": "did:web:raw.githubusercontent.com:egavard:payload-sign:master",
+        "issuer": "did:web:raw.githubusercontent.com:egavard:payload-sign:master",
+        "issuanceDate": "2023-03-21T12:00:00.148Z",
+        "credentialSubject": {
+          "id": "did:web:raw.githubusercontent.com:egavard:payload-sign:master",
+          "type": "gx:LegalParticipant",
+          "gx:legalName": "dsba compliant participant",
+          "gx:legalRegistrationNumber": {
+            "gx:vatID": "MYVATID"
+          },
+          "gx:headquarterAddress": {
+            "gx:countrySubdivisionCode": "BE-BRU"
+          },
+          "gx:legalAddress": {
+            "gx:countrySubdivisionCode": "BE-BRU"
+          },
+          "gx-terms-and-conditions:gaiaxTermsAndConditions": "70c1d713215f95191a11d38fe2341faed27d19e083917bc8732ca4fea4976700"
+        }
+      }

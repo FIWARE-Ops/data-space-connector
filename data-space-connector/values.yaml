@@ -56,3 +56,11 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: walt-id
+    enabled: true
+    source_path: applications/walt-id
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
