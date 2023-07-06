@@ -77,9 +77,9 @@ jobs:
           run: |
             wget https://github.com/helm/chart-releaser/releases/download/v1.6.0/chart-releaser_1.6.0_linux_amd64.tar.gz          
             tar -xvzf chart-releaser_1.6.0_linux_amd64.tar.gz
-            cr package charts/data-space-connector
-            cr upload --owner "$GITHUB_ACTOR@users.noreply.github.com" --git-repo ${GITHUB_REPOSITORY} --packages-with-index --token ${{ secrets.GITHUB_TOKEN }} --push --skip-existing
-            cr index --owner "$GITHUB_ACTOR@users.noreply.github.com" --git-repo ${GITHUB_REPOSITORY}  --packages-with-index --index-path . --token ${{ secrets.GITHUB_TOKEN }} --push
+            ./cr package charts/data-space-connector
+            ./cr upload --owner "$GITHUB_ACTOR@users.noreply.github.com" --git-repo ${GITHUB_REPOSITORY} --packages-with-index --token ${{ secrets.GITHUB_TOKEN }} --push --skip-existing
+            ./cr index --owner "$GITHUB_ACTOR@users.noreply.github.com" --git-repo ${GITHUB_REPOSITORY}  --packages-with-index --index-path . --token ${{ secrets.GITHUB_TOKEN }} --push
 
     git-release:
       needs: ["generate-version","deploy"]
