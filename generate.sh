@@ -24,7 +24,6 @@ for dir in $dscChartFolder/charts/*/; do
     echo $name: >>  $dscChartFolder/values.yaml
     cat $valuesFile | sed 's/^/  /' >>  $dscChartFolder/values.yaml
 
-    helm dependency build ${dir}
 done
 # fix values in the chart yaml
 version="${1:=0.0.0}"
