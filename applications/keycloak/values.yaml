@@ -1,0 +1,111 @@
+keycloak:
+
+  # Logging
+  logging:
+    level: INFO
+
+  # Replica
+  replicaCount: 1
+
+  # Admin account
+  auth:
+    adminUser: fiwareAdmin
+    adminPassword: fiwareAdmin
+
+  # CLI config
+  keycloakConfigCli:
+    enabled: true
+    # current image does not contain 20.0.3., thus we need this fix
+    command: 
+      - java
+      - -jar
+      - /opt/bitnami/keycloak-config-cli/keycloak-config-cli-20.0.1.jar
+
+    extraEnvVars:
+      - name: IMPORT_FILES_LOCATIONS
+        value: "/config/*"
+    containerSecurityContext:
+      enabled: false
+    podSecurityContext:
+      enabled: false
+
+    # Realm config - either provide configuration or existing ConfigMap
+    configuration: {}
+    existingConfigmap: ""
+
+  # ENVs
+  extraEnvVars:
+  - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+    value: "true"
+  - name: KEYCLOAK_LOG_LEVEL
+    value: INFO
+  - name: VCISSUER_ISSUER_DID
+    value: "did:web:my-did:did"
+  - name: VCISSUER_WALTID_ADDRESS
+    value: "http://walt-id-vcwaltid"
+
+  # Volume mounts
+  extraVolumeMounts:
+    - name: profiles
+      mountPath: /opt/bitnami/keycloak/conf/profile.properties
+      subPath: profile.properties
+    - name: providers
+      mountPath: /opt/bitnami/keycloak/providers/
+    - name: issuer-key
+      mountPath: /opt/keys
+
+  # Volumes
+  extraVolumes:
+    ## ConfigMap containg profile.properties
+    #- name: profiles
+    #  configMap:
+    #    name: dsba-packet-delivery-keycloak-profile
+    - name: providers
+      emptyDir: {}
+    ## ConfigMap with issuer keyfile.json
+    #- name: issuer-key
+    #  configMap:
+    #    name: dsba-packet-delivery-keycloak-key
+    ## ConfigMap with import.sh script used in initContainer below
+    #- name: did-config
+    #  configMap:
+    #    name: dsba-packet-delivery-keycloak-did-config
+    ## Secret with Certificate used in initContainer below
+    #- name: did-secret
+    #  secret: 
+    #    secretName: dsba-packet-delivery-walt-id-vcwaltid-tls-sec
+
+
+  initContainers:
+    - name: add-vc-issuer
+      image: quay.io/fiware/keycloak-vc-issuer:0.4.0
+      imagePullPolicy: Always
+      volumeMounts:
+        - name: providers
+          mountPath: /target
+    ## initContainer for loading DID requires volumes specified above
+    #- name: load-did
+    #  image: quay.io/opencloudio/curl:4.2.0-build.8
+    #  imagePullPolicy: Always
+    #  command: 
+    #    - /bin/sh
+    #    - /opt/did/script/import.sh
+    #  env:
+    #    - name: WALTID_CORE_ADDRESS
+    #      value: "walt-id-vcwaltid:7000"
+    #  volumeMounts:
+    #    - name: did-config
+    #      mountPath: /opt/did/script
+    #    - name: did-secret
+    #      mountPath: /opt/did/secret
+
+  # Disable internal DB
+  postgresql:
+    enabled: false
+
+  # Config for external DB
+  externalDatabase:
+    host: postgresql
+    user: keycloak
+    password: "<keycloak-password>"
+    database: keycloak
