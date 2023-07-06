@@ -51,29 +51,27 @@ keycloak:
       subPath: profile.properties
     - name: providers
       mountPath: /opt/bitnami/keycloak/providers/
-    - name: issuer-key
-      mountPath: /opt/keys
+    #- name: issuer-key
+    #  mountPath: /opt/keys
 
   # Volumes
   extraVolumes:
-    ## ConfigMap containg profile.properties
-    #- name: profiles
-    #  configMap:
-    #    name: dsba-packet-delivery-keycloak-profile
+    - name: profiles
+      configMap:
+        name: keycloak-profile
     - name: providers
       emptyDir: {}
     ## ConfigMap with issuer keyfile.json
     #- name: issuer-key
     #  configMap:
-    #    name: dsba-packet-delivery-keycloak-key
+    #    name: keycloak-key
     ## ConfigMap with import.sh script used in initContainer below
-    #- name: did-config
-    #  configMap:
-    #    name: dsba-packet-delivery-keycloak-did-config
-    ## Secret with Certificate used in initContainer below
-    #- name: did-secret
-    #  secret: 
-    #    secretName: dsba-packet-delivery-walt-id-vcwaltid-tls-sec
+    - name: did-config
+      configMap:
+        name: keycloak-did-config
+    - name: did-secret
+      secret: 
+        secretName: walt-id-vcwaltid-tls-sec
 
 
   initContainers:
@@ -83,21 +81,20 @@ keycloak:
       volumeMounts:
         - name: providers
           mountPath: /target
-    ## initContainer for loading DID requires volumes specified above
-    #- name: load-did
-    #  image: quay.io/opencloudio/curl:4.2.0-build.8
-    #  imagePullPolicy: Always
-    #  command: 
-    #    - /bin/sh
-    #    - /opt/did/script/import.sh
-    #  env:
-    #    - name: WALTID_CORE_ADDRESS
-    #      value: "walt-id-vcwaltid:7000"
-    #  volumeMounts:
-    #    - name: did-config
-    #      mountPath: /opt/did/script
-    #    - name: did-secret
-    #      mountPath: /opt/did/secret
+    - name: load-did
+      image: quay.io/opencloudio/curl:4.2.0-build.8
+      imagePullPolicy: Always
+      command: 
+        - /bin/sh
+        - /opt/did/script/import.sh
+      env:
+        - name: WALTID_CORE_ADDRESS
+          value: "walt-id-vcwaltid:7000"
+      volumeMounts:
+        - name: did-config
+          mountPath: /opt/did/script
+        - name: did-secret
+          mountPath: /opt/did/secret
 
   # Disable internal DB
   postgresql:
@@ -109,3 +106,8 @@ keycloak:
     user: keycloak
     password: "<keycloak-password>"
     database: keycloak
+
+# Config to create DID
+didConfig:
+  domain: "provider.com"
+  x5u: "https://provider.com/certs/tls.crt"
