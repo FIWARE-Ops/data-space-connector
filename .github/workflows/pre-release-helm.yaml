@@ -68,8 +68,9 @@ jobs:
         
         - name: Install yq
           run: |
-            pip3 install yq
-            yq -V
+            pip install yq
+            echo "Installed"
+            yq --version
 
         - name: Generate Chart.yaml
           run: | 
