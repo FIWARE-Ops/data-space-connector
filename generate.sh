@@ -28,6 +28,5 @@ for dir in $dscChartFolder/charts/*/; do
 done
 # fix values in the chart yaml
 version="${1:=0.0.0}"
-echo $version
 yq e -i '.version = "'$version'"'  $dscChartFolder/Chart.yaml
 
