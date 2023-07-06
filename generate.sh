@@ -27,7 +27,7 @@ for dir in $dscChartFolder/charts/*/; do
     helm dependency build ${dir}
 done
 # fix values in the chart yaml
-version="${VERSION:=0.0.0}"
+version="${1:=0.0.0}"
 echo $version
 yq e -i '.version = "'$version'"'  $dscChartFolder/Chart.yaml
 

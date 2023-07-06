@@ -1,9 +1,13 @@
-name: Deploy
+name: Pre-Release
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
 
 jobs:
     generate-version:
@@ -36,6 +40,7 @@ jobs:
 
     deploy:
 
+      needs: [ "generate-version" ]
       runs-on: ubuntu-latest
       if: github.event_name == 'push'
 
@@ -44,13 +49,6 @@ jobs:
           uses: actions/checkout@v3
           with:
             fetch-depth: 0
-
-        # prepare yaml parser
-        - uses: chrisdickinson/setup-yq@latest
-
-        - name: Generate Chart.yaml
-          run: | 
-            ./generate.sh
 
         - name: Configure Git
           run: |
@@ -64,8 +62,32 @@ jobs:
             chmod 700 get_helm.sh
             ./get_helm.sh
 
+        # prepare yaml parser
+        - uses: chrisdickinson/setup-yq@latest
+
+        - name: Generate Chart.yaml
+          run: | 
+            ./generate.sh ${{ needs.generate-version.outputs.version }}
+
+
         - name: Run chart-releaser
           uses: helm/chart-releaser-action@v1.5.0
           env:
             CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"          
 
+    git-release:
+      needs: ["generate-version","deploy"]
+      runs-on: ubuntu-latest
+
+      steps:
+
+        - uses: actions/checkout@v2
+
+        - uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: ${{ needs.generate-version.outputs.version }}
+            prerelease: true
+            title: ${{ needs.generate-version.outputs.version }}
+            files: |
+              LICENSE
