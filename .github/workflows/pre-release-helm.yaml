@@ -62,9 +62,13 @@ jobs:
             ./get_helm.sh
 
         # prepare yaml parser
-        - uses: chrisdickinson/setup-yq@latest
+        - uses: actions/setup-python@v4
           with:
-            yq-version: 4.2.0
+            python-version: '3.10' 
+        
+        - name: Install yq
+          run: |
+            pip3 install yq
 
         - name: Generate Chart.yaml
           run: | 
