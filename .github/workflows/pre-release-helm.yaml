@@ -1,0 +1,71 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    generate-version:
+      runs-on: ubuntu-latest
+
+      outputs:
+        version: ${{ steps.out.outputs.version }}
+
+      steps:
+        - uses: actions/checkout@v2
+
+        - id: bump
+          uses: zwaldowski/match-label-action@v1
+          with:
+            allowed: major,minor,patch
+
+        - uses: zwaldowski/semver-release-action@v2
+          with:
+            dry_run: true
+            bump: ${{ steps.bump.outputs.match }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Get PR Number
+          id: pr_number
+          run: echo "::set-output name=nr::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+
+        - name: Set version output
+          id: out
+          run: echo "::set-output name=version::$(echo ${VERSION}-PRE-${{ steps.pr_number.outputs.nr }})"
+
+    deploy:
+
+      runs-on: ubuntu-latest
+      if: github.event_name == 'push'
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+
+        # prepare yaml parser
+        - uses: chrisdickinson/setup-yq@latest
+
+        - name: Generate Chart.yaml
+          run: | 
+            ./generate.sh
+
+        - name: Configure Git
+          run: |
+            git config user.name "$GITHUB_ACTOR"
+            git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          
+        # See https://github.com/helm/chart-releaser-action/issues/6
+        - name: Install Helm
+          run: |
+            curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+            chmod 700 get_helm.sh
+            ./get_helm.sh
+
+        - name: Run chart-releaser
+          uses: helm/chart-releaser-action@v1.5.0
+          env:
+            CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"          
+
