@@ -63,6 +63,8 @@ jobs:
 
         # prepare yaml parser
         - uses: chrisdickinson/setup-yq@latest
+          with:
+            yq-version: 4.2.0
 
         - name: Generate Chart.yaml
           run: | 
