@@ -72,3 +72,11 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: keycloak
+    enabled: true
+    source_path: applications/keycloak
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml

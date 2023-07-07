@@ -51,8 +51,6 @@ keycloak:
       subPath: profile.properties
     - name: providers
       mountPath: /opt/bitnami/keycloak/providers/
-    #- name: issuer-key
-    #  mountPath: /opt/keys
 
   # Volumes
   extraVolumes:
@@ -61,11 +59,6 @@ keycloak:
         name: keycloak-profile
     - name: providers
       emptyDir: {}
-    ## ConfigMap with issuer keyfile.json
-    #- name: issuer-key
-    #  configMap:
-    #    name: keycloak-key
-    ## ConfigMap with import.sh script used in initContainer below
     - name: did-config
       configMap:
         name: keycloak-did-config
@@ -73,7 +66,7 @@ keycloak:
       secret: 
         secretName: walt-id-vcwaltid-tls-sec
 
-
+  # Init containers for VC issuer and loading of DID
   initContainers:
     - name: add-vc-issuer
       image: quay.io/fiware/keycloak-vc-issuer:0.4.0
