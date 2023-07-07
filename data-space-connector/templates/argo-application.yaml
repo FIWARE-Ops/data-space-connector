@@ -1,3 +1,4 @@
+{{- if .Values.argoApplications }}
 {{- if .Values.applications }}
 {{- $secrets := .Values.secretsEnabled }}
 {{- $release := .Values.release }}
@@ -106,6 +107,7 @@ spec:
       kind: GrafanaDataSource
       jsonPointers:
         - /spec/datasources/0/secureJsonData/httpHeaderValue1
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
