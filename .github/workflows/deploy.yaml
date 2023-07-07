@@ -59,8 +59,8 @@ jobs:
 
       - name: Get namespace from branch name
         run: |
-          echo ::set-env name=NAMESPACE::$(echo ${{ steps.branch-name.outputs.current_branch }} | cut -d "/" -f 2)
-          echo $NAMESPACE
+          echo "NAMESPACE=$(echo ${{ steps.branch-name.outputs.current_branch }} | cut -d "/" -f 2)" >> "$GITHUB_ENV"
+          echo ${{ env.NAMESPACE }}
 
       - name: Log the participant
         run: |
