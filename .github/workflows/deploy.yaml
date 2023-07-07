@@ -60,6 +60,9 @@ jobs:
       - name: Get namespace from branch name
         run: |
           echo "NAMESPACE=$(echo ${{ steps.branch-name.outputs.current_branch }} | cut -d "/" -f 2)" >> "$GITHUB_ENV"
+
+      - name: Log the namespace
+        run: |
           echo ${{ env.NAMESPACE }}
 
       - name: Log the participant
