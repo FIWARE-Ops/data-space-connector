@@ -82,3 +82,11 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: keyrock
+    enabled: true
+    source_path: applications/keyrock
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
