@@ -90,3 +90,11 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: pdp
+    enabled: true
+    source_path: applications/pdp
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml

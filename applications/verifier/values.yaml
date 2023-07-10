@@ -27,4 +27,4 @@ vcverifier:
 
     # Config service
     configRepo:
-      configEndpoint: http://dsba-packet-delivery-ccs-credentials-config-service:8080/
+      configEndpoint: http://ccs-credentials-config-service:8080/
