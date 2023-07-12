@@ -98,3 +98,11 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: kong
+    enabled: true
+    source_path: applications/kong
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
