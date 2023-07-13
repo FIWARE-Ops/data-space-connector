@@ -8,6 +8,7 @@ branch: &branch main
 secretsEnabled: &secretsEnabled false
 host: &host
 tlsSecret: &tlsSecret
+participant: my-provider
 
 applications:
 

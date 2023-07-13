@@ -4,6 +4,7 @@
 {{- $release := .Values.release }}
 {{- $source := .Values.source }}
 {{- $team := .Values.team }}
+{{- $participant := .Values.participant }}
 {{- $host := .Values.host }}
 {{- $tlsSecret := .Values.tlsSecret }}
 {{- $argoNamespace := .Values.argoNamespace -}}
@@ -29,6 +30,7 @@ metadata:
   labels:
     destination-namespace: {{ .destination }}
     purpose: {{ .purpose }}
+    participant: {{ $participant }}
 {{- if .values }}
 {{- if .values.fullnameOverride }}
 {{- if contains .values.fullnameOverride .name }}
