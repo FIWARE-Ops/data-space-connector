@@ -50,8 +50,6 @@ keycloak:
 
   # Volume mounts
   extraVolumeMounts:
-    - name: data
-      emptyDir: {}
     - name: profiles
       mountPath: /opt/bitnami/keycloak/conf/profile.properties
       subPath: profile.properties
@@ -62,6 +60,8 @@ keycloak:
 
   # Volumes
   extraVolumes:
+    - name: data
+      emptyDir: {}
     - name: profiles
       configMap:
         name: keycloak-profile
