@@ -2,7 +2,7 @@ activation-service:
   deployment:
     image:
       repository: quay.io/i4trust/activation-service
-      tag: 2.2.1-PRE-19
+      tag: 2.2.1
       pullPolicy: IfNotPresent
 
   ## Configuration of activation service execution
