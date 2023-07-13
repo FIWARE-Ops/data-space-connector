@@ -106,3 +106,11 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: activation-service
+    enabled: true
+    source_path: applications/activation-service
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
