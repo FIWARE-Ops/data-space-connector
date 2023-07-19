@@ -26,7 +26,7 @@ jobs:
     # Will look for values.yaml file at: <GITOPS_REPO>/<NAMESPACE>/<PARTICIPANT>/<VALUES_DIR>/values.yaml
     strategy:
       matrix:
-        participant: ["packet-delivery-dsc"]
+        participant: ["packet-delivery"]
     
     steps:
 

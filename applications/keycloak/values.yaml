@@ -1,5 +1,9 @@
 keycloak:
 
+  # Image
+  image: 
+    tag: 21.1.2-debian-11-r1
+
   # Logging
   logging:
     level: INFO
@@ -51,9 +55,13 @@ keycloak:
       subPath: profile.properties
     - name: providers
       mountPath: /opt/bitnami/keycloak/providers/
+    - name: data
+      mountPath: /data
 
   # Volumes
   extraVolumes:
+    - name: data
+      emptyDir: {}
     - name: profiles
       configMap:
         name: keycloak-profile
@@ -69,7 +77,7 @@ keycloak:
   # Init containers for VC issuer and loading of DID
   initContainers:
     - name: add-vc-issuer
-      image: quay.io/fiware/keycloak-vc-issuer:0.4.0
+      image: quay.io/fiware/keycloak-vc-issuer:0.5.0
       imagePullPolicy: Always
       volumeMounts:
         - name: providers

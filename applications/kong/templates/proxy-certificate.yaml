@@ -1,0 +1,15 @@
+{{- if .Values.kong.proxy.route.certificate -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "kong.fullname" . }}
+  labels:
+    {{ include "kong.metaLabels" . | nindent 4 }}
+spec:
+  secretName: {{ include "kong.fullname" . }}-tls-sec
+  issuerRef:
+    {{- toYaml .Values.kong.proxy.route.certificate.issuer | nindent 4 }}
+  commonName: {{ .Values.kong.proxy.route.host }}
+  dnsNames:
+    - {{ .Values.kong.proxy.route.host }}
+{{- end -}}

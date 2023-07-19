@@ -1,0 +1,12 @@
+apiVersion: v2
+name: activation-service
+description: Chart holder for argo-cd
+
+type: application
+version: 2.2.1
+appVersion: "2.2.0"
+
+dependencies:
+  - name: activation-service
+    version: 2.2.1
+    repository: https://i4Trust.github.io/helm-charts

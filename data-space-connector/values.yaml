@@ -8,6 +8,7 @@ branch: &branch main
 secretsEnabled: &secretsEnabled false
 host: &host
 tlsSecret: &tlsSecret
+participant: my-provider
 
 applications:
 
@@ -78,6 +79,38 @@ applications:
   - name: keycloak
     enabled: true
     source_path: applications/keycloak
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
+  - name: keyrock
+    enabled: true
+    source_path: applications/keyrock
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
+  - name: pdp
+    enabled: true
+    source_path: applications/pdp
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
+  - name: kong
+    enabled: true
+    source_path: applications/kong
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
+  - name: activation-service
+    enabled: true
+    source_path: applications/activation-service
     source_ref: *branch
     destination: *destination
     helm_values:
