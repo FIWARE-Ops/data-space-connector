@@ -110,5 +110,12 @@ keycloak:
 
 # Config to create DID
 didConfig:
+  # Enable creation of ConfigMap for loading the DID into walt-id
+  # When disabling, also remove the load-did initContainer from the list above
+  loadDidWebEnabled: true
+
+  # Domain for DID web
   domain: "provider.com"
+
+  # x5u for DID web
   x5u: "https://provider.com/certs/tls.crt"
