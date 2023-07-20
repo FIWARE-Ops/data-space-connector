@@ -74,10 +74,10 @@ keyrock:
     - name: IDM_PR_CLIENT_KEY
       valueFrom:
           secretKeyRef:
-            name: walt-id-vcwaltid-tls-sec
+            name: vcwaltid-tls-sec
             key: tls.key
     - name: IDM_PR_CLIENT_CRT
       valueFrom:
           secretKeyRef:
-            name: walt-id-vcwaltid-tls-sec
+            name: vcwaltid-tls-sec
             key: tls.crt

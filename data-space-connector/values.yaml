@@ -60,9 +60,9 @@ applications:
     helm_values:
     - values.yaml
 
-  - name: walt-id
+  - name: vcwaltid
     enabled: true
-    source_path: applications/walt-id
+    source_path: applications/vcwaltid
     source_ref: *branch
     destination: *destination
     helm_values:

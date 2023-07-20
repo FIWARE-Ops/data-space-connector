@@ -1,3 +1,4 @@
+{{- if .Values.didConfig.loadDidWebEnabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -16,3 +17,4 @@ data:
           \"path\": \"did\",
           \"x5u\": \"{{ .Values.didConfig.x5u }}\"
       }"
+{{- end }}
