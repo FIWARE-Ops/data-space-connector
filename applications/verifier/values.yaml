@@ -16,7 +16,7 @@ vcverifier:
 
     # Walt-id config
     ssikit:
-      auditorUrl: http://walt-id-vcwaltid:7003
+      auditorUrl: http://vcwaltid:7003
 
     # Verifier config
     verifier:
