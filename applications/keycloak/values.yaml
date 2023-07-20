@@ -46,7 +46,7 @@ keycloak:
   - name: VCISSUER_ISSUER_DID
     value: "did:web:my-did:did"
   - name: VCISSUER_WALTID_ADDRESS
-    value: "http://walt-id-vcwaltid"
+    value: "http://vcwaltid"
 
   # Volume mounts
   extraVolumeMounts:
@@ -72,7 +72,7 @@ keycloak:
         name: keycloak-did-config
     - name: did-secret
       secret: 
-        secretName: walt-id-vcwaltid-tls-sec
+        secretName: vcwaltid-tls-sec
 
   # Init containers for VC issuer and loading of DID
   initContainers:
@@ -90,7 +90,7 @@ keycloak:
         - /opt/did/script/import.sh
       env:
         - name: WALTID_CORE_ADDRESS
-          value: "walt-id-vcwaltid:7000"
+          value: "vcwaltid:7000"
       volumeMounts:
         - name: did-config
           mountPath: /opt/did/script
