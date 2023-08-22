@@ -1,0 +1,847 @@
+# should argo-cd applications be created?
+argoApplications: false
+
+
+#Sub-Chart configuration configuration
+
+activation-service:
+  # Enable the deployment of application: activation-service
+  deploymentEnabled: false
+
+  activation-service:
+    deployment:
+      image:
+        repository: quay.io/i4trust/activation-service
+        tag: 2.2.1
+        pullPolicy: IfNotPresent
+
+    ## Configuration of activation service execution
+    activationService:
+      # -- Listen port
+      port: 8080
+      # -- Number of (gunicorn) workers that should be created
+      workers: 1
+      # -- Maximum header size in bytes
+      maxHeaderSize: 32768
+      # -- Log Level
+      logLevel: "debug"
+
+    ## CCS config
+    ccs:
+      endpoint: "http://ccs-credentials-config-service:8080/"
+      id: "my-activation-service"
+      credentials:
+        - type: "VerifiableCredential"
+          trustedParticipantsLists: [
+            "https://tir.dataspace.com"
+          ]
+          trustedIssuersLists: [
+            "http://til-trusted-issuers-list:8080"
+          ]
+        - type: "ActivationService"
+          trustedParticipantsLists: [
+            "https://tir.dataspace.com"
+          ]
+          trustedIssuersLists: [
+            "http://til-trusted-issuers-list:8080"
+          ]
+
+    ## AS config
+    config:
+
+      # DB
+      db:
+        # -- Use sqlite in-memory database
+        useMemory: true
+        # -- Enable tracking of modifications
+        modTracking: false
+        # -- Enable SQL logging to stderr
+        echo: true
+
+      # Configuration for additional API keys to protect certain endpoints
+      apikeys:
+        # Config for iSHARE flow
+        ishare:
+          # Enable for /token endpoint (API key will be required)
+          enabledToken: false
+          # Enable for /createpolicy endpoint (API key will be required)
+          enabledCreatePolicy: false
+        # Config for Trusted-Issuers-List flow
+        issuer:
+          # Header name
+          headerName: "AS-API-KEY"
+          # API key (auto-generated if left empty)
+          apiKey: ""
+          # Enable for /issuer endpoint (API key will be required)
+          enabledIssuer: true
+
+      ar:
+        # Endpoint for token request
+        token: "https://ar.isharetest.net/connect/token"
+        # Endpoint for create policy requests
+        policy: "https://ar.isharetest.net/policy"
+        # Endpoint for delegation requests
+        delegation: "https://ar.isharetest.net/delegation"
+        # EORI of AR
+        id: "EU.EORI.DEPROVIDER"
+
+      issuer:
+        clientId: "my-activation-service"
+        providerId: "did:web:my-did:did"
+        tilUri: "http://til-trusted-issuers-list:8080"
+        verifierUri: "https://verifier.provider.com"
+        samedevicePath: "/api/v1/samedevice"
+        jwksPath: "/.well-known/jwks"
+        algorithms:
+          - "ES256"
+        roles:
+          createRole: "CREATE_ISSUER"
+          updateRole: "UPDATE_ISSUER"
+          deleteRole: "DELETE_ISSUER"
+
+credentials-config-service:
+  # Enable the deployment of application: credentials-config-service
+  deploymentEnabled: true
+
+  credentials-config-service:
+
+    # Database config
+    database:
+      persistence: true
+      host: mysql-ips
+      name: ccs
+
+      # Should use Secret in production environment
+      username: root
+      password: "dbPassword"
+
+dsba-pdp:
+  # Enable the deployment of application: dsba-pdp
+  deploymentEnabled: false
+
+  dsba-pdp:
+
+    # DB
+    db:
+      enabled: false
+      migrate:
+        enabled: false
+
+    deployment:
+      # Image
+      image:
+        pullPolicy: Always
+        repository: quay.io/fiware/dsba-pdp
+        tag: 1.0.0
+
+      # Log level
+      logLevel: TRACE
+
+      # iSHARE config
+      ishare:
+        existingSecret: vcwaltid-tls-sec
+
+        clientId: did:web:my-did:did
+        trustedFingerprints:
+          - MYFINGERPRINT
+
+        ar:
+          id: "did:web:my-did:did"
+          delegationPath: "/ar/delegation"
+          tokenPath: "/oauth2/token"
+          url: "https://ar.provider.com"
+
+        trustAnchor:
+          id: "EU.EORI.FIWARESATELLITE"
+          tokenPath: "/token"
+          trustedListPath: "/trusted_list"
+          url: "https://tir.dataspace.com"
+
+      # Verifier
+      trustedVerifiers:
+        - https://verifier.provider.com/.well-known/jwks
+
+      # Provider DID
+      providerId: "did:web:my-did:did"
+
+    # ENVs
+    additionalEnvVars:
+      - name: ISHARE_CERTIFICATE_PATH
+        value: /iShare/tls.crt
+      - name: ISHARE_KEY_PATH
+        value: /iShare/tls.key
+
+keycloak:
+  # Enable the deployment of application: keycloak
+  deploymentEnabled: false
+
+  keycloak:
+
+    # Image
+    image:
+      tag: 21.1.2-debian-11-r1
+
+    # Logging
+    logging:
+      level: INFO
+
+    # Replica
+    replicaCount: 1
+
+    # Admin account
+    auth:
+      adminUser: fiwareAdmin
+      adminPassword: fiwareAdmin
+
+    # CLI config
+    keycloakConfigCli:
+      enabled: true
+      # current image does not contain 20.0.3., thus we need this fix
+      command:
+        - java
+        - -jar
+        - /opt/bitnami/keycloak-config-cli/keycloak-config-cli-20.0.1.jar
+
+      extraEnvVars:
+        - name: IMPORT_FILES_LOCATIONS
+          value: "/config/*"
+      containerSecurityContext:
+        enabled: false
+      podSecurityContext:
+        enabled: false
+
+      # Realm config - either provide configuration or existing ConfigMap
+      configuration: {}
+      existingConfigmap: ""
+
+    # ENVs
+    extraEnvVars:
+    - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+      value: "true"
+    - name: KEYCLOAK_LOG_LEVEL
+      value: INFO
+    - name: VCISSUER_ISSUER_DID
+      value: "did:web:my-did:did"
+    - name: VCISSUER_WALTID_ADDRESS
+      value: "http://vcwaltid"
+
+    # Volume mounts
+    extraVolumeMounts:
+      - name: profiles
+        mountPath: /opt/bitnami/keycloak/conf/profile.properties
+        subPath: profile.properties
+      - name: providers
+        mountPath: /opt/bitnami/keycloak/providers/
+      - name: data
+        mountPath: /data
+
+    # Volumes
+    extraVolumes:
+      - name: data
+        emptyDir: {}
+      - name: profiles
+        configMap:
+          name: keycloak-profile
+      - name: providers
+        emptyDir: {}
+      - name: did-config
+        configMap:
+          name: keycloak-did-config
+      - name: did-secret
+        secret:
+          secretName: vcwaltid-tls-sec
+
+    # Init containers for VC issuer and loading of DID
+    initContainers:
+      - name: add-vc-issuer
+        image: quay.io/fiware/keycloak-vc-issuer:0.5.0
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: providers
+            mountPath: /target
+      - name: load-did
+        image: quay.io/opencloudio/curl:4.2.0-build.8
+        imagePullPolicy: Always
+        command:
+          - /bin/sh
+          - /opt/did/script/import.sh
+        env:
+          - name: WALTID_CORE_ADDRESS
+            value: "vcwaltid:7000"
+        volumeMounts:
+          - name: did-config
+            mountPath: /opt/did/script
+          - name: did-secret
+            mountPath: /opt/did/secret
+
+    # Disable internal DB
+    postgresql:
+      enabled: false
+
+    # Config for external DB
+    externalDatabase:
+      host: postgresql
+      user: keycloak
+      password: "<keycloak-password>"
+      database: keycloak
+
+  # Config to create DID
+  didConfig:
+    # Enable creation of ConfigMap for loading the DID into walt-id
+    # When disabling, also remove the load-did initContainer from the list above
+    loadDidWebEnabled: true
+
+    # Domain for DID web
+    domain: "provider.com"
+
+    # x5u for DID web
+    x5u: "https://provider.com/certs/tls.crt"
+
+keyrock:
+  # Enable the deployment of application: keyrock
+  deploymentEnabled: false
+
+  keyrock:
+    fullnameOverride: keyrock-dsc
+
+    # Image
+    statefulset:
+      image:
+        repository: quay.io/wi_stefan/keyrock
+        tag: sn-fix
+        pullPolicy: Always
+
+    # DB config
+    db:
+      user: root
+      password: "<mysql-password>"
+      host: mysql-dsc
+
+    # Admin user to be created
+    admin:
+      user: admin
+      password: "<keyrock-password>"
+      email: admin@fiware.org
+
+    # External hostname of Keyrock
+    host: https://keyrock.provider.com
+
+    ## Theme configuration for Keyrock
+    theme:
+      ## -- Enable theme
+      enabled: false
+
+    ## Configuration of Authorisation Registry (AR)
+    authorisationRegistry:
+      # -- Enable usage of authorisation registry
+      enabled: true
+      # -- Identifier (EORI) of AR
+      identifier: "did:web:my-did:did"
+      # -- URL of AR
+      url: "internal"
+
+    ## Configuration of iSHARE Satellite
+    satellite:
+      # -- Enable usage of satellite
+      enabled: true
+      # -- Identifier (EORI) of satellite
+      identifier: "EU.EORI.FIWARESATELLITE"
+      # -- URL of satellite
+      url: "https://tir.dataspace.com"
+      # -- Token endpoint of satellite
+      tokenEndpoint: "https://https://tir.dataspace.com/token"
+      # -- Parties endpoint of satellite
+      partiesEndpoint: "https://https://tir.dataspace.com/parties"
+
+    ## -- Configuration of local key and certificate for validation and generation of tokens
+    token:
+      # -- Enable storage of local key and certificate
+      enabled: false
+
+    # ENV variables for Keyrock
+    additionalEnvVars:
+      - name: IDM_TITLE
+        value: "dsba AR"
+      - name: IDM_DEBUG
+        value: "true"
+      - name: DEBUG
+        value: "*"
+      - name: IDM_DB_NAME
+        value: ar_idm
+      - name: IDM_DB_SEED
+        value: "true"
+      - name: IDM_SERVER_MAX_HEADER_SIZE
+        value: "32768"
+      - name: IDM_PR_CLIENT_ID
+        value: "did:web:my-did:did"
+      - name: IDM_PR_CLIENT_KEY
+        valueFrom:
+            secretKeyRef:
+              name: vcwaltid-tls-sec
+              key: tls.key
+      - name: IDM_PR_CLIENT_CRT
+        valueFrom:
+            secretKeyRef:
+              name: vcwaltid-tls-sec
+              key: tls.crt
+
+kong:
+  # Enable the deployment of application: kong
+  deploymentEnabled: false
+
+  kong:
+    image:
+      repository: quay.io/fiware/kong
+      tag: "0.5.2"
+      pullPolicy: IfNotPresent
+
+    replicaCount: 1
+
+    autoscaling:
+      enabled: false
+
+    env:
+      database: "off"
+      nginx_worker_processes: "2"
+      proxy_access_log: /dev/stdout
+      admin_access_log: /dev/stdout
+      admin_gui_access_log: /dev/stdout
+      portal_api_access_log: /dev/stdout
+      proxy_error_log: /dev/stderr
+      admin_error_log: /dev/stderr
+      admin_gui_error_log: /dev/stderr
+      portal_api_error_log: /dev/stderr
+      prefix: /kong_prefix/
+      log_level: debug
+      nginx_proxy_large_client_header_buffers: "16 128k"
+      nginx_proxy_http2_max_field_size: "32k"
+      nginx_proxy_http2_max_header_size: "32k"
+      plugins: bundled,pep-plugin,ngsi-ishare-policies
+      pluginserver_names: pep-plugin
+      pluginserver_pep_plugin_start_cmd: "/go-plugins/pep-plugin"
+      pluginserver_pep_plugin_query_cmd: "/go-plugins/pep-plugin -dump"
+
+    ingressController:
+      enabled: false
+      installCRDs: false
+
+    proxy:
+      type: ClusterIP
+      enabled: true
+      tls:
+        enabled: false
+
+      # Provide Ingress or Route config here
+      ingress:
+        enabled: false
+      route:
+        enabled: false
+
+    admin:
+      enabled: true
+      type: ClusterIP
+      http:
+        enabled: true
+        servicePort: 8001
+        containerPort: 8001
+
+    status:
+      enabled: true
+      http:
+        enabled: true
+        containerPort: 9102
+
+    # Provide the kong.yml configuration (either as existing CM, secret or directly in the values.yaml)
+    dblessConfig:
+      configMap: ""
+      secret: ""
+      config: |
+        _format_version: "2.1"
+        _transform: true
+
+        consumers:
+        - username: token-consumer
+          keyauth_credentials:
+          - tags:
+            - token-key
+            - tir-key
+
+        services:
+          - host: "orion"
+            name: "provider"
+            port: 1026
+            protocol: http
+
+            routes:
+              - name: my-path
+                paths:
+                  - /my-path
+                strip_path: true
+
+            plugins:
+              - name: pep-plugin
+                config:
+                  pathprefix: "/pdc"
+                  authorizationendpointtype: ExtAuthz
+                  authorizationendpointaddress: http://pdp-dsba-pdp:8080/authz
+
+              - name: request-transformer
+                config:
+                  remove:
+                    headers:
+                      - Authorization
+                      - authorization
+
+mongodb:
+  # Enable the deployment of application: mongodb
+  deploymentEnabled: true
+
+  mongodb:
+
+    # DB Authorization
+    auth:
+      enabled: true
+      # Should use a Secret on production deployments
+      rootPassword: "dbPassword"
+
+    # Required for permissions to PVC
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      runAsGroup: 0
+      runAsNonRoot: true
+
+    # Set resources
+    resources:
+      limits:
+        cpu: 200m
+        memory: 512Mi
+
+    persistence:
+      enabled: true
+      size: 8Gi
+
+mysql:
+  # Enable the deployment of application: mysql
+  deploymentEnabled: true
+
+  mysql:
+    fullnameOverride: mysql-ips
+    auth:
+      # Should use a Secret on production deployments
+      rootPassword: "dbPassword"
+
+orion-ld:
+  # Enable the deployment of application: orion-ld
+  deploymentEnabled: true
+
+  orion:
+
+    broker:
+      db:
+        auth:
+          user: root
+          password: "dbPassword"
+          mech: "SCRAM-SHA-1"
+        hosts:
+          - ips-dsc-mongodb
+
+    initData:
+      initEnabled: true
+      hook: post-install
+      backoffLimit: 6
+      entities:
+        - name: deliveryorder_happypets001.json
+          data: |
+            {
+              "id": "urn:ngsi-ld:DELIVERYORDER:HAPPYPETS001",
+              "type": "DELIVERYORDER",
+              "issuer": {
+                "type": "Property",
+                "value": "Happy Pets"
+              },
+              "destinee": {
+                "type": "Property",
+                "value": "Happy Pets customer via IPS"
+              },
+              "deliveryAddress": {
+                "type": "Property",
+                "value": {
+                  "addressCountry": "DE",
+                  "addressRegion": "Berlin",
+                  "addressLocality": "Berlin",
+                  "postalCode": "12345",
+                  "streetAddress": "Customer Strasse 23"
+                }
+              },
+              "originAddress": {
+                "type": "Property",
+                "value": {
+                  "addressCountry": "DE",
+                  "addressRegion": "Berlin",
+                  "addressLocality": "Berlin",
+                  "postalCode": "12345",
+                  "streetAddress": "HappyPets Strasse 15"
+                }
+              },
+              "pda": {
+                "type": "Property",
+                "value": "2021-10-03"
+              },
+              "pta": {
+                "type": "Property",
+                "value": "14:00:00"
+              },
+              "eda": {
+                "type": "Property",
+                "value": "2021-10-02"
+              },
+              "eta": {
+                "type": "Property",
+                "value": "14:00:00"
+              },
+              "@context": [
+                "https://schema.lab.fiware.org/ld/context"
+              ]
+            }
+                
+        - name: deliveryorder_happypets002.json
+          data: |
+            {
+              "id": "urn:ngsi-ld:DELIVERYORDER:HAPPYPETS002",
+              "type": "DELIVERYORDER",
+              "issuer": {
+                "type": "Property",
+                "value": "Happy Pets"
+              },
+              "destinee": {
+                "type": "Property",
+                "value": "Happy Pets 2nd customer via IPS"
+              },
+              "deliveryAddress": {
+                "type": "Property",
+                "value": {
+                  "addressCountry": "DE",
+                  "addressRegion": "Hamburg",
+                  "addressLocality": "Hamburg",
+                  "postalCode": "23456",
+                  "streetAddress": "Customer Str. 19"
+                }
+              },
+              "originAddress": {
+                "type": "Property",
+                "value": {
+                  "addressCountry": "DE",
+                  "addressRegion": "Berlin",
+                  "addressLocality": "Berlin",
+                  "postalCode": "12345",
+                  "streetAddress": "HappyPets Strasse 15"
+                }
+              },
+              "pda": {
+                "type": "Property",
+                "value": "2021-11-12"
+              },
+              "pta": {
+                "type": "Property",
+                "value": "11:00:00"
+              },
+              "eda": {
+                "type": "Property",
+                "value": "2021-11-12"
+              },
+              "eta": {
+                "type": "Property",
+                "value": "11:00:00"
+              },
+              "@context": [
+                "https://schema.lab.fiware.org/ld/context"
+              ]
+            }
+
+dsba-pdp:
+  # Enable the deployment of application: dsba-pdp
+  deploymentEnabled: false
+
+  dsba-pdp:
+
+    # DB
+    db:
+      enabled: false
+      migrate:
+        enabled: false
+
+    deployment:
+      # Image
+      image:
+        pullPolicy: Always
+        repository: quay.io/fiware/dsba-pdp
+        tag: 1.0.0
+
+      # Log level
+      logLevel: TRACE
+
+      # iSHARE config
+      ishare:
+        existingSecret: vcwaltid-tls-sec
+
+        clientId: did:web:my-did:did
+        trustedFingerprints:
+          - MYFINGERPRINT
+
+        ar:
+          id: "did:web:my-did:did"
+          delegationPath: "/ar/delegation"
+          tokenPath: "/oauth2/token"
+          url: "https://ar.provider.com"
+
+        trustAnchor:
+          id: "EU.EORI.FIWARESATELLITE"
+          tokenPath: "/token"
+          trustedListPath: "/trusted_list"
+          url: "https://tir.dataspace.com"
+
+      # Verifier
+      trustedVerifiers:
+        - https://verifier.provider.com/.well-known/jwks
+
+      # Provider DID
+      providerId: "did:web:my-did:did"
+
+    # ENVs
+    additionalEnvVars:
+      - name: ISHARE_CERTIFICATE_PATH
+        value: /iShare/tls.crt
+      - name: ISHARE_KEY_PATH
+        value: /iShare/tls.key
+
+postgres:
+  # Enable the deployment of application: postgres
+  deploymentEnabled: true
+
+  postgresql:
+
+    fullnameOverride: postgresql-ips
+
+    auth:
+      # Should use a Secret for PWs on production deployments
+      # Credentials for Keycloak DB
+      username: keycloak
+      password: "dbPassword"
+      enablePostgresUser: true
+
+      # Credentials for postgres admin user
+      postgresPassword: "dbRootPassword"
+
+    # Init DB
+    primary:
+      initdb:
+        scripts:
+          create.sh: |
+            psql postgresql://postgres:${POSTGRES_POSTGRES_PASSWORD}@localhost:5432 -c "CREATE DATABASE keycloak_ips;"
+
+trusted-issuers-list:
+  # Enable the deployment of application: trusted-issuers-list
+  deploymentEnabled: false
+
+  trusted-issuers-list:
+
+    # Image
+    deployment:
+      image:
+        tag: 0.0.3
+
+    # Database config
+    database:
+      persistence: true
+      host: mysql-dsc
+      name: til
+
+      # Should use Secret in production environment
+      username: root
+      password: "<mysql-password>"
+
+vcwaltid:
+  # Enable the deployment of application: vcwaltid
+  deploymentEnabled: false
+
+  # Organisation DID
+  did: did:web:my-did:did
+
+  # Walt-id config
+  vcwaltid:
+
+    # Persistence
+    persistence:
+      enabled: true
+      pvc:
+        size: 1Gi
+
+    # List of templates to be created
+    templates:
+      GaiaXParticipantCredential.json: |
+        {
+          "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://registry.lab.dsba.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/trustframework#"
+          ],
+          "type": [
+            "VerifiableCredential"
+          ],
+          "id": "did:web:raw.githubusercontent.com:egavard:payload-sign:master",
+          "issuer": "did:web:raw.githubusercontent.com:egavard:payload-sign:master",
+          "issuanceDate": "2023-03-21T12:00:00.148Z",
+          "credentialSubject": {
+            "id": "did:web:raw.githubusercontent.com:egavard:payload-sign:master",
+            "type": "gx:LegalParticipant",
+            "gx:legalName": "dsba compliant participant",
+            "gx:legalRegistrationNumber": {
+              "gx:vatID": "MYVATID"
+            },
+            "gx:headquarterAddress": {
+              "gx:countrySubdivisionCode": "BE-BRU"
+            },
+            "gx:legalAddress": {
+              "gx:countrySubdivisionCode": "BE-BRU"
+            },
+            "gx-terms-and-conditions:gaiaxTermsAndConditions": "70c1d713215f95191a11d38fe2341faed27d19e083917bc8732ca4fea4976700"
+          }
+        }
+
+verifier:
+  # Enable the deployment of application: verifier
+  deploymentEnabled: false
+
+  vcverifier:
+
+    deployment:
+
+      # Image
+      image:
+        repository: quay.io/fiware/vcverifier
+        tag: 2.1.0
+        pullPolicy: Always
+
+      # Logging
+      logging:
+        level: DEBUG
+        pathsToSkip:
+          - "/health"
+
+      # Walt-id config
+      ssikit:
+        auditorUrl: http://vcwaltid:7003
+
+      # Verifier config
+      verifier:
+        # URL endpoint of data space trusted issuers registry
+        tirAddress: https://tir.dataspace.com/v3/issuers
+        # DID of organisation
+        did: did:web:my-did:did
+
+      # Config service
+      configRepo:
+        configEndpoint: http://ccs-credentials-config-service:8080/
