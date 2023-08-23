@@ -119,3 +119,10 @@ didConfig:
 
   # x5u for DID web
   x5u: "https://provider.com/certs/tls.crt"
+
+# OpenShift Route config
+route:
+  enabled: false
+  host: my-host.org
+  tls: {}
+  certificate: {}
