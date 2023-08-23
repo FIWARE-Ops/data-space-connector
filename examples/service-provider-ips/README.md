@@ -12,6 +12,9 @@ for domain `*.aws.fiware.io` with ClusterIssuer `letsencrypt-fiware-eks`.
 When using a different Ingress Controller or specific load balancer, make sure to add 
 the necessary annotations.
 
+It is assumed, that the organisation IPS is part of a data space where the trusted participant list 
+can be found at [https://tir.dsba.fiware.dev](https://tir.dsba.fiware.dev). 
+
 After downloading the chart (see [../../README.md#deployment-with-helm](../../README.md#deployment-with-helm)), 
 use the following command:
 ```shell

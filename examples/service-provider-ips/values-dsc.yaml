@@ -771,17 +771,25 @@ vcwaltid:
 
 verifier:
   # Enable the deployment of application: verifier
-  deploymentEnabled: false
+  deploymentEnabled: true
 
   vcverifier:
 
-    deployment:
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - host: ips-verifier.dsba.aws.fiware.io
+          paths:
+            - /
+      tls:
+        - hosts:
+            - ips-verifier.dsba.aws.fiware.io
+          secretName: verifier-ips-dsba-tls
 
-      # Image
-      image:
-        repository: quay.io/fiware/vcverifier
-        tag: 2.1.0
-        pullPolicy: Always
+    deployment:
 
       # Logging
       logging:
@@ -791,18 +799,18 @@ verifier:
 
       # Walt-id config
       ssikit:
-        auditorUrl: http://vcwaltid:7003
+        auditorUrl: http://ips-dsc-vcwaltid:7003
 
       # Verifier config
       verifier:
         # URL endpoint of data space trusted issuers registry
-        tirAddress: https://tir.dataspace.com/v3/issuers
+        tirAddress: https://tir.dsba.fiware.dev/v3/issuers
         # DID of organisation
-        did: did:web:my-did:did
+        did: did:web:ips.dsba.aws.fiware.io:did
 
       # Config service
       configRepo:
-        configEndpoint: http://ccs-credentials-config-service:8080/
+        configEndpoint: http://ips-dsc-credentials-config-service:8080/
 
 
 
