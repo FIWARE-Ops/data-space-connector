@@ -12,7 +12,7 @@ for domain `*.aws.fiware.io` with ClusterIssuer `letsencrypt-fiware-eks`.
 When using a different Ingress Controller or specific load balancer, make sure to add 
 the necessary annotations.
 
-After downloading the chart (see [../../REAME.md#deployment-with-helm](../../REAME.md#deployment-with-helm)), 
+After downloading the chart (see [../../README.md#deployment-with-helm](../../README.md#deployment-with-helm)), 
 use the following command:
 ```shell
 helm install -n ips -f ./values-dsc.yaml ips-dsc <PATH-TO-DSC>/data-space-connector/charts/data-space-connector
