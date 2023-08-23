@@ -1,6 +1,13 @@
 # Organisation DID
 did: did:web:my-did:did
 
+# Networking
+route:
+  enabled: false
+ingress:
+  enabled: false
+  class: nginx
+
 # Walt-id config
 vcwaltid:
 

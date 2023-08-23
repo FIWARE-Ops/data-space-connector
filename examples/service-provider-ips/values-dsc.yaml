@@ -533,6 +533,7 @@ mysql:
     auth:
       # Should use a Secret on production deployments
       rootPassword: "dbPassword"
+      password: "dbPassword"
 
 orion-ld:
   # Enable the deployment of application: orion-ld
@@ -766,11 +767,19 @@ trusted-issuers-list:
 
 vcwaltid:
   # Enable the deployment of application: vcwaltid
-  deploymentEnabled: false
+  deploymentEnabled: true
 
   # Organisation DID
   did: did:web:my-did:did
-
+  ingress:
+    enabled: true
+    host: ips.dsba.aws.fiware.io
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
+    tls:
+      enabled: true
+  route:
+    enabled: false
   # Walt-id config
   vcwaltid:
 
