@@ -621,24 +621,63 @@ postgres:
 
 trusted-issuers-list:
   # Enable the deployment of application: trusted-issuers-list
-  deploymentEnabled: false
+  deploymentEnabled: true
 
   trusted-issuers-list:
 
-    # Image
-    deployment:
-      image:
-        tag: 0.0.3
+    # Ingress
+    ingress:
+      til:
+        enabled: true
+        hosts:
+          - host: til-ips.dsba.aws.fiware.io
+        tls:
+          - hosts:
+              - til-ips.dsba.aws.fiware.io
+            secretName: til-ips-dsba-til-tls
+      tir:
+        enabled: true
+        hosts:
+          - host: tir-ips.dsba.aws.fiware.io
+        tls:
+          - hosts:
+              - tir-ips.dsba.aws.fiware.io
+            secretName: til-ips-dsba-tir-tls
 
     # Database config
     database:
       persistence: true
-      host: mysql-dsc
+      host: mysql-ips
       name: til
 
       # Should use Secret in production environment
       username: root
-      password: "<mysql-password>"
+      password: "dbPassword"
+
+    # Init data
+    initData:
+      initEnabled: true
+      hook: post-install,post-upgrade
+      backoffLimit: 6
+      issuers:
+        - name: mp_create
+          issuer:
+            did: "did:web:marketplace.dsba.fiware.dev:did"
+            credentials:
+              - validFor:
+                  from: "2022-07-21T17:32:28Z"
+                  to: "2040-07-21T17:32:28Z"
+                credentialsType: "ActivationService"
+                claims:
+                  - name: "roles"
+                    allowedValues: 
+                      - - names:
+                          - "CREATE_ISSUER"
+                          target: "did:web:ips.dsba.aws.fiware.io:did"
+              - validFor:
+                  from: "2022-07-21T17:32:28Z"
+                  to: "2040-07-21T17:32:28Z"
+                credentialsType: "VerifiableCredential"
 
 vcwaltid:
   # Enable the deployment of application: vcwaltid
