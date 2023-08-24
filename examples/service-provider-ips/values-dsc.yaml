@@ -117,7 +117,7 @@ credentials-config-service:
 
 dsba-pdp:
   # Enable the deployment of application: dsba-pdp
-  deploymentEnabled: false
+  deploymentEnabled: true
 
   dsba-pdp:
 
@@ -128,41 +128,38 @@ dsba-pdp:
         enabled: false
 
     deployment:
-      # Image
-      image:
-        pullPolicy: Always
-        repository: quay.io/fiware/dsba-pdp
-        tag: 1.0.0
-
       # Log level
-      logLevel: TRACE
+      logLevel: DEBUG
 
       # iSHARE config
       ishare:
-        existingSecret: vcwaltid-tls-sec
+        existingSecret: ips-dsc-vcwaltid-tls-sec
 
-        clientId: did:web:my-did:did
+        clientId: did:web:ips.dsba.aws.fiware.io:did
+
+        # Initial list of fingerprints for trusted CAs. This will be overwritten
+        # after the first update from the trust anchor.
         trustedFingerprints:
-          - MYFINGERPRINT
+          - D2F62092F982CF783D4632BD86FA86C3FBFDB2D8C8A58BC6809163FCF5CD030B
 
         ar:
-          id: "did:web:my-did:did"
+          id: "did:web:ips.dsba.aws.fiware.io:did"
           delegationPath: "/ar/delegation"
           tokenPath: "/oauth2/token"
-          url: "https://ar.provider.com"
+          url: "https://ar-ips.dsba.aws.fiware.io"
 
         trustAnchor:
           id: "EU.EORI.FIWARESATELLITE"
           tokenPath: "/token"
           trustedListPath: "/trusted_list"
-          url: "https://tir.dataspace.com"
+          url: "https://tir.dsba.fiware.dev"
 
       # Verifier
       trustedVerifiers:
-        - https://verifier.provider.com/.well-known/jwks
+        - https://ips-verifier.dsba.aws.fiware.io/.well-known/jwks
 
       # Provider DID
-      providerId: "did:web:my-did:did"
+      providerId: "did:web:ips.dsba.aws.fiware.io:did"
 
     # ENVs
     additionalEnvVars:
@@ -170,95 +167,6 @@ dsba-pdp:
         value: /iShare/tls.crt
       - name: ISHARE_KEY_PATH
         value: /iShare/tls.key
-
-
-keyrock:
-  # Enable the deployment of application: keyrock
-  deploymentEnabled: false
-
-  keyrock:
-    fullnameOverride: keyrock-dsc
-
-    # Image
-    statefulset:
-      image:
-        repository: quay.io/wi_stefan/keyrock
-        tag: sn-fix
-        pullPolicy: Always
-
-    # DB config
-    db:
-      user: root
-      password: "<mysql-password>"
-      host: mysql-dsc
-
-    # Admin user to be created
-    admin:
-      user: admin
-      password: "<keyrock-password>"
-      email: admin@fiware.org
-
-    # External hostname of Keyrock
-    host: https://keyrock.provider.com
-
-    ## Theme configuration for Keyrock
-    theme:
-      ## -- Enable theme
-      enabled: false
-
-    ## Configuration of Authorisation Registry (AR)
-    authorisationRegistry:
-      # -- Enable usage of authorisation registry
-      enabled: true
-      # -- Identifier (EORI) of AR
-      identifier: "did:web:my-did:did"
-      # -- URL of AR
-      url: "internal"
-
-    ## Configuration of iSHARE Satellite
-    satellite:
-      # -- Enable usage of satellite
-      enabled: true
-      # -- Identifier (EORI) of satellite
-      identifier: "EU.EORI.FIWARESATELLITE"
-      # -- URL of satellite
-      url: "https://tir.dataspace.com"
-      # -- Token endpoint of satellite
-      tokenEndpoint: "https://https://tir.dataspace.com/token"
-      # -- Parties endpoint of satellite
-      partiesEndpoint: "https://https://tir.dataspace.com/parties"
-
-    ## -- Configuration of local key and certificate for validation and generation of tokens
-    token:
-      # -- Enable storage of local key and certificate
-      enabled: false
-
-    # ENV variables for Keyrock
-    additionalEnvVars:
-      - name: IDM_TITLE
-        value: "dsba AR"
-      - name: IDM_DEBUG
-        value: "true"
-      - name: DEBUG
-        value: "*"
-      - name: IDM_DB_NAME
-        value: ar_idm
-      - name: IDM_DB_SEED
-        value: "true"
-      - name: IDM_SERVER_MAX_HEADER_SIZE
-        value: "32768"
-      - name: IDM_PR_CLIENT_ID
-        value: "did:web:my-did:did"
-      - name: IDM_PR_CLIENT_KEY
-        valueFrom:
-            secretKeyRef:
-              name: vcwaltid-tls-sec
-              key: tls.key
-      - name: IDM_PR_CLIENT_CRT
-        valueFrom:
-            secretKeyRef:
-              name: vcwaltid-tls-sec
-              key: tls.crt
 
 kong:
   # Enable the deployment of application: kong
@@ -538,62 +446,6 @@ orion-ld:
               ]
             }
 
-dsba-pdp:
-  # Enable the deployment of application: dsba-pdp
-  deploymentEnabled: false
-
-  dsba-pdp:
-
-    # DB
-    db:
-      enabled: false
-      migrate:
-        enabled: false
-
-    deployment:
-      # Image
-      image:
-        pullPolicy: Always
-        repository: quay.io/fiware/dsba-pdp
-        tag: 1.0.0
-
-      # Log level
-      logLevel: TRACE
-
-      # iSHARE config
-      ishare:
-        existingSecret: vcwaltid-tls-sec
-
-        clientId: did:web:my-did:did
-        trustedFingerprints:
-          - MYFINGERPRINT
-
-        ar:
-          id: "did:web:my-did:did"
-          delegationPath: "/ar/delegation"
-          tokenPath: "/oauth2/token"
-          url: "https://ar.provider.com"
-
-        trustAnchor:
-          id: "EU.EORI.FIWARESATELLITE"
-          tokenPath: "/token"
-          trustedListPath: "/trusted_list"
-          url: "https://tir.dataspace.com"
-
-      # Verifier
-      trustedVerifiers:
-        - https://verifier.provider.com/.well-known/jwks
-
-      # Provider DID
-      providerId: "did:web:my-did:did"
-
-    # ENVs
-    additionalEnvVars:
-      - name: ISHARE_CERTIFICATE_PATH
-        value: /iShare/tls.crt
-      - name: ISHARE_KEY_PATH
-        value: /iShare/tls.key
-
 postgres:
   # Enable the deployment of application: postgres
   deploymentEnabled: true
@@ -629,6 +481,9 @@ trusted-issuers-list:
     ingress:
       til:
         enabled: true
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
+          kubernetes.io/ingress.class: nginx
         hosts:
           - host: til-ips.dsba.aws.fiware.io
         tls:
@@ -637,6 +492,9 @@ trusted-issuers-list:
             secretName: til-ips-dsba-til-tls
       tir:
         enabled: true
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
+          kubernetes.io/ingress.class: nginx
         hosts:
           - host: tir-ips.dsba.aws.fiware.io
         tls:
@@ -657,7 +515,7 @@ trusted-issuers-list:
     # Init data
     initData:
       initEnabled: true
-      hook: post-install,post-upgrade
+      hook: post-install
       backoffLimit: 6
       issuers:
         - name: mp_create
@@ -851,6 +709,216 @@ verifier:
       configRepo:
         configEndpoint: http://ips-dsc-credentials-config-service:8080/
 
+
+keyrock:
+  # Enable the deployment of application: keyrock
+  deploymentEnabled: true
+
+  keyrock:
+    fullnameOverride: keyrock-ips
+
+    # DB config
+    db:
+      user: root
+      password: "dbPassword"
+      host: mysql-ips
+
+    # Admin user to be created
+    admin:
+      user: admin
+      password: "admin"
+      email: admin@fiware.org
+
+    # External hostname of Keyrock
+    host: https://ar-ips.dsba.aws.fiware.io
+
+    # Ingress
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - host: ar-ips.dsba.aws.fiware.io
+          paths:
+            - /
+      tls:
+        - hosts:
+            - ar-ips.dsba.aws.fiware.io
+          secretName: ar-ips-dsba-tls
+
+    ## Theme configuration for Keyrock
+    theme:
+      ## -- Enable theme
+      enabled: false
+
+    ## Configuration of Authorisation Registry (AR)
+    authorisationRegistry:
+      # -- Enable usage of authorisation registry
+      enabled: true
+      # -- Identifier (EORI) of AR
+      identifier: "did:web:ips.dsba.aws.fiware.io:did"
+      # -- URL of AR
+      url: "internal"
+
+    ## Configuration of iSHARE Satellite
+    satellite:
+      # -- Enable usage of satellite
+      enabled: true
+      # -- Identifier (EORI) of satellite
+      identifier: "EU.EORI.FIWARESATELLITE"
+      # -- URL of satellite
+      url: "https://tir.dsba.fiware.dev"
+      # -- Token endpoint of satellite
+      tokenEndpoint: "https://tir.dsba.fiware.dev/token"
+      # -- Parties endpoint of satellite
+      partiesEndpoint: "https://tir.dsba.fiware.dev/parties"
+
+    ## -- Configuration of local key and certificate for validation and generation of tokens
+    token:
+      # -- Enable storage of local key and certificate
+      enabled: false
+
+    # ENV variables for Keyrock
+    additionalEnvVars:
+      - name: IDM_TITLE
+        value: "IPS AR"
+      - name: IDM_DEBUG
+        value: "true"
+      - name: DEBUG
+        value: "*"
+      - name: IDM_DB_NAME
+        value: ar_idm_ips
+      - name: IDM_DB_SEED
+        value: "true"
+      - name: IDM_SERVER_MAX_HEADER_SIZE
+        value: "32768"
+      - name: IDM_PR_CLIENT_ID
+        value: "did:web:ips.dsba.aws.fiware.io:did"
+      - name: IDM_PR_CLIENT_KEY
+        valueFrom:
+            secretKeyRef:
+              name: ips-dsc-vcwaltid-tls-sec
+              key: tls.key
+      - name: IDM_PR_CLIENT_CRT
+        valueFrom:
+            secretKeyRef:
+              name: ips-dsc-vcwaltid-tls-sec
+              key: tls.crt
+
+    # Init data
+    initData:
+      initEnabled: true
+      hook: post-install
+      backoffLimit: 6
+      command: 
+        - /bin/sh
+        - /scripts/create.sh
+      volumeMount:
+        name: scripts
+        mountPath: /scripts
+      env:
+        - name: DB_PASSWORD
+          value: "dbPassword"
+      scriptData:
+        create.sh: |-
+          mysql -h mysql-ips -u root -p$DB_PASSWORD ar_idm_ips <<EOF
+
+          -- Static objects
+          SET @rules := JSON_ARRAY(
+            JSON_OBJECT(
+              "effect", "Permit"
+            )
+          );
+
+          SET @subjectGold := "GOLD_CUSTOMER";
+          SET @subjectStandard := "STANDARD_CUSTOMER";
+
+          -- Policies Gold
+          SET @policiesGold := JSON_ARRAY(
+            JSON_OBJECT(
+              "rules", CAST(@rules as JSON),
+              "target", JSON_OBJECT(
+                "actions", JSON_ARRAY("PATCH"),
+                "resource", JSON_OBJECT(
+                  "type", "DELIVERYORDER",
+                  "attributes", JSON_ARRAY("pta","pda"),
+                  "identifiers", JSON_ARRAY("*")
+                )
+              )
+            ),
+            JSON_OBJECT(
+              "rules", CAST(@rules as JSON),
+              "target", JSON_OBJECT(
+                "actions", JSON_ARRAY("GET"),
+                "resource", JSON_OBJECT(
+                  "type", "DELIVERYORDER",
+                  "attributes", JSON_ARRAY("*"),
+                  "identifiers", JSON_ARRAY("*")
+                )
+              )
+            )
+          );
+
+          -- Policies Standard
+          SET @policiesStandard := JSON_ARRAY(
+            JSON_OBJECT(
+              "rules", CAST(@rules as JSON),
+              "target", JSON_OBJECT(
+                "actions", JSON_ARRAY("GET"),
+                "resource", JSON_OBJECT(
+                  "type", "DELIVERYORDER",
+                  "attributes", JSON_ARRAY("*"),
+                  "identifiers", JSON_ARRAY("*")
+                )
+              )
+            )
+          );
+
+          -- Insert Delegation Evidence Gold VC
+          SET @delegationGoldVC := JSON_OBJECT(
+            "target", JSON_OBJECT(
+              "accessSubject", @subjectGold
+            ),
+            "notBefore", 1616583866,
+            "notOnOrAfter", 1735817171,
+            "policyIssuer", "did:web:ips.dsba.aws.fiware.io:did",
+            "policySets", JSON_ARRAY(
+              JSON_OBJECT(
+                "target", JSON_OBJECT(
+                  "environment", JSON_OBJECT(
+                    "licenses", JSON_ARRAY("ISHARE.0001")
+                  )
+                ),
+                "policies", CAST(@policiesGold as JSON)
+              )
+            )
+          );
+          INSERT IGNORE INTO delegation_evidence (policy_issuer, access_subject,policy) VALUES ("did:web:ips.dsba.aws.fiware.io:did", @subjectGold, @delegationGoldVC);
+
+          -- Insert Delegation Evidence Standard VC
+          SET @delegationStandardVC := JSON_OBJECT(
+            "target", JSON_OBJECT(
+              "accessSubject", @subjectStandard
+            ),
+            "notBefore", 1616583866,
+            "notOnOrAfter", 1735817171,
+            "policyIssuer", "did:web:ips.dsba.aws.fiware.io:did",
+            "policySets", JSON_ARRAY(
+              JSON_OBJECT(
+                "target", JSON_OBJECT(
+                  "environment", JSON_OBJECT(
+                    "licenses", JSON_ARRAY("ISHARE.0001")
+                  )
+                ),
+                "policies", CAST(@policiesStandard as JSON)
+              )
+            )
+          );
+          INSERT IGNORE INTO delegation_evidence (policy_issuer, access_subject,policy) VALUES ("did:web:ips.dsba.aws.fiware.io:did", @subjectStandard, @delegationStandardVC);
+
+          COMMIT;
+          EOF
 
 
 keycloak:
