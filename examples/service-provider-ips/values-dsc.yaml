@@ -2,23 +2,15 @@
 argoApplications: false
 
 
-#Sub-Chart configuration configuration
+#Sub-Chart configuration
 
 activation-service:
   # Enable the deployment of application: activation-service
-  deploymentEnabled: false
+  deploymentEnabled: true
 
   activation-service:
-    deployment:
-      image:
-        repository: quay.io/i4trust/activation-service
-        tag: 2.2.1
-        pullPolicy: IfNotPresent
-
     ## Configuration of activation service execution
     activationService:
-      # -- Listen port
-      port: 8080
       # -- Number of (gunicorn) workers that should be created
       workers: 1
       # -- Maximum header size in bytes
@@ -26,24 +18,42 @@ activation-service:
       # -- Log Level
       logLevel: "debug"
 
+    ## Add Ingress or OpenShift Route
+    route:
+      enabled: false
+
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - host: ips-as.dsba.aws.fiware.io
+          paths:
+            - /
+      tls:
+        - hosts:
+            - ips-as.dsba.aws.fiware.io
+          secretName: as-ips-dsba-tls
+
     ## CCS config
     ccs:
-      endpoint: "http://ccs-credentials-config-service:8080/"
-      id: "my-activation-service"
+      endpoint: "http://ips-dsc-credentials-config-service:8080/"
+      id: "ips-activation-service"
       credentials:
         - type: "VerifiableCredential"
           trustedParticipantsLists: [
-            "https://tir.dataspace.com"
+            "https://tir.dsba.fiware.dev"
           ]
           trustedIssuersLists: [
-            "http://til-trusted-issuers-list:8080"
+            "http://ips-dsc-trusted-issuers-list:8080"
           ]
-        - type: "ActivationService"
+        - type: "IpsActivationService"
           trustedParticipantsLists: [
-            "https://tir.dataspace.com"
+            "https://tir.dsba.fiware.dev"
           ]
           trustedIssuersLists: [
-            "http://til-trusted-issuers-list:8080"
+            "http://ips-dsc-trusted-issuers-list:8080"
           ]
 
     ## AS config
@@ -60,36 +70,20 @@ activation-service:
 
       # Configuration for additional API keys to protect certain endpoints
       apikeys:
-        # Config for iSHARE flow
-        ishare:
-          # Enable for /token endpoint (API key will be required)
-          enabledToken: false
-          # Enable for /createpolicy endpoint (API key will be required)
-          enabledCreatePolicy: false
         # Config for Trusted-Issuers-List flow
         issuer:
           # Header name
           headerName: "AS-API-KEY"
           # API key (auto-generated if left empty)
-          apiKey: ""
+          apiKey: "77ab4a67-ea3c-4348-98bd-2e9f0304bfb8"
           # Enable for /issuer endpoint (API key will be required)
           enabledIssuer: true
 
-      ar:
-        # Endpoint for token request
-        token: "https://ar.isharetest.net/connect/token"
-        # Endpoint for create policy requests
-        policy: "https://ar.isharetest.net/policy"
-        # Endpoint for delegation requests
-        delegation: "https://ar.isharetest.net/delegation"
-        # EORI of AR
-        id: "EU.EORI.DEPROVIDER"
-
       issuer:
-        clientId: "my-activation-service"
-        providerId: "did:web:my-did:did"
-        tilUri: "http://til-trusted-issuers-list:8080"
-        verifierUri: "https://verifier.provider.com"
+        clientId: "ips-activation-service"
+        providerId: "did:web:ips.dsba.aws.fiware.io:did"
+        tilUri: "http://ips-dsc-trusted-issuers-list:8080"
+        verifierUri: "https://ips-verifier.dsba.aws.fiware.io"
         samedevicePath: "/api/v1/samedevice"
         jwksPath: "/.well-known/jwks"
         algorithms:
@@ -483,7 +477,7 @@ trusted-issuers-list:
               - validFor:
                   from: "2022-07-21T17:32:28Z"
                   to: "2040-07-21T17:32:28Z"
-                credentialsType: "ActivationService"
+                credentialsType: "IpsActivationService"
                 claims:
                   - name: "roles"
                     allowedValues: 
