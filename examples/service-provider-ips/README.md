@@ -5,7 +5,7 @@ Example deployment of a packet delivery service provider named IPS.
 
 ## Prerequisites
 
-Assuming existing namespace `ips`, where the connector will be dployed. 
+Assuming existing namespace `ips`, where the connector will be deployed. 
 
 Assuming [nginx-ingress](https://docs.nginx.com/nginx-ingress-controller/) as Ingress Controller 
 and [cert-manager](https://cert-manager.io/) being configured to issue certificates 
