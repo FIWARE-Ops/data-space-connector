@@ -9,4 +9,4 @@ appVersion: "2.0.3"
 dependencies:
   - name: vcverifier
     version: 1.0.9
-    repository: https://i4Trust.github.io/helm-charts
+    repository: https://i4trust.github.io/helm-charts

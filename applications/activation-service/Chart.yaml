@@ -9,4 +9,4 @@ appVersion: "2.2.0"
 dependencies:
   - name: activation-service
     version: 2.2.1
-    repository: https://i4Trust.github.io/helm-charts
+    repository: https://i4trust.github.io/helm-charts
