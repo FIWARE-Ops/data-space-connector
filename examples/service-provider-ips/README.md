@@ -3,17 +3,24 @@
 Example deployment of a packet delivery service provider named IPS. 
 
 
-## Deployment with helm
+## Prerequisites
 
-Assuming existing namespace `ips`. 
+Assuming existing namespace `ips`, where the connector will be dployed. 
 
-Assuming nginx-ingress as Ingress Controller and cert-manager being configured to issue certificates 
+Assuming [nginx-ingress](https://docs.nginx.com/nginx-ingress-controller/) as Ingress Controller 
+and [cert-manager](https://cert-manager.io/) being configured to issue certificates 
 for domain `*.aws.fiware.io` with ClusterIssuer `letsencrypt-fiware-eks`.  
 When using a different Ingress Controller or specific load balancer, make sure to add 
-the necessary annotations.
+the necessary annotations.  
+Also change the domains and hostnames according to your DNS config.
 
 It is assumed, that the organisation IPS is part of a data space where the trusted participant list 
-can be found at [https://tir.dsba.fiware.dev](https://tir.dsba.fiware.dev). 
+can be found at [https://tir.dsba.fiware.dev](https://tir.dsba.fiware.dev).  
+When operating a different data space with different trusted participant list, change this 
+accordingly.
+
+
+## Deployment with helm
 
 After downloading the chart (see [../../README.md#deployment-with-helm](../../README.md#deployment-with-helm)), 
 use the following command:
@@ -21,7 +28,7 @@ use the following command:
 helm install -n ips -f ./values-dsc.yaml ips-dsc <PATH-TO-DSC>/data-space-connector/charts/data-space-connector
 ```
 
-Or install using the remote chart:
+Alternatively, install using the remote chart:
 ```shell
 helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 helm install -n ips -f ./values-dsc.yaml ips-dsc dsc/data-space-connector
