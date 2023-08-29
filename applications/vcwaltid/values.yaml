@@ -1,14 +1,21 @@
 # Organisation DID
 did: did:web:my-did:did
 
+# Networking
+route:
+  enabled: false
+ingress:
+  enabled: false
+  class: nginx
+
 # Walt-id config
 vcwaltid:
 
   # Image
   deployment:
-    image:  
-      repository: quay.io/fiware/waltid
-      tag: 1.14.1-SNAPSHOT
+    image:
+      repository: waltid/ssikit
+      tag: 1.2306281817.jwt-sign-rsa
       pullPolicy: Always
 
   # API config

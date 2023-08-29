@@ -92,9 +92,9 @@ applications:
     helm_values:
     - values.yaml
 
-  - name: pdp
+  - name: dsba-pdp
     enabled: true
-    source_path: applications/pdp
+    source_path: applications/dsba-pdp
     source_ref: *branch
     destination: *destination
     helm_values:

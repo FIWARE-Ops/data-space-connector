@@ -40,3 +40,9 @@ The chart is [generated](generate.sh) on each merge to master from the current a
     version=0.0.1
     wget https://github.com/FIWARE-Ops/data-space-connector/releases/download/data-space-connector-$version/data-space-connector-$version.tgz | && tar -xzvf data-space-connector-$version.tgz
 ```
+
+
+### Examples
+
+Different examples for the deployment of the FIWARE Data Space connector can be found 
+under [./examples](./examples).

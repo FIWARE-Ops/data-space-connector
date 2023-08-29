@@ -5,6 +5,18 @@ trusted-issuers-list:
     image:  
       tag: 0.0.3
 
+  # Configure an Ingress or OpenShift Route
+  ingress:
+    til:
+      enabled: false
+    tir:
+      enabled: false
+  route:
+    til:
+      enabled: false
+    tir:
+      enabled: false
+      
   # Database config
   database:
     persistence: true
