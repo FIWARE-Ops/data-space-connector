@@ -3,7 +3,7 @@
 Different examples for the deployment of the FIWARE Data Space Connector, as well as the integration with 
 other frameworks.
 
-<contents>
+<details>
 <summary><strong>Contents</strong></summary>
 
 - [Deployment of service providers](#deployment-of-service-providers)
@@ -11,7 +11,7 @@ other frameworks.
   - [Packet Delivery Company (ArgoCD)](#packet-delivery-company-argocd)
 - [Integration with AWS Smart Territory Framework](#integration-with-aws-smart-territory-framework)
 
-</contents>
+</details>
 
 
 ## Deployment of service providers
