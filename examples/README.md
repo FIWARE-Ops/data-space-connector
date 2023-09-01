@@ -44,14 +44,14 @@ The configuration can be found at the
 
 
 
-## Integration with AWS Smart Territory Framework
+## Integration with AWS Garnet Framework (formerly AWS Smart Territory Framework)
 
 This is an example of a data service provider that is integrated with the 
-[AWS Smart Territory Framework (STF)](https://github.com/aws-samples/aws-stf). 
+[AWS Garnet Framwork (formerly AWS STF)](https://github.com/aws-samples/aws-stf). 
 
 In general, this example deploys a data service provider based on the Data Space Connector, 
 but integrating the FIWARE Context Broker from the STF.
 
 More information can be found here:
-* [./aws-smart-territory-framework](./aws-smart-territory-framework)
+* [./aws-garnet](./aws-garnet)
 
