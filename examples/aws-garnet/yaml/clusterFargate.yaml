@@ -1,0 +1,13 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: fiware-data-space-connector-fargate-cluster
+  region: eu-west-1
+  
+fargateProfiles:
+  - name: fargateprofile
+    selectors:
+      - namespace: fiware-dsc
+        labels:
+          app: data-space-connector
