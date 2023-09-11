@@ -36,9 +36,85 @@ In this case, the FIWARE Context Broker will be hosted by a pod in the Kubernete
 ## (OPTIONAL) AWS EKS Cluster Creation
 If the creation of a dedicated Kubernetes cluster is considered for the deployment of the FIWARE Data Spaces Connector, it is recommended that users follow the instructions to create a new Amazon EKS Cluster available in the [official Amazon EKS Immersion Workshop](https://catalog.workshops.aws/eks-immersionday/en-US/introduction#confirm-eks-setup)
 
-## FIWARE Data Space Connector deployment on AWS EKS using Helm
-
 ### AWS EKS Cluster Setup with Fargate Profile
+
+* Assign environment variables to choose the deployment parameters
+```shell
+export AWS_REGION=eu-west-1
+export ekscluster_name="fiware-dsc-cluster"
+```
+
+* Create the VPC to host the Amazon EKS cluster on your AWS Account - update the `eks-vpc-3az.yaml` file to select the desired region for your deployment
+
+```shell
+aws cloudformation deploy --stack-name "eks-vpc" --template-file "./yaml/eks-vpc-3az.yaml" --capabilities CAPABILITY_NAMED_IAM
+```
+
+* Store the VPC ID in an environment variable
+
+```shell
+export vpc_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=eks-vpc | jq -r '.Vpcs[].VpcId')
+echo $vpc_ID
+```
+
+*  Export the Subnet ID, CIDR, and Subnet Name to a text file for tracking
+
+```shell
+aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)'
+echo $vpc_ID > vpc_subnet.txt
+aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' >> vpc_subnet.txt
+cat vpc_subnet.txt
+```
+
+* Store VPC ID, Subnet IDs as environment variables that will be used on next steps
+
+```shell
+export PublicSubnet01=$(aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' | awk '/eks-vpc-PublicSubnet01/{print $1}')
+export PublicSubnet02=$(aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' | awk '/eks-vpc-PublicSubnet02/{print $1}')
+export PublicSubnet03=$(aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' | awk '/eks-vpc-PublicSubnet03/{print $1}')
+export PrivateSubnet01=$(aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' | awk '/eks-vpc-PrivateSubnet01/{print $1}')
+export PrivateSubnet02=$(aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' | awk '/eks-vpc-PrivateSubnet02/{print $1}')
+export PrivateSubnet03=$(aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' | awk '/eks-vpc-PrivateSubnet03/{print $1}')
+echo "export vpc_ID=${vpc_ID}" | tee -a ~/.bash_profile
+echo "export PublicSubnet01=${PublicSubnet01}" | tee -a ~/.bash_profile
+echo "export PublicSubnet02=${PublicSubnet02}" | tee -a ~/.bash_profile
+echo "export PublicSubnet03=${PublicSubnet03}" | tee -a ~/.bash_profile
+echo "export PrivateSubnet01=${PrivateSubnet01}" | tee -a ~/.bash_profile
+echo "export PrivateSubnet02=${PrivateSubnet02}" | tee -a ~/.bash_profile
+echo "export PrivateSubnet03=${PrivateSubnet03}" | tee -a ~/.bash_profile
+source ~/.bash_profile
+```
+
+* Use the provided script `eks-cluster-fargateProfiler.sh` to populate your resources IDs to instantiate the Amazon EKS Cluster template 
+
+```shell
+chmod +x ./scripts/eks-cluster-fargateProfiler.sh
+./scripts/eks-cluster-fargateProfiler.sh
+```
+
+* Create the Amazon EKS Cluster with Fargate Profile using `eksctl`
+
+```shell
+eksctl create cluster --config-file=./yaml/eks-cluster-3az.yaml
+```
+
+* Create an IAM Identity Mapping to access your Amazon EKS cluster metadata using the AWS Console
+
+```shell
+eksctl create iamidentitymapping --cluster fiware-dsc-cluster --arn arn:aws:iam::<YOUR-AWS-ACCOUNT_ID>:role/<YOUR-AWS-ROLE-FOR-ACCESSING-CONSOLE> --group system:masters --username admin
+```
+
+* Check if your cluster is running properly once the Amazon CloudFormation Stack creation is complete
+
+```shell
+kubectl get svc
+```
+
+* Configuring OIDC ID Provider(IdP) to EKS cluster allows you to use AWS IAM roles for Kubernetes service accounts, and this requires an IAM OIDC provider in the cluster. Let's run the command below to integrate OIDC into the cluster.
+
+```shell 
+eksctl utils associate-iam-oidc-provider --region ${AWS_REGION} --cluster fiware-dsc-cluster --approve
+```
 
 ### IPS Service Provider Deployment in Amazon EKS 
 This section covers the setup of the prerequisites of the IPS Service Provider examples of this repository, available in [this reference](../service-provider-ips/README.md).
