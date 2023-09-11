@@ -116,60 +116,54 @@ kubectl get svc
 eksctl utils associate-iam-oidc-provider --region ${AWS_REGION} --cluster fiware-dsc-cluster --approve
 ```
 
-### IPS Service Provider Deployment in Amazon EKS 
+### (OPTIONAL) Install [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html) add-on to manage ingress configuration
+AWS Load Balancer Controller is a Kubernetes add-on that manages AWS Elastic Load Balancers(ELB) used by Kubernetes cluster. 
+This controller provides:
+
+* Provision new AWS ALB when Kubernetes Ingress is created. 
+* Provision new AWS NLB when Kubernetes LoadBalancer is created.
+
+It is recommended to follow the official AWS documentation to install the AWS Load Balancer Controller add-on to control ingress. The step-by-step procedure is available in [this link](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
+
+### nginx Ingress Controller Configuration 
+In AWS, we use a Network load balancer (NLB) to expose the Ingress-Nginx Controller behind a Service of ```Type=LoadBalancer```. It is advised that the [official Installation Guide is followed for the next steps](https://kubernetes.github.io/ingress-nginx/deploy/#aws)
+A short version of the procedure is reproduced below for a quick setup: 
+
+* Create an AWS IAM Policy for the Ingress Controller using the provided file `./policies/aws-lbc-iam_policy.json`. The JSON file can also be found [here](https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json)
+
+```shell
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://./policies/aws-lbc-iam_policy.json
+```
+
+* Create an IAM Role and ServiceAccount for the AWS Load Balancer controller
+
+```shell
+eksctl create iamserviceaccount --cluster=fiware-dsc-cluster --namespace=kube-system --name=ingress-nginx-controller --attach-policy-arn=arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --region ${AWS_REGION} --approve
+```
+
+* Deploy the Kubernetes Service for the nginx Ingress Controller on your cluster using the provided file `./yaml/nginx-ingress-controller.yaml` . The default deployment file is also available in [this link](https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/nlb-with-tls-termination/deploy.yaml)
+
+```shell
+kubectl apply -n kube-system -f ./yaml/nginx-ingress-controller.yaml
+```
+
+## IPS Service Provider Deployment in Amazon EKS 
 This section covers the setup of the prerequisites of the IPS Service Provider examples of this repository, available in [this reference](../service-provider-ips/README.md).
 
-#### IPS Kubernetes namespace creation 
+* IPS Kubernetes namespace creation 
 
 ```shell
 kubectl create namespace ips
 ```
 
-#### nginx Ingress Controller Configuration 
-<!-- Assuming [nginx-ingress](https://docs.nginx.com/nginx-ingress-controller/) as Ingress Controller -->
-
-In AWS, we use a Network load balancer (NLB) to expose the Ingress-Nginx Controller behind a Service of ```Type=LoadBalancer```. It is advised that the [official Installation Guide is followed for the next steps](https://kubernetes.github.io/ingress-nginx/deploy/#aws)
-
-The provided templates illustrate the setup for legacy in-tree service load balancer for AWS NLB. AWS provides the documentation on how to use Network load balancing on Amazon EKS with AWS Load Balancer Controller.
-Network Load Balancer (NLB)
+* Add FIWARE Data Space Connector Remote repository
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/deploy.yaml
+helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 ```
 
-TLS termination in AWS Load Balancer (NLB)
-
-By default, TLS is terminated in the ingress controller. But it is also possible to terminate TLS in the Load Balancer. This section explains how to do that on AWS using an NLB.
-
-* Download the deploy.yaml template
+* Install the Helm Chart using the provided file `./yaml/values-dsc-awl-load-balancer-controller.yaml`
 
 ```shell
-wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/nlb-with-tls-termination/deploy.yaml
+helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller.yaml ips-dsc dsc/data-space-connector
 ```
-
-* Edit the file and change the VPC CIDR in use for the Kubernetes cluster:
-
-```shell
-proxy-real-ip-cidr: XXX.XXX.XXX/XX
-```
-
-##### cert-manager Certificate Manager Configuration
-<!-- and [cert-manager](https://cert-manager.io/) being configured to issue certificates 
-for domain `*.aws.fiware.io` with ClusterIssuer `letsencrypt-fiware-eks`.  
-When using a different Ingress Controller or specific load balancer, make sure to add 
-the necessary annotations.  
-Also change the domains and hostnames according to your DNS config.
--->
-
-Change the AWS Certificate Manager (ACM) ID as well:
-
-```json
-arn:aws:acm:<YOUR-CLUSTER-AWS-REGION>:XXXXXXXX:certificate/XXXXXX-XXXXXXX-XXXXXXX-XXXXXXXX
-```
-
-Deploy the manifest:
-
-```shell
-kubectl apply -f deploy.yaml
-```
-
