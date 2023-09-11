@@ -2,8 +2,8 @@ import { Aws, CfnOutput, NestedStack, NestedStackProps } from "aws-cdk-lib"
 import { Construct } from "constructs"
 import { GarnetSecret } from "../garnet-constructs/secret";
 import { GarnetNetworking } from "../garnet-constructs/networking";
-import { GarnetOrionDatabase } from "./database";
-import { GarnetOrionFargate } from "./fargate";
+//import { GarnetOrionDatabase } from "./database";
+//import { GarnetOrionFargate } from "./fargate";
 import { Parameters } from "../../../parameters";
 import { Vpc } from "aws-cdk-lib/aws-ec2";
 import { GarnetApiGateway } from "../garnet-constructs/apigateway";

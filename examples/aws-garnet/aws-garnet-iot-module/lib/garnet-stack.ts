@@ -1,6 +1,6 @@
 import { CfnElement, CfnOutput, Names, Stack, StackProps } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import { GarnetScorpio } from './stacks/garnet-scorpio/garnet-scorpio'
+//import { GarnetScorpio } from './stacks/garnet-scorpio/garnet-scorpio'
 import { GarnetIotStack } from './stacks/garnet-iot/garnet-iot-stack'
 import { Parameters } from '../parameters'
 import { GarnetOrion } from './stacks/garnet-orion/garnet-orion'
@@ -26,13 +26,13 @@ export class GarnetStack extends Stack {
 
     let garnet_broker_stack: GarnetOrion
 
-    garnet_broker_stack = new GarnetOrion(this, 'OrionLdBroker', {
+    garnet_broker_stack = new GarnetOrion(this, 'ContextBrokerProxy', {
       vpc: garnet_constructs.vpc, 
       secret: garnet_constructs.secret
     })
     
     const garnet_iot_stack  = new GarnetIotStack(this, 'GarnetIoT', {
-      dns_context_broker: garnet_broker_stack.dns_context_broker, 
+      dns_context_broker: Parameters.amazon_eks_cluster_load_balancer_dns,//garnet_broker_stack.dns_context_broker, 
       vpc: garnet_constructs.vpc, 
       api_ref: garnet_broker_stack.api_ref,
       bucket_name: garnet_constructs.bucket_name

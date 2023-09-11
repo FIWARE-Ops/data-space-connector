@@ -11,8 +11,8 @@ enum Broker {
 export const Parameters = {
     
     // FIWARE DATA SPACE CONNECTOR PARAMETERS
-    amazon_eks_cluster_load_balancer_dns: "",
-    amazon_eks_cluster_load_balancer_listener_arn: "",
+    amazon_eks_cluster_load_balancer_dns: "k8s-kubesyst-ingressn-XXXXXXXX.elb.eu-west-1.amazonaws.com", // REPLACE WITH YOUR CLUSTER LOAD BALANCER DNS
+    amazon_eks_cluster_load_balancer_listener_arn: "arn:aws:elasticloadbalancing:eu-west-1:XXXXXXXXX:listener/net/k8s-kubesyst-ingressn-XXXXXXXXXX/XXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXX",
     
     // GARNET PARAMETERS
     aws_region: "eu-west-1", // see regions in which you can deploy Garnet: https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vpc-links.html#http-api-vpc-link-availability

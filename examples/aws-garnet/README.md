@@ -179,6 +179,10 @@ Edit the file including the respective strings referencing your Load Balancer re
 Then, deploy the CDK stack using the following commands:
 
 ```shell
+cd aws-garnet-iot-module
+```
+
+```shell
 npm install
 ```
 
