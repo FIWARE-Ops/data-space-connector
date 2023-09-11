@@ -165,6 +165,31 @@ helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller.yaml ips-dsc dsc/data-space-connector
 ```
 
+### Deployment of AWS Garnet Framework IoT Module
+An AWS CDK project modified from the AWS Garnet Framwork main project is available in [this repository](./aws-garnet-iot-module/). The project was modified so ONLY the AWS Garnet Framwrork IoT Module is deployed once the CDK stacks are deployed. To integrate this module to the Context Broker deployed in the Amazon EKS Cluster, 2 main parameters must be set in the `./aws-garnet-iot-module/parameters.ts` file :
+
+```shell
+    // FIWARE DATA SPACE CONNECTOR PARAMETERS
+    amazon_eks_cluster_load_balancer_dns: "",
+    amazon_eks_cluster_load_balancer_listener_arn: "",
+```
+
+Edit the file including the respective strings referencing your Load Balancer resource for the Data Space Connector deployed in the Amazon EKS Cluster in your AWS Account.
+
+Then, deploy the CDK stack using the following commands:
+
+```shell
+npm install
+```
+
+```shell
+cdk bootstrap
+```
+
+```shell
+cdk deploy
+```
+
 ## 2/ Existing AWS Garnet Framework deployment in the AWS Account with a Context Broker on AWS ECS Fargate
 
 <br>
