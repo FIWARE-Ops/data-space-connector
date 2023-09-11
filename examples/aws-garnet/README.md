@@ -15,28 +15,15 @@ In this example, the procedure to deploy the packet delivery service provider na
 
 This deployment example focuses on 2 possible initial configurations of infrastructure:
 
-### 1/ No existing AWS Garnet Framework deployment in the AWS Account
-For this scenario, it is recommended that the complete Helm Chart for the Data Spaces Connector is deployed to a Kubernetes Cluster in the service Amazon Elastic Kubernetes Service ([AWS EKS](https://aws.amazon.com/eks/)).
-In this case, the FIWARE Context Broker will be hosted by a pod in the Kubernetes cluster and the integration to the AWS Garnet Framework will be performed by deploying only the [AWS Garnet IoT module](https://github.com/aws-samples/aws-stf-core#stf-iot) of the framework. Further configuration will include streamlining the Garnet IoT pipeline to the Internal Service Load Balancer associated to the EKS cluster.
+* 1/ No existing AWS Garnet Framework deployment in the AWS Account
+* 2/ Existing AWS Garnet Framework deployment in the AWS Account with a Context Broker on AWS ECS Fargate
 
-<br>
+In any of the previous cases, an Amazon EKS Cluster is needed to deploy the Data Space Connector. However, if there is an existing Amazon EKS Cluster in your AWS, it can be leveraged for this deployment and no additional cluster must be created. The next steps will help deploying a new cluster from scratch for the connector deployment.
 
-![Target Architecture for a fresh deployment of AWS Garnet Framework with the DS Connector](./static-assets/garnet-ds-connector-scenario1.png)
-
-<br>
-
-### 2/ Existing AWS Garnet Framework deployment in the AWS Account with a Context Broker on AWS ECS Fargate
-
-<br>
-
-![Target Architecture for extending the deployment of an existing AWS Garnet Framework](./static-assets/garnet-ds-connector-scenario2.png)
-
-<br>
-
-## (OPTIONAL) AWS EKS Cluster Creation
+### Amazon EKS Cluster Creation
 If the creation of a dedicated Kubernetes cluster is considered for the deployment of the FIWARE Data Spaces Connector, it is recommended that users follow the instructions to create a new Amazon EKS Cluster available in the [official Amazon EKS Immersion Workshop](https://catalog.workshops.aws/eks-immersionday/en-US/introduction#confirm-eks-setup)
 
-### AWS EKS Cluster Setup with Fargate Profile
+#### AWS EKS Cluster Setup with Fargate Profile
 
 * Assign environment variables to choose the deployment parameters
 ```shell
@@ -116,7 +103,7 @@ kubectl get svc
 eksctl utils associate-iam-oidc-provider --region ${AWS_REGION} --cluster fiware-dsc-cluster --approve
 ```
 
-### (OPTIONAL) Install [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html) add-on to manage ingress configuration
+#### (OPTIONAL) Install [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html) add-on to manage ingress configuration
 AWS Load Balancer Controller is a Kubernetes add-on that manages AWS Elastic Load Balancers(ELB) used by Kubernetes cluster. 
 This controller provides:
 
@@ -125,7 +112,7 @@ This controller provides:
 
 It is recommended to follow the official AWS documentation to install the AWS Load Balancer Controller add-on to control ingress. The step-by-step procedure is available in [this link](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
 
-### nginx Ingress Controller Configuration 
+#### nginx Ingress Controller Configuration 
 In AWS, we use a Network load balancer (NLB) to expose the Ingress-Nginx Controller behind a Service of ```Type=LoadBalancer```. It is advised that the [official Installation Guide is followed for the next steps](https://kubernetes.github.io/ingress-nginx/deploy/#aws)
 A short version of the procedure is reproduced below for a quick setup: 
 
@@ -147,7 +134,17 @@ eksctl create iamserviceaccount --cluster=fiware-dsc-cluster --namespace=kube-sy
 kubectl apply -n kube-system -f ./yaml/nginx-ingress-controller.yaml
 ```
 
-## IPS Service Provider Deployment in Amazon EKS 
+## 1/ No existing AWS Garnet Framework deployment in the AWS Account
+For this scenario, it is recommended that the complete Helm Chart for the Data Spaces Connector is deployed to a Kubernetes Cluster in the service Amazon Elastic Kubernetes Service ([AWS EKS](https://aws.amazon.com/eks/)).
+In this case, the FIWARE Context Broker will be hosted by a pod in the Kubernetes cluster and the integration to the AWS Garnet Framework will be performed by deploying only the [AWS Garnet IoT module](https://github.com/aws-samples/aws-stf-core#stf-iot) of the framework. Further configuration will include streamlining the Garnet IoT pipeline to the Internal Service Load Balancer associated to the EKS cluster.
+
+<br>
+
+![Target Architecture for a fresh deployment of AWS Garnet Framework with the DS Connector](./static-assets/garnet-ds-connector-scenario1.png)
+
+<br>
+
+### IPS Service Provider Deployment in Amazon EKS 
 This section covers the setup of the prerequisites of the IPS Service Provider examples of this repository, available in [this reference](../service-provider-ips/README.md).
 
 * IPS Kubernetes namespace creation 
@@ -167,3 +164,11 @@ helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 ```shell
 helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller.yaml ips-dsc dsc/data-space-connector
 ```
+
+## 2/ Existing AWS Garnet Framework deployment in the AWS Account with a Context Broker on AWS ECS Fargate
+
+<br>
+
+![Target Architecture for extending the deployment of an existing AWS Garnet Framework](./static-assets/garnet-ds-connector-scenario2.png)
+
+<br>
