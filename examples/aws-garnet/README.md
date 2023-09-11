@@ -140,7 +140,7 @@ In this case, the FIWARE Context Broker will be hosted by a pod in the Kubernete
 
 <br>
 
-![Target Architecture for a fresh deployment of AWS Garnet Framework with the DS Connector](./static-assets/garnet-ds-connector-scenario1.png)
+![Target Architecture for a fresh deployment of AWS Garnet Framework with the DS Connector](./static-assets/garnet-ds-connector-scenario2.png)
 
 <br>
 
@@ -198,6 +198,6 @@ cdk deploy
 
 <br>
 
-![Target Architecture for extending the deployment of an existing AWS Garnet Framework](./static-assets/garnet-ds-connector-scenario2.png)
+![Target Architecture for extending the deployment of an existing AWS Garnet Framework](./static-assets/garnet-ds-connector-scenario1.png)
 
 <br>
