@@ -178,9 +178,9 @@ kong:
       ingress:
         enabled: true
         annotations:
-          #kubernetes.io/ingress.class: nginx
+          kubernetes.io/ingress.class: nginx
           cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
-        ingressClassName: nginx
+        #ingressClassName: nginx
         tls: kong-ips-dsba-tls
         hostname: ips-kong.dsba.aws.fiware.io
       route:
@@ -907,11 +907,11 @@ keycloak:
     # Ingress
     ingress:
       enabled: true
-      ingressClassName: nginx
+      #ingressClassName: nginx
       hostname: ips-kc.dsba.aws.fiware.io
       tls: true
       annotations:
-        #kubernetes.io/ingress.class: nginx
+        kubernetes.io/ingress.class: nginx
         cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
 
     # ENVs

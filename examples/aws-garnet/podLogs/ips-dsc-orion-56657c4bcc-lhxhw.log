@@ -1,0 +1,11 @@
+time=2023-09-12T13:45:01.893Z | lvl=TMP | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=orionld.cpp[740]:versionInfo | msg=based on orion:     1.15.0-next
+time=2023-09-12T13:45:01.893Z | lvl=TMP | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=orionld.cpp[741]:versionInfo | msg=git hash:           bf7e59a7c0059b2d07e065648c8b47e13a7f9d6e
+time=2023-09-12T13:45:01.893Z | lvl=TMP | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=orionld.cpp[742]:versionInfo | msg=build branch:       release/1.1.0
+time=2023-09-12T13:45:01.893Z | lvl=TMP | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=orionld.cpp[743]:versionInfo | msg=compiled by:        root
+time=2023-09-12T13:45:01.893Z | lvl=TMP | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=orionld.cpp[744]:versionInfo | msg=compiled in:        
+time=2023-09-12T13:45:01.893Z | lvl=TMP | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=orionld.cpp[745]:versionInfo | msg=-----------------------------------------
+time=2023-09-12T13:45:01.903Z | lvl=WARN | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=mongocInit.cpp[58]:mongocLog | msg=MONGOC[mongoc]: Falling back to malloc for counters.
+time=2023-09-12T13:45:01.908Z | lvl=TMP | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=mongocInit.cpp[289]:mongocInit | msg=Connecting to mongo for the C driver, with URI 'mongodb://root:dbPassword@ips-dsc-mongodb/?authMechanism=SCRAM-SHA-1&appname=orionld'
+time=2023-09-12T13:45:31.908Z | lvl=ERROR | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=mongocTenantsGet.cpp[62]:mongocTenantsGet | msg=Database Error ()
+time=2023-09-12T13:45:31.908Z | lvl=FATAL | corr=N/A | trans=N/A | from=N/A | srv=N/A | subsrv=N/A | comp=Orion | op=mongocInit.cpp[311]:mongocInit | msg=Unable to extract tenants from the database - fatal error
+----------------------------------

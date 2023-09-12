@@ -1,0 +1,11 @@
+2023/09/12 13:24:14 [debug] 1118#0: *4 [lua] client.lua:618: init(): [dns-client] ndots = 5
+2023/09/12 13:24:14 [debug] 1118#0: *4 [lua] client.lua:620: init(): [dns-client] search = ips.svc.cluster.local, svc.cluster.local, cluster.local, eu-west-1.compute.internal
+2023/09/12 13:24:14 [debug] 1118#0: *4 [lua] client.lua:633: init(): [dns-client] badTtl = 1 s
+2023/09/12 13:24:14 [debug] 1118#0: *4 [lua] client.lua:635: init(): [dns-client] emptyTtl = 30 s
+2023/09/12 13:24:14 [debug] 1118#0: *4 [lua] balancers.lua:263: create_balancers(): initialized 0 balancer(s), 0 error(s)
+2023/09/12 13:24:14 [notice] 1118#0: *5 [kong] process.lua:256 Starting pep-plugin, context: ngx.timer
+2023/09/12 13:24:14 [info] 1118#0: *5 [pep-plugin:1120] time="2023-09-12T13:24:14Z" level=info msg="Starting with default priority: 805", context: ngx.timer
+2023/09/12 13:24:14 [info] 1118#0: *5 [pep-plugin:1120] 2023/09/12 13:24:14 Listening on socket: /usr/local/kong/pep-plugin.socket, context: ngx.timer
+2023/09/12 13:24:15 [debug] 1118#0: *6 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=mlcache, event=mlcache:purge:kong_core_db_cache, pid=1119, data=
+2023/09/12 13:24:15 [debug] 1118#0: *6 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=mlcache, event=mlcache:purge:kong_db_cache, pid=1119, data=
+----------------------------------
