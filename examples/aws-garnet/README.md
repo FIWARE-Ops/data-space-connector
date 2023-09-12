@@ -200,4 +200,4 @@ cdk deploy
 
 ![Target Architecture for extending the deployment of an existing AWS Garnet Framework](./static-assets/garnet-ds-connector-scenario1.png)
 
-<br>
+<br> 
