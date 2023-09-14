@@ -25,10 +25,10 @@ kubectl create namespace ips
 helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 ```
 
-* Install the Helm Chart using the provided file `./yaml/values-dsc-awl-load-balancer-controller.yaml`
+* Install the Helm Chart using the provided file `./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml`
 
 ```shell
-helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller.yaml ips-dsc dsc/data-space-connector
+helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml ips-dsc dsc/data-space-connector
 ```
 
 ### Deployment of AWS Garnet Framework IoT Module
