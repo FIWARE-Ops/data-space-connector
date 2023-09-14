@@ -11,7 +11,7 @@ dsba-pdp:
     image:  
       pullPolicy: Always
       repository: quay.io/fiware/dsba-pdp 
-      tag: 1.0.0
+      tag: 1.1.0-pre-30
 
     # Log level
     logLevel: TRACE
