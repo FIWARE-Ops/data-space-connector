@@ -115,3 +115,12 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
+
+  - name: tm-forum-api
+    enabled: true
+    source_path: applications/tm-forum-api
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+    - values.yaml
+
