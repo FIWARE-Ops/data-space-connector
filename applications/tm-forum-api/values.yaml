@@ -24,6 +24,8 @@ tm-forum-api:
 
   # enable the api proxy
   apiProxy:
+    image:
+      tag: distroless-v1.27-latest
     enabled: true
     service: 
       nameOverride: pdc-tmforum-api
