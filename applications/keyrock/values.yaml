@@ -5,7 +5,7 @@ keyrock:
   statefulset:
     image:
       repository: quay.io/wi_stefan/keyrock
-      tag: sn-fix
+      tag: sn-fix-2
       pullPolicy: Always
 
   # DB config
