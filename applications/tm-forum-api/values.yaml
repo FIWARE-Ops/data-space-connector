@@ -9,7 +9,7 @@ tm-forum-api:
       repository: quay.io/beknazar
       # -- tag to be used, most of the time the apis will use the same version
       #tag: 0.5.0
-      tag: 2.0.3
+      tag: 2.0.4
       # -- pull policy to be used
       pullPolicy: IfNotPresent
 
