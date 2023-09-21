@@ -1,0 +1,233 @@
+time="2023-09-15T11:01:28Z" level=info msg="Will read config from /configs/server.yaml"
+{"level":"info","msg":"Configuration is: {\"Server\":{\"Port\":3000,\"TemplateDir\":\"views/\",\"StaticDir\":\"views/static\"},\"Verifier\":{\"Did\":\"did:web:ips.dsba.aws.fiware.io:did\",\"TirAddress\":\"https://tir.dsba.fiware.dev/v3/issuers\",\"SessionExpiry\":30,\"PolicyConfig\":{\"DefaultPolicies\":null,\"CredentialTypeSpecificPolicies\":null}},\"SSIKit\":{\"AuditorURL\":\"http://ips-dsc-vcwaltid:7003\"},\"Logging\":{\"Level\":\"DEBUG\",\"JsonLogging\":true,\"LogRequests\":true,\"PathsToSkip\":[\"/health\"]},\"ConfigRepo\":{\"ConfigEndpoint\":\"http://ips-dsc-credentials-config-service:8080/\",\"Services\":null}}","time":"2023-09-15T11:01:28Z"}
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:01:28Z"}
+{"level":"warning","msg":"Initiated key {\"crv\":\"P-256\",\"d\":\"FsKuK2bsEeN3aMchpRqgTTX8DIWdDPcpsCye9KcyNS8\",\"kid\":\"K4c6rug-G5RU4H705HwkkzTZQnUaY3Ixmd0ViDhsr0U\",\"kty\":\"EC\",\"x\":\"udogFy3Eaw8tthUYFSxITE2e7hjxeCazGZvlvv4UsyU\",\"y\":\"xhHV7ZehKC0fRO4-mMEOW9lfcBJMFwkgJb7nJdXMAOM\"}.","time":"2023-09-15T11:01:28Z"}
+{"level":"debug","msg":"Successfully initalized the verifier","time":"2023-09-15T11:01:28Z"}
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /token                    --> github.com/fiware/VCVerifier/openapi.GetToken (1 handlers)
+[GIN-debug] GET    /api/v1/samedevice        --> github.com/fiware/VCVerifier/openapi.StartSIOPSameDevice (1 handlers)
+[GIN-debug] POST   /api/v1/authentication_response --> github.com/fiware/VCVerifier/openapi.VerifierAPIAuthenticationResponse (1 handlers)
+[GIN-debug] GET    /api/v1/authentication_response --> github.com/fiware/VCVerifier/openapi.GetVerifierAPIAuthenticationResponse (1 handlers)
+[GIN-debug] GET    /.well-known/jwks         --> github.com/fiware/VCVerifier/openapi.VerifierAPIJWKS (1 handlers)
+[GIN-debug] GET    /api/v1/startsiop         --> github.com/fiware/VCVerifier/openapi.VerifierAPIStartSIOP (1 handlers)
+[GIN-debug] GET    /api/v1/loginQR           --> github.com/fiware/VCVerifier/openapi.VerifierPageDisplayQRSIOP (1 handlers)
+[GIN-debug] POST   /token                    --> github.com/fiware/VCVerifier/openapi.GetToken (3 handlers)
+[GIN-debug] POST   /api/v1/authentication_response --> github.com/fiware/VCVerifier/openapi.VerifierAPIAuthenticationResponse (3 handlers)
+[GIN-debug] GET    /api/v1/samedevice        --> github.com/fiware/VCVerifier/openapi.StartSIOPSameDevice (3 handlers)
+[GIN-debug] GET    /api/v1/startsiop         --> github.com/fiware/VCVerifier/openapi.VerifierAPIStartSIOP (3 handlers)
+[GIN-debug] GET    /api/v1/authentication_response --> github.com/fiware/VCVerifier/openapi.GetVerifierAPIAuthenticationResponse (3 handlers)
+[GIN-debug] GET    /api/v1/loginQR           --> github.com/fiware/VCVerifier/openapi.VerifierPageDisplayQRSIOP (3 handlers)
+[GIN-debug] GET    /.well-known/jwks         --> github.com/fiware/VCVerifier/openapi.VerifierAPIJWKS (3 handlers)
+[GIN-debug] GET    /health                   --> main.HealthReq (3 handlers)
+[GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+[GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+[GIN-debug] GET    /metrics                  --> github.com/penglongli/gin-metrics/ginmetrics.(*Monitor).Use.func1 (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on 0.0.0.0:3000
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:01:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:01:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:01:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:01:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:01:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:01:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:01:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:01:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:01:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:01:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:01:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:02:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:02:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:02:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:02:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:02:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:02:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:02:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:02:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:03:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:03:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:03:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:03:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:03:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:03:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:03:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:03:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:04:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:04:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:04:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:04:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:04:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:04:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:04:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:04:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:05:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:05:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:05:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:05:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:05:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:05:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:05:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:05:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:06:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:06:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:06:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:06:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:06:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:06:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:06:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:06:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:07:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:07:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:07:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:07:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:07:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:07:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:07:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:07:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:08:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:08:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:08:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:08:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:08:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:08:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:08:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:08:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:09:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:09:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:09:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:09:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:09:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:09:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:09:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:09:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:10:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:10:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:10:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:10:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:10:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:10:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:10:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:10:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:11:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:11:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:11:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:11:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:11:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:11:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:11:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:11:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:12:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:12:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:12:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:12:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:12:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:12:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:12:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:12:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:13:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:13:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:13:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:13:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:13:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:13:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:13:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:13:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:14:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:14:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:14:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:14:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:14:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:14:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:14:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:14:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:15:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:15:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:15:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:15:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:15:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:15:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:15:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:15:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:16:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:16:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:16:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:16:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:16:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:16:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:16:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:16:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:17:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:17:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:17:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:17:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:17:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:17:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:17:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:17:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:18:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:18:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:18:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:18:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:18:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:18:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:18:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:18:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:19:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:19:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:19:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:19:28Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:19:58Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:19:58Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:19:58Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:19:58Z"}
+----------------------------------
+{"level":"debug","msg":"Retrieve services from http://ips-dsc-credentials-config-service:8080/service for page 0 and size 100.","time":"2023-09-15T11:20:28Z"}
+{"level":"warning","msg":"Was not able to get the services from http://ips-dsc-credentials-config-service:8080/service. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:20:28Z"}
+{"level":"warning","msg":"Failed to receive services page 0 with size 100. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused","time":"2023-09-15T11:20:28Z"}
+{"level":"warning","msg":"Was not able to update the credentials config from the external service. Will try again. Err: Get \"http://ips-dsc-credentials-config-service:8080/service?pageSize=100\u0026page=0\": dial tcp 172.20.80.187:8080: connect: connection refused.","time":"2023-09-15T11:20:28Z"}
+----------------------------------

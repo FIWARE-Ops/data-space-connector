@@ -29,7 +29,7 @@ mongodb:
 ```shell
 orion-ld:
   # Disable the deployment of application: orion-ld
-  deploymentEnabled: true
+  deploymentEnabled: false
 ```
 
 * Replace the host for the Kong proxy to point it to AWS Garnet Framework's Unified API based on API Gateway. The value for the host parameter can be found in your [AWS Cloud Formation](https://console.aws.amazon.com/cloudformation/home) Stack named `Garnet` > Outputs tab > `GarnetEndpoint` > Value.
@@ -50,11 +50,11 @@ orion-ld:
             - token-key
             - tir-key
             
-    #TODO - Replace here with the AWS Garnet Framework Unified API endpoint 
+    #TODO - Replace here with the AWS Garnet Framework Unified API endpoint AND REMOVE THIS LINE
         services:
-          - host: "https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com" 
+          - host: "xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com" 
             name: "ips"
-            port: 1026
+            port: 443
             protocol: http
 ```
 

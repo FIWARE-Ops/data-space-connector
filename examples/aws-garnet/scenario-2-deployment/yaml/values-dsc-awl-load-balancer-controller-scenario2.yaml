@@ -201,11 +201,10 @@ kong:
             - token-key
             - tir-key
 
-      #TODO - Replace here with the AWS Garnet Framework Unified API endpoint 
         services:
-          - host: "https://psr8tihlz1.execute-api.eu-west-1.amazonaws.com" 
+          - host: "psr8tihlz1.execute-api.eu-west-1.amazonaws.com" 
             name: "ips"
-            port: 1026
+            port: 443
             protocol: http
 
             routes:

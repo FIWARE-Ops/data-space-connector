@@ -1,0 +1,207 @@
+2023/09/15 11:01:58 [warn] ulimit is currently set to "1024". For better performance set it to at least "4096" using "ulimit -n"
+2023/09/15 11:01:58 [warn] 1#0: the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /kong_prefix/nginx.conf:6
+nginx: [warn] the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /kong_prefix/nginx.conf:6
+2023/09/15 11:01:58 [warn] 1#0: the "http2_max_field_size" directive is obsolete, use the "large_client_header_buffers" directive instead in /kong_prefix/nginx-kong.conf:119
+nginx: [warn] the "http2_max_field_size" directive is obsolete, use the "large_client_header_buffers" directive instead in /kong_prefix/nginx-kong.conf:119
+2023/09/15 11:01:58 [warn] 1#0: the "http2_max_header_size" directive is obsolete, use the "large_client_header_buffers" directive instead in /kong_prefix/nginx-kong.conf:120
+nginx: [warn] the "http2_max_header_size" directive is obsolete, use the "large_client_header_buffers" directive instead in /kong_prefix/nginx-kong.conf:120
+2023/09/15 11:01:58 [debug] 1#0: [lua] globalpatches.lua:10: installing the globalpatches
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:460: init(): [dns-client] (re)configuring dns client
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:465: init(): [dns-client] staleTtl = 4
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:469: init(): [dns-client] noSynchronisation = nil
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:488: init(): [dns-client] query order = LAST, SRV, A, AAAA, CNAME
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allrouters = [fe00::2]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: ips-dsc-kong-66f7f55bf-zghw9 = 10.11.82.212
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-mcastprefix = [fe00::0]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allnodes = [fe00::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localhost = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-loopback = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: localhost = 127.0.0.1
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: localhost = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localnet = [fe00::0]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:552: init(): [dns-client] validTtl = nil
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:593: init(): [dns-client] nameserver 172.20.0.10
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:598: init(): [dns-client] attempts = 5
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:605: init(): [dns-client] no_random = true
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:614: init(): [dns-client] timeout = 2000 ms
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:618: init(): [dns-client] ndots = 5
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:620: init(): [dns-client] search = ips.svc.cluster.local, svc.cluster.local, cluster.local, eu-west-1.compute.internal
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:633: init(): [dns-client] badTtl = 1 s
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:635: init(): [dns-client] emptyTtl = 30 s
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:460: init(): [dns-client] (re)configuring dns client
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:465: init(): [dns-client] staleTtl = 4
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:469: init(): [dns-client] noSynchronisation = false
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:488: init(): [dns-client] query order = LAST, SRV, A, CNAME
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allrouters = [fe00::2]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: ips-dsc-kong-66f7f55bf-zghw9 = 10.11.82.212
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-mcastprefix = [fe00::0]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allnodes = [fe00::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localhost = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-loopback = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: localhost = 127.0.0.1
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: localhost = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localnet = [fe00::0]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:552: init(): [dns-client] validTtl = nil
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:593: init(): [dns-client] nameserver 172.20.0.10
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:598: init(): [dns-client] attempts = 5
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:605: init(): [dns-client] no_random = true
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:614: init(): [dns-client] timeout = 2000 ms
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:618: init(): [dns-client] ndots = 5
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:620: init(): [dns-client] search = ips.svc.cluster.local, svc.cluster.local, cluster.local, eu-west-1.compute.internal
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:633: init(): [dns-client] badTtl = 1 s
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:635: init(): [dns-client] emptyTtl = 30 s
+2023/09/15 11:01:58 [debug] 1#0: [lua] globalpatches.lua:270: randomseed(): seeding PRNG from OpenSSL RAND_bytes()
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:460: init(): [dns-client] (re)configuring dns client
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:465: init(): [dns-client] staleTtl = 4
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:469: init(): [dns-client] noSynchronisation = false
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:488: init(): [dns-client] query order = LAST, SRV, A, CNAME
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allrouters = [fe00::2]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: ips-dsc-kong-66f7f55bf-zghw9 = 10.11.82.212
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-mcastprefix = [fe00::0]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allnodes = [fe00::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localhost = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-loopback = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: localhost = 127.0.0.1
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: localhost = [::1]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localnet = [fe00::0]
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:552: init(): [dns-client] validTtl = nil
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:593: init(): [dns-client] nameserver 172.20.0.10
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:598: init(): [dns-client] attempts = 5
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:605: init(): [dns-client] no_random = true
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:614: init(): [dns-client] timeout = 2000 ms
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:618: init(): [dns-client] ndots = 5
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:620: init(): [dns-client] search = ips.svc.cluster.local, svc.cluster.local, cluster.local, eu-west-1.compute.internal
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:633: init(): [dns-client] badTtl = 1 s
+2023/09/15 11:01:58 [debug] 1#0: [lua] client.lua:635: init(): [dns-client] emptyTtl = 30 s
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: ip-restriction
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: request-transformer
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: response-transformer
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: request-size-limiting
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: rate-limiting
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'rate-limiting.ratelimiting_metrics'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: response-ratelimiting
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: syslog
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: loggly
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: datadog
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: ldap-auth
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: statsd
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: bot-detection
+2023/09/15 11:01:58 [debug] 1#0: [kong] iam-ecs-credentials.lua:40 No ECS environment variables found for IAM
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: aws-lambda
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: request-termination
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: prometheus
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: proxy-cache
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: session
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'session.sessions'
+2023/09/15 11:01:58 [debug] 1#0: [lua] openssl.lua:5: [acme] using ffi, OpenSSL version linked: 101010ef
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: acme
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'acme.acme_storage'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: grpc-gateway
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: grpc-web
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: pre-function
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: post-function
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: azure-functions
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: zipkin
+2023/09/15 11:01:58 [debug] 1#0: [kong] process.lua:62 search config for pluginserver named: pep-plugin
+time="2023-09-15T11:01:58Z" level=info msg="Starting with default priority: 805"
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: pep-plugin
+2023/09/15 11:01:58 [debug] 1#0: [lua] evp.lua:215: openssl11=true err=nil
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: ngsi-ishare-policies
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: auth-endpoint-config-ishare
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: jwt
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'jwt.jwt_secrets'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: acl
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'acl.acls'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: correlation-id
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: cors
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: oauth2
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'oauth2.oauth2_credentials'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'oauth2.oauth2_authorization_codes'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'oauth2.oauth2_tokens'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: tcp-log
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: udp-log
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: file-log
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: http-log
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: key-auth
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'key-auth.keyauth_credentials'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: hmac-auth
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'hmac-auth.hmacauth_credentials'
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:245: load_plugin(): Loading plugin: basic-auth
+2023/09/15 11:01:58 [debug] 1#0: [lua] plugins.lua:203: loader_fn(): Loading custom plugin entity: 'basic-auth.basicauth_credentials'
+2023/09/15 11:01:59 [notice] 1#0: using the "epoll" event method
+2023/09/15 11:01:59 [notice] 1#0: openresty/1.19.9.1
+2023/09/15 11:01:59 [notice] 1#0: built by gcc 6.4.0 (Alpine 6.4.0) 
+2023/09/15 11:01:59 [notice] 1#0: OS: Linux 5.10.186-179.751.amzn2.x86_64
+2023/09/15 11:01:59 [notice] 1#0: getrlimit(RLIMIT_NOFILE): 1024:65535
+2023/09/15 11:01:59 [notice] 1#0: start worker processes
+2023/09/15 11:01:59 [notice] 1#0: start worker process 1119
+2023/09/15 11:01:59 [notice] 1#0: start worker process 1120
+2023/09/15 11:01:59 [debug] 1119#0: *1 [lua] globalpatches.lua:270: randomseed(): seeding PRNG from OpenSSL RAND_bytes()
+2023/09/15 11:01:59 [debug] 1120#0: *2 [lua] globalpatches.lua:270: randomseed(): seeding PRNG from OpenSSL RAND_bytes()
+2023/09/15 11:01:59 [debug] 1119#0: *1 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=resty-worker-events, event=started, pid=1119, data=nil
+2023/09/15 11:01:59 [debug] 1120#0: *2 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=resty-worker-events, event=started, pid=1120, data=nil
+2023/09/15 11:01:59 [debug] 1119#0: *1 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=resty-worker-events, event=started, pid=1120, data=nil
+2023/09/15 11:01:59 [notice] 1119#0: *1 [lua] init.lua:260: purge(): [DB cache] purging (local) cache, context: init_worker_by_lua*
+2023/09/15 11:01:59 [debug] 1119#0: *1 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=mlcache, event=mlcache:purge:kong_core_db_cache, pid=1119, data=
+2023/09/15 11:01:59 [notice] 1119#0: *1 [lua] init.lua:260: purge(): [DB cache] purging (local) cache, context: init_worker_by_lua*
+2023/09/15 11:01:59 [debug] 1119#0: *1 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=mlcache, event=mlcache:purge:kong_db_cache, pid=1119, data=
+2023/09/15 11:01:59 [notice] 1119#0: *1 [kong] init.lua:426 declarative config loaded from /kong_dbless/kong.yml, context: init_worker_by_lua*
+2023/09/15 11:01:59 [debug] 1119#0: *1 [lua] counter.lua:70: new(): start timer for shdict kong on worker 0
+2023/09/15 11:01:59 [info] 1119#0: *1 [kong] handler.lua:57 [acme] acme renew timer started on worker 0, context: init_worker_by_lua*
+2023/09/15 11:01:59 [debug] 1119#0: *1 [lua] counter.lua:70: new(): start timer for shdict prometheus_metrics on worker 0
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:460: init(): [dns-client] (re)configuring dns client
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:465: init(): [dns-client] staleTtl = 4
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:469: init(): [dns-client] noSynchronisation = false
+2023/09/15 11:01:59 [debug] 1120#0: *2 [lua] counter.lua:70: new(): start timer for shdict kong on worker 1
+2023/09/15 11:01:59 [info] 1120#0: *2 [kong] handler.lua:57 [acme] acme renew timer started on worker 1, context: init_worker_by_lua*
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:488: init(): [dns-client] query order = LAST, SRV, A, CNAME
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allrouters = [fe00::2]
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: ips-dsc-kong-66f7f55bf-zghw9 = 10.11.82.212
+2023/09/15 11:01:59 [debug] 1120#0: *2 [lua] counter.lua:70: new(): start timer for shdict prometheus_metrics on worker 1
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-mcastprefix = [fe00::0]
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allnodes = [fe00::1]
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localhost = [::1]
+2023/09/15 11:01:59 [notice] 1120#0: *2 [kong] init.lua:312 only worker #0 can manage, context: init_worker_by_lua*
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-loopback = [::1]
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: localhost = 127.0.0.1
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: localhost = [::1]
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localnet = [fe00::0]
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:552: init(): [dns-client] validTtl = nil
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:593: init(): [dns-client] nameserver 172.20.0.10
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:598: init(): [dns-client] attempts = 5
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:605: init(): [dns-client] no_random = true
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:614: init(): [dns-client] timeout = 2000 ms
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:618: init(): [dns-client] ndots = 5
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:620: init(): [dns-client] search = ips.svc.cluster.local, svc.cluster.local, cluster.local, eu-west-1.compute.internal
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:633: init(): [dns-client] badTtl = 1 s
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] client.lua:635: init(): [dns-client] emptyTtl = 30 s
+2023/09/15 11:01:59 [debug] 1119#0: *3 [lua] balancers.lua:263: create_balancers(): initialized 0 balancer(s), 0 error(s)
+2023/09/15 11:01:59 [notice] 1119#0: *4 [kong] process.lua:256 Starting pep-plugin, context: ngx.timer
+2023/09/15 11:01:59 [info] 1119#0: *4 [pep-plugin:1121] time="2023-09-15T11:01:59Z" level=info msg="Starting with default priority: 805", context: ngx.timer
+2023/09/15 11:01:59 [info] 1119#0: *4 [pep-plugin:1121] 2023/09/15 11:01:59 Listening on socket: /usr/local/kong/pep-plugin.socket, context: ngx.timer
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:460: init(): [dns-client] (re)configuring dns client
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:465: init(): [dns-client] staleTtl = 4
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:469: init(): [dns-client] noSynchronisation = false
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:488: init(): [dns-client] query order = LAST, SRV, A, CNAME
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allrouters = [fe00::2]
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: ips-dsc-kong-66f7f55bf-zghw9 = 10.11.82.212
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-mcastprefix = [fe00::0]
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-allnodes = [fe00::1]
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localhost = [::1]
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-loopback = [::1]
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:528: init(): [dns-client] adding A-record from 'hosts' file: localhost = 127.0.0.1
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: localhost = [::1]
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:543: init(): [dns-client] adding AAAA-record from 'hosts' file: ip6-localnet = [fe00::0]
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:552: init(): [dns-client] validTtl = nil
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:593: init(): [dns-client] nameserver 172.20.0.10
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:598: init(): [dns-client] attempts = 5
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:605: init(): [dns-client] no_random = true
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:614: init(): [dns-client] timeout = 2000 ms
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:618: init(): [dns-client] ndots = 5
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:620: init(): [dns-client] search = ips.svc.cluster.local, svc.cluster.local, cluster.local, eu-west-1.compute.internal
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:633: init(): [dns-client] badTtl = 1 s
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] client.lua:635: init(): [dns-client] emptyTtl = 30 s
+2023/09/15 11:01:59 [debug] 1120#0: *5 [lua] balancers.lua:263: create_balancers(): initialized 0 balancer(s), 0 error(s)
+2023/09/15 11:02:00 [debug] 1120#0: *8 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=mlcache, event=mlcache:purge:kong_core_db_cache, pid=1119, data=
+2023/09/15 11:02:00 [debug] 1120#0: *8 [lua] events.lua:211: do_event_json(): worker-events: handling event; source=mlcache, event=mlcache:purge:kong_db_cache, pid=1119, data=
+----------------------------------
