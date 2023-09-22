@@ -6,10 +6,10 @@ tm-forum-api:
     image:
       # -- repository to get the container from
       #repository: quay.io/wi_stefan
-      repository: quay.io/beknazar
+      repository: quay.io/wi_stefan
       # -- tag to be used, most of the time the apis will use the same version
       #tag: 0.5.0
-      tag: 2.0.7
+      tag: 0.6.0-PRE-23
       # -- pull policy to be used
       pullPolicy: IfNotPresent
 
