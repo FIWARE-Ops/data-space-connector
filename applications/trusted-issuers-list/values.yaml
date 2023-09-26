@@ -1,5 +1,6 @@
 trusted-issuers-list:
 
+  fullnameOverride: ${til-service}
   # Image
   deployment:
     image:  

@@ -1,0 +1,12 @@
+apiVersion: v2
+name: contract-management
+description: Chart holder for argo-cd
+
+type: application
+version: 0.5.0
+appVersion: "0.5.0"
+
+dependencies:
+  - name: contract-management
+    version: 0.5.0
+    repository: https://fiware.github.io/helm-charts

@@ -28,7 +28,7 @@ tm-forum-api:
       tag: distroless-v1.27-latest
     enabled: true
     service: 
-      nameOverride: pdc-tmforum-api
+      nameOverride: ${tm_forum_proxy}
 
   # -- list of apis to be deployed
   # -- every api needs to define a name and image. Basepath is required when routes or ingress will be enabled. Beside that, they can overwrite the default-config by using the same keys.

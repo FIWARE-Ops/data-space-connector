@@ -9,6 +9,8 @@ secretsEnabled: &secretsEnabled false
 host: &host
 tlsSecret: &tlsSecret
 participant: my-provider
+tm_forum_proxy: proxy-tmforum-api
+til_service: til-service
 
 applications:
 
@@ -124,3 +126,10 @@ applications:
     helm_values:
     - values.yaml
 
+  - name: contract-management
+    enabled: true
+    source_path: applications/contract-management
+    source_ref: *branch
+    destination: *destination
+    helm_values:
+      - values.yaml
