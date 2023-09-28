@@ -24,7 +24,7 @@ following ENVs for the Github action, `OPENSHIFT_SERVER` and `OPENSHIFT_TOKEN`, 
 For deployment, simply fork this repository, adapt the configuration of the action to your setup and set the necessary ENVs. After creating a 
 `deploy/<TARGET_NAMESPACE>` branch, it will perform the deployment to the specified namespace.
 
-For a different cluster flavor, the GitHib action needs to be modified before to be compatible.
+For a different cluster flavor, the GitHub action needs to be modified before to be compatible.
 
 
 ### Deployment with Helm
