@@ -37,8 +37,12 @@ The chart is available at the repository ```https://fiware-ops.github.io/data-sp
     # add the repo
     helm repo add dsc https://fiware-ops.github.io/data-space-connector/
     # install the chart
-    helm install dsc/data-space-connector
+    helm install <DeploymentName> dsc/data-space-connector -n <Namespace> -f values.yaml
 ```
+**Note,** that due to the app-of-apps structure of the connector and the different dependencies between the components, a deployment without providing any configuration values will not work. Make sure to provide a 
+`values.yaml` file for the deployment, specifying all necessary parameters. This includes setting parameters of the connected data space (e.g., trust anchor endpoints), DNS information (providing Ingress or OpenShift Route parameters), 
+structure and type of the required VCs, internal hostnames of the different connector components and providing the configuration of the DID and keys/certs.  
+Also have a look at the [examples](#examples).
 
 The chart also contains the [argo-cd applications support](./data-space-connector/templates/), thus it can be used to generate argo-deployments, too. In plain Helm deployments, this should be disabled in the values.yaml:
 ```yaml
