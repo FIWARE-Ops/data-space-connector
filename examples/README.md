@@ -9,7 +9,7 @@ other frameworks.
 - [Deployment of service providers](#deployment-of-service-providers)
   - [IPS Service Provider (helm)](#ips-service-provider-helm)
   - [Packet Delivery Company (ArgoCD)](#packet-delivery-company-argocd)
-- [Integration with AWS Smart Territory Framework](#integration-with-aws-smart-territory-framework)
+- [Integration with AWS Garnet Framework](#integration-with-aws-garnet-framework-formerly-aws-smart-territory-framework)
 
 </details>
 
