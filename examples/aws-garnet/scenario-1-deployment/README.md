@@ -25,7 +25,7 @@ kubectl create namespace ips
 helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 ```
 
-* Install the Helm Chart using the provided file `./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml`
+* Install the Helm Chart using the provided file `./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml` [available in this repository](./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml)
 
 ```shell
 helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml ips-dsc dsc/data-space-connector
@@ -58,4 +58,37 @@ cdk bootstrap
 
 ```shell
 cdk deploy
+```
+
+## Other Resources - Troubleshooting
+Once the Data Space Connector is deployed via the Helm chart in your cluster, additional scripts are also provided in this [repository](../scripts/) to help any troubleshooting of your connector deployment.
+Two main scripts are provided:
+
+* 1/ Save all pods logs from a EKS cluster namespace using `kubectl` to your local deployment machine under `./podLogs/` [in this repository structure](./podLogs/)
+The script `kubectlLogsFromNamespace.sh` [link](../scripts/kubectlLogsFromNamespace.sh) runs a local process in your deployment machine to poll logs from all currently running pods under a namespace from your cluster and save locally for further analysis.
+It can be manually modified to change the desired namespace to be analyzed 
+
+```shell
+#!/bin/bash
+
+NAMESPACE="ips"
+```
+
+and the corresponding polling period by changing the values in the script file before running it
+
+```shell
+  # Sleep for a few seconds before checking for new logs and pods again
+  sleep 3
+done
+```
+
+* 2/ Delete all currently running pods from an EKS cluster namespace using `kubectl`
+The script `deleteAllPodsFromNamespace.sh` [link](../scripts/deleteAllPodsFromNamespace.sh) runs a local process in your deployment machine to force delete long-lived running pods from a failed deployment.
+It can be manually modified to change the desired namespace to be analyzed 
+
+```shell
+#!/bin/bash
+
+# Set the fixed namespace
+namespace="ips"
 ```

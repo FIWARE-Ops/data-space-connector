@@ -20,7 +20,7 @@ This deployment example focuses on 2 possible initial configurations of infrastr
 ![Target Architecture for a fresh deployment of AWS Garnet Framework with the DS Connector](./static-assets/garnet-ds-connector-scenario1.png)
 
 * 2/ Existing AWS Garnet Framework deployment in the AWS Account with a Context Broker on AWS ECS Fargate
-* 
+ 
 ![Target Architecture for extending the deployment of an existing AWS Garnet Framework](./static-assets/garnet-ds-connector-scenario2.png)
 
 In any of the previous cases, an Amazon EKS Cluster is needed to deploy the Data Space Connector. However, if there is an existing Amazon EKS Cluster in your AWS, it can be leveraged for this deployment and no additional cluster must be created. The next steps will help deploying a new cluster from scratch for the connector deployment.
@@ -77,7 +77,7 @@ echo "export PrivateSubnet03=${PrivateSubnet03}" | tee -a ~/.bash_profile
 source ~/.bash_profile
 ```
 
-* Use the provided script `eks-cluster-fargateProfiler.sh` to populate your resources IDs to instantiate the Amazon EKS Cluster template 
+* Use the provided script `eks-cluster-fargateProfiler.sh` [available in this repository](./scripts/eks-cluster-fargateProfiler.sh) to populate your resources IDs to instantiate the Amazon EKS Cluster template 
 
 ```shell
 chmod +x ./scripts/eks-cluster-fargateProfiler.sh
@@ -138,3 +138,10 @@ eksctl create iamserviceaccount --cluster=fiware-dsc-cluster --namespace=kube-sy
 ```shell
 kubectl apply -n kube-system -f ./yaml/nginx-ingress-controller.yaml
 ```
+
+## Next Steps
+Once your Amazon EKS Cluster is ready, head to the specific step-by-step procedure that best describes your current environment in the following links of this documentation:
+
+* [1/ No existing AWS Garnet Framework deployment in the AWS Account](./scenario-1-deployment/)
+
+* [2/ Existing AWS Garnet Framework deployment in the AWS Account with a Context Broker on AWS ECS Fargate](./scenario-2-deployment/)
