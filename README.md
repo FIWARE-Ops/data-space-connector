@@ -1,10 +1,35 @@
 # FIWARE Data Space Connector
 
-Connector bundling all components
+The FIWARE Data Space Connector is an integrated suite of components implementing DSBA Technical Convergence recommendations, every organization participating 
+in a data space should deploy to “connect” to a data space.
 
-## Deployment with Helm
+This repository provides the charts and deployment recipes. 
 
-Even thought a gitops-approach, following the app-of-apps pattern, with [ArgoCD](https://argo-cd.readthedocs.io/en/stable/), is the preferred way to deploy the Data-Space-Connector, not everyone has has it available. Therefor, the Data-Space-Connector is also provided as an [Umbrella-Chart](https://helm.sh/docs/howto/charts_tips_and_tricks/#complex-charts-with-many-dependencies), containing all the sub-charts and their dependencies.
+A more extensive documentation about the connector and the supported flows in a data space it supports can be found at the 
+FIWARE [data-space-connector repository](https://github.com/FIWARE/data-space-connector).
+
+
+
+## Deployment
+
+
+### Deployment with ArgoCD
+
+The FIWARE Data Space Connector is a [Helm](https://helm.sh) chart using a gitops-approach, following 
+the [app-of-apps pattern](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping), with [ArgoCD](https://argo-cd.readthedocs.io/en/stable/). 
+
+This repository already provides a [deployment Github action](.github/workflows/deploy.yaml) compatible with OpenShift clusters, performing deployments out of 
+a branch created in the format `deploy/<TARGET_NAMESPACE>` and pulling the `values.yaml` from a specified gitops repository. It also requires to set the 
+following ENVs for the Github action, `OPENSHIFT_SERVER` and `OPENSHIFT_TOKEN`, specifying the OpenShift target URL and access token, respectively.  
+For deployment, simply fork this repository, adapt the configuration of the action to your setup and set the necessary ENVs. After creating a 
+`deploy/<TARGET_NAMESPACE>` branch, it will perform the deployment to the specified namespace.
+
+For a different cluster flavor, the GitHub action needs to be modified before to be compatible.
+
+
+### Deployment with Helm
+
+Even though a gitops-approach, following the app-of-apps pattern, with ArgoCD, is the preferred way to deploy the Data-Space-Connector, not everyone has it available. Therefore, the Data-Space-Connector is also provided as an [Umbrella-Chart](https://helm.sh/docs/howto/charts_tips_and_tricks/#complex-charts-with-many-dependencies), containing all the sub-charts and their dependencies.
 
 The chart is available at the repository ```https://fiware-ops.github.io/data-space-connector/```. You can install it via:
 
@@ -12,8 +37,12 @@ The chart is available at the repository ```https://fiware-ops.github.io/data-sp
     # add the repo
     helm repo add dsc https://fiware-ops.github.io/data-space-connector/
     # install the chart
-    helm install dsc/data-space-connector
+    helm install <DeploymentName> dsc/data-space-connector -n <Namespace> -f values.yaml
 ```
+**Note,** that due to the app-of-apps structure of the connector and the different dependencies between the components, a deployment without providing any configuration values will not work. Make sure to provide a 
+`values.yaml` file for the deployment, specifying all necessary parameters. This includes setting parameters of the connected data space (e.g., trust anchor endpoints), DNS information (providing Ingress or OpenShift Route parameters), 
+structure and type of the required VCs, internal hostnames of the different connector components and providing the configuration of the DID and keys/certs.  
+Also have a look at the [examples](#examples).
 
 The chart also contains the [argo-cd applications support](./data-space-connector/templates/), thus it can be used to generate argo-deployments, too. In plain Helm deployments, this should be disabled in the values.yaml:
 ```yaml
