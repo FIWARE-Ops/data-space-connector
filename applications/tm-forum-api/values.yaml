@@ -1,18 +1,6 @@
 tm-forum-api:
   ## configuration to be used by every api-deployment if nothing specific is provided.
   defaultConfig:
-  
-    # -- configuration to be used for the image of the container
-    image:
-      # -- repository to get the container from
-      #repository: quay.io/wi_stefan
-      repository: quay.io/beknazar
-      # -- tag to be used, most of the time the apis will use the same version
-      #tag: 0.5.0
-      tag: 2.0.2
-      # -- pull policy to be used
-      pullPolicy: IfNotPresent
-
     # --  ngsi-ld broker connection information
     ngsiLd:
       # -- timeout for requests ot the broker
@@ -73,3 +61,7 @@ tm-forum-api:
     - name: service-catalog
       image: tmforum-service-catalog
       basePath: /tmf-api/serviceCatalogManagement/v4
+
+  # redis caching
+  redis:
+    enabled: false
