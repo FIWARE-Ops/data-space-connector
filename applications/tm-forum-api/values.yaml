@@ -71,3 +71,7 @@ tm-forum-api:
     - name: service-catalog
       image: tmforum-service-catalog
       basePath: /tmf-api/serviceCatalogManagement/v4
+
+  # redis caching
+  redis:
+    enabled: false
