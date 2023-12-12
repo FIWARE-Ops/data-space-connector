@@ -25,16 +25,16 @@ exports.handler = async (event) => {
             }
         }
 
-        if(!payload.id || !payload.type || !payload.location) {
-            throw new Error('id, type and location are required')
+        if(!payload.id || !payload.type) {
+            throw new Error('id and type are required')
         }
 
-        if(payload.type != 'Device'){
-            throw new Error('Invalid type. The value of type must be Device and compliant with Smart Data Models - Device')
+        if(payload.type != 'Thing'){
+            throw new Error('Invalid type. The value of type must be Thing')
         }
 
-        if(!payload.id.startsWith('urn:ngsi-ld:Device:')){
-            throw new Error('Invalid id. The id must start with urn:ngsi-ld:Device: following with thingName')
+        if(!payload.id.startsWith('urn:ngsi-ld:Thing:')){
+            throw new Error('Invalid id. The id must start with urn:ngsi-ld:Thing: following with thingName')
         }
 
         // Get the thingName from the id
@@ -63,7 +63,27 @@ exports.handler = async (event) => {
 
         console.log(thing_in_registry)
 
-        delete payload.thingGroups
+
+        for (let [key, value] of Object.entries(payload)) {
+            if(!['type', 'id', '@context'].includes(key)) {
+        
+                if( typeof value == 'object' && !Array.isArray(value)){
+                recursive_concise(key, value)
+                } else {
+                    payload[key] = {
+                        value: value
+                    }
+                }
+                
+            
+            } 
+        }
+
+        if (payload['@context']) {
+            console.log(`Removed the context:`)
+            console.log(payload['@context'])
+            delete payload['@context']
+        }
 
         const shadow_payload = {
             state: {
@@ -103,4 +123,16 @@ exports.handler = async (event) => {
     
 
 
+}
+
+const recursive_concise = (key, value) => {
+
+    if( typeof value == 'object' && !Array.isArray(value)){
+        if(['Property', 'Relationship', 'GeoProperty'].includes(value['type'])) {
+            delete value['type'] 
+        }
+        for (let [skey, svalue] of Object.entries(value)){
+                    recursive_concise(skey,svalue)
+        }
+    }
 }

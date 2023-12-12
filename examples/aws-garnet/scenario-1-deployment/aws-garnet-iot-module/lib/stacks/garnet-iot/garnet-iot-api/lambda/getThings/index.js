@@ -11,7 +11,7 @@ exports.handler = async (event) => {
     try { 
         let { headers, queryStringParameters} = event
 
-        let index = 'Device'
+        let index = 'Thing'
 
         if(queryStringParameters && queryStringParameters['index']) {
             index = queryStringParameters['index']
@@ -37,8 +37,7 @@ exports.handler = async (event) => {
             return [ ...prev, 
                     { thingName: curr.thingName, 
                       thingGroupNames: curr.thingGroupNames, 
-                      thingTypeName: curr.thingTypeName, 
-                      entity: {...curr?.shadow?.name[`${shadow_prefix}-${index}`]?.reported}
+                      thingTypeName: curr.thingTypeName
                     }
             ]
         }, [])

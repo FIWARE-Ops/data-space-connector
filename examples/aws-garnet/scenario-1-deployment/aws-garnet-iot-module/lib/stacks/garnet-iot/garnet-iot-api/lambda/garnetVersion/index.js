@@ -12,7 +12,7 @@ exports.handler = async (event) => {
         if(CONTEXT_BROKER == "Orion"){
             path = `ngsi-ld/ex/v1/version`
         } else if (CONTEXT_BROKER == "Scorpio") {
-            path = `/q/info`
+            path = `q/info`
         } else {
             throw new Error(`${CONTEXT_BROKER} is an invalid value for Context Broker`)
         }

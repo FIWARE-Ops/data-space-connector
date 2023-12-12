@@ -8,6 +8,7 @@ import { RetentionDays } from "aws-cdk-lib/aws-logs"
 import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from "aws-cdk-lib/custom-resources"
 import { Construct } from "constructs"
 import { Parameters } from "../../../../parameters"
+import { garnet_constant } from "../../garnet-constructs/constants"
 
 
 export interface GarnetIotApiProps {
@@ -23,7 +24,7 @@ export class GarnetIotApi extends Construct {
 
 
         // LAMBDA LAYER (SHARED LIBRARIES)
-        const layer_lambda_path = `./lib/stacks/garnet-iot/layers`
+        const layer_lambda_path = `./lib/layers`
         const layer_lambda = new LayerVersion(this, 'LayerLambda', {
             code: Code.fromAsset(layer_lambda_path),
             compatibleRuntimes: [Runtime.NODEJS_18_X]
@@ -39,18 +40,19 @@ export class GarnetIotApi extends Construct {
         // LAMBDA GARNET API VERSION
         const lambda_garnet_version_path = `${__dirname}/lambda/garnetVersion`
         const lambda_garnet_version = new Function(this, 'LambdaGarnetVersion', {
-            functionName: `garnet-api-version-lambda-${Names.uniqueId(this).slice(-8).toLowerCase()}`,
+            functionName: `garnet-api-version-lambda-${Names.uniqueId(this).slice(-4).toLowerCase()}`,
+            description: 'Garnet API - Function that returns the Garnet Version',
             runtime: Runtime.NODEJS_18_X,
             code: Code.fromAsset(lambda_garnet_version_path),
             handler: 'index.handler',
-            timeout: Duration.seconds(15),
+            timeout: Duration.seconds(30),
             logRetention: RetentionDays.THREE_MONTHS,
             layers: [layer_lambda],
             architecture: Architecture.ARM_64,
 
             environment: {
                 CONTEXT_BROKER: Parameters.garnet_broker,
-                GARNET_VERSION: Parameters.garnet_version
+                GARNET_VERSION: garnet_constant.garnet_version
                 }   
         })
 
@@ -95,17 +97,18 @@ export class GarnetIotApi extends Construct {
         // LAMBDA THAT POSTS THING
         const lambda_post_thing_path = `${__dirname}/lambda/postThing`
         const lambda_post_thing = new Function(this, 'LambdaPostThing', {
-            functionName: `garnet-iot-api-post-thing-lambda-${Names.uniqueId(this).slice(-8).toLowerCase()}`,
+            functionName: `garnet-iot-api-post-thing-lambda-${Names.uniqueId(this).slice(-4).toLowerCase()}`,
+            description: 'Garnet API - Function to POST THING',
             runtime: Runtime.NODEJS_18_X,
             code: Code.fromAsset(lambda_post_thing_path),
             handler: 'index.handler',
-            timeout: Duration.seconds(15),
+            timeout: Duration.seconds(30),
             logRetention: RetentionDays.THREE_MONTHS,
             layers: [layer_lambda],
             architecture: Architecture.ARM_64,
             environment: {
                 AWSIOTREGION: Aws.REGION,
-                SHADOW_PREFIX: Parameters.garnet_iot.shadow_prefix,
+                SHADOW_PREFIX: garnet_constant.shadow_prefix,
                 }   
         })
 
@@ -161,7 +164,8 @@ export class GarnetIotApi extends Construct {
         // LAMBDA THAT DELETE THING
         const lambda_delete_thing_path = `${__dirname}/lambda/deleteThing`
         const lambda_delete_thing = new Function(this, 'LambdaDeleteThing', {
-            functionName: `garnet-iot-api-delete-thing-lambda-${Names.uniqueId(this).slice(-8).toLowerCase()}`,
+            functionName: `garnet-iot-api-delete-thing-lambda-${Names.uniqueId(this).slice(-4).toLowerCase()}`,
+            description: 'Garnet API - Function to DELETE THING',
             vpc: props.vpc, 
             vpcSubnets: {
                 subnetType: SubnetType.PRIVATE_WITH_EGRESS
@@ -169,13 +173,13 @@ export class GarnetIotApi extends Construct {
             runtime: Runtime.NODEJS_18_X,
             code: Code.fromAsset(lambda_delete_thing_path),
             handler: 'index.handler',
-            timeout: Duration.seconds(15),
+            timeout: Duration.seconds(30),
             logRetention: RetentionDays.THREE_MONTHS,
             layers: [layer_lambda],
             architecture: Architecture.ARM_64,
             environment: {
                 AWSIOTREGION: Aws.REGION,
-                SHADOW_PREFIX: Parameters.garnet_iot.shadow_prefix,
+                SHADOW_PREFIX: garnet_constant.shadow_prefix,
                 DNS_CONTEXT_BROKER: props.dns_context_broker
             }   
         })
@@ -229,17 +233,18 @@ export class GarnetIotApi extends Construct {
         // LAMBDA THAT GETS THING
         const lambda_get_thing_path = `${__dirname}/lambda/getThing`
         const lambda_get_thing = new Function(this, 'LambdaGetThing', {
-            functionName: `garnet-iot-api-get-thing-lambda-${Names.uniqueId(this).slice(-8).toLowerCase()}`,
+            functionName: `garnet-iot-api-get-thing-lambda-${Names.uniqueId(this).slice(-4).toLowerCase()}`,
+            description: 'Garnet API - Function to GET THING',
             runtime: Runtime.NODEJS_18_X,
             code: Code.fromAsset(lambda_get_thing_path),
             handler: 'index.handler',
-            timeout: Duration.seconds(15),
+            timeout: Duration.seconds(30),
             logRetention: RetentionDays.THREE_MONTHS,
             layers: [layer_lambda],
             architecture: Architecture.ARM_64,
             environment: {
                 AWSIOTREGION: Aws.REGION,
-                SHADOW_PREFIX: Parameters.garnet_iot.shadow_prefix,
+                SHADOW_PREFIX: garnet_constant.shadow_prefix,
                 }   
         })
 
@@ -291,17 +296,18 @@ export class GarnetIotApi extends Construct {
         // LAMBDA THAT GETS THING
         const lambda_get_things_path = `${__dirname}/lambda/getThings`
         const lambda_get_things = new Function(this, 'LambdaGetThings', {
-            functionName: `garnet-iot-api-get-things-lambda-${Names.uniqueId(this).slice(-8).toLowerCase()}`,
+            functionName: `garnet-iot-api-get-things-lambda-${Names.uniqueId(this).slice(-4).toLowerCase()}`,
+            description: 'Garnet API - Function to GET THINGS',
             runtime: Runtime.NODEJS_18_X,
             code: Code.fromAsset(lambda_get_things_path),
             handler: 'index.handler',
-            timeout: Duration.seconds(15),
+            timeout: Duration.minutes(3),
             logRetention: RetentionDays.THREE_MONTHS,
             layers: [layer_lambda],
             architecture: Architecture.ARM_64,
             environment: {
                 AWSIOTREGION: Aws.REGION,
-                SHADOW_PREFIX: Parameters.garnet_iot.shadow_prefix,
+                SHADOW_PREFIX: garnet_constant.shadow_prefix,
                 }   
         })
 
@@ -353,17 +359,18 @@ export class GarnetIotApi extends Construct {
         // LAMBDA THAT POST SHADOWS
         const lambda_post_shadows_path = `${__dirname}/lambda/postShadows`
         const lambda_post_shadows = new Function(this, 'LambdaPostShadows', {
-            functionName: `garnet-iot-api-post-shadows-lambda-${Names.uniqueId(this).slice(-8).toLowerCase()}`,
+            functionName: `garnet-iot-api-post-shadows-lambda-${Names.uniqueId(this).slice(-4).toLowerCase()}`,
+            description: 'Garnet API - Function to POST SHADOW',
             runtime: Runtime.NODEJS_18_X,
             code: Code.fromAsset(lambda_post_shadows_path),
             handler: 'index.handler',
-            timeout: Duration.seconds(15),
+            timeout: Duration.seconds(50),
             logRetention: RetentionDays.THREE_MONTHS,
             layers: [layer_lambda],
             architecture: Architecture.ARM_64,
             environment: {
                 AWSIOTREGION: Aws.REGION,
-                SHADOW_PREFIX: Parameters.garnet_iot.shadow_prefix,
+                SHADOW_PREFIX: garnet_constant.shadow_prefix,
                 }   
         })
 

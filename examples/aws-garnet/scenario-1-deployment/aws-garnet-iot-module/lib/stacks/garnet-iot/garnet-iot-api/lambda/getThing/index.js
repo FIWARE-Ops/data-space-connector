@@ -26,7 +26,7 @@ exports.handler = async (event) => {
             new ListNamedShadowsForThingCommand({ thingName })
         )
 
-        if(!results.includes(`${shadow_prefix}-Device`)) {
+        if(!results.includes(`${shadow_prefix}-Thing`)) {
             return {
                 statusCode: 404, 
                 body: JSON.stringify({

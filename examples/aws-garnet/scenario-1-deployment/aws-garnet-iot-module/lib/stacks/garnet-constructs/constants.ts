@@ -28,8 +28,16 @@ export const scorpiobroker_sqs_object = {
     "SCORPIO_TOPICS_TEMPORAL": `garnet-scorpiobroker-temporal`,
     "SCORPIO_TOPICS_INTERNALNOTIFICATION": `garnet-scorpiobroker-internalnotification`,
     "SCORPIO_TOPICS_INTERNALREGSUB": `garnet-scorpiobroker-internalregsub`,
-    "SCORPIO_TOPICS_SUBALIVE": `garnet-scorpiobroker-subalive`,
-    "SCORPIO_TOPICS_SUBSYNC": `garnet-scorpiobroker-subsync`, 
-    "SCORPIO_TOPICS_REGSUBALIVE": `garnet-scorpiobroker-regsubalive`,
-    "SCORPIO_TOPICS_REGSUBSYNC": `garnet-scorpiobroker-regsubsync`
+}
+
+export const garnet_constant = {
+    garnet_version: "1.0.0", // DO NOT CHANGE
+    shadow_prefix: "Garnet",
+    subAllName: 'GarnetDataLakeSub-DoNotDelete',
+    iotDomainName: 'garnet-iot-domain', 
+    gluedbName: 'garnetdb'
+}
+
+export enum Broker {
+    SCORPIO = "Scorpio"
 }
