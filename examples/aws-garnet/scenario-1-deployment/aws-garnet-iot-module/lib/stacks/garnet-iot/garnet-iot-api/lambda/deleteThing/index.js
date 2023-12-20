@@ -14,45 +14,52 @@ exports.handler = async (event) => {
         const {pathParameters: {thingName}, headers, queryStringParameters} = event
 
         console.log(queryStringParameters?.['recursive'])
+        
         if(!thingName) {
             throw new Error('thingName is required')
         }
-        if (queryStringParameters?.['recursive'] == 'false'){
 
+        if (queryStringParameters?.['recursive'] == 'true'){
+            try {
+                const {results} = await iotdata.send(
+                    new ListNamedShadowsForThingCommand({thingName})
+                )
+                for await (let shadowName of results){
+                    if(shadowName.startsWith(shadow_prefix)){
+                        try {
+                            await iotdata.send(
+                                new DeleteThingShadowCommand({ thingName, shadowName })
+                            )
+                            let delete_entity = await axios.delete(`${dns_broker}/entities/urn:ngsi-ld:${shadowName.split(shadow_prefix)[1].split('-')[1]}:${thingName}`)       
+                        } catch (e) {
+                            console.log(e.message)
+                        }
+                        
+                    }
+                }
+            } catch(e){
+                console.log(e.message)
+            }
+
+        } else {
             try {
                 await iotdata.send(
                     new DeleteThingShadowCommand({
-                        thingName, shadowName: `${shadow_prefix}-Device`   
+                        thingName, shadowName: `${shadow_prefix}-Thing`   
                     })
                 )
-                let delete_entity = await axios.delete(`${dns_broker}/entities/urn:ngsi-ld:Device:${thingName}`)
+                let delete_entity = await axios.delete(`${dns_broker}/entities/urn:ngsi-ld:Thing:${thingName}`)
             } catch (e) {
                 console.log(e.message)
             }
-        } else {
-            const {results} = await iotdata.send(
-                new ListNamedShadowsForThingCommand({thingName})
-            )
-            for await (let shadowName of results){
-                if(shadowName.startsWith(shadow_prefix)){
-                    try {
-                        await iotdata.send(
-                            new DeleteThingShadowCommand({ thingName, shadowName })
-                        )
-                        let delete_entity = await axios.delete(`${dns_broker}/entities/urn:ngsi-ld:${shadowName.split(shadow_prefix)[1].split('-')[1]}:${thingName}`)       
-                    } catch (e) {
-                        console.log(e.message)
-                    }
-                    
-                }
-            }
         }
+
         await iot.send(
             new DeleteThingCommand({thingName})
         )
-        let add = 'and all its associated entities'
-        if(queryStringParameters?.['recursive'] == 'false'){
-            add =''
+        let add = ''
+        if(queryStringParameters?.['recursive'] == 'true'){
+            add = 'and all its associated entities'
         }
 
         let msg = `Successfully deleted the thing ${thingName} ${add}`

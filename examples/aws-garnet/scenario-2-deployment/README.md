@@ -2,7 +2,7 @@
 
 ## 2/ Existing AWS Garnet Framework deployment in the AWS Account with a Context Broker on AWS ECS Fargate
 For this scenario, it is recommended that a modified version of the Helm Chart for the Data Spaces Connector is deployed to a Kubernetes Cluster in the service Amazon Elastic Kubernetes Service ([AWS EKS](https://aws.amazon.com/eks/)).
-In this case, considering that your environment for the AWS Garnet Framework was set up following the [official AWS GitHub Repository](https://github.com/aws-samples/aws-stf-core), the FIWARE Orion-LD Context Broker is already hosted as an Amazon Elastic Container Service ([AWS ECS](https://aws.amazon.com/ecs/)) task in an AWS Fargate cluster and the integration to the Data Spaces Connector will be performed by deploying only this modified Helm Chart available [in this reference](./yaml/values-dsc-awl-load-balancer-controller-scenario2.yaml).
+In this case, considering that your environment for the AWS Garnet Framework was set up following the [official AWS GitHub Repository](https://github.com/awslabs/garnet-framework), the Context Broker is already hosted as an Amazon Elastic Container Service ([AWS ECS](https://aws.amazon.com/ecs/)) task in an AWS Fargate cluster and the integration to the Data Spaces Connector will be performed by deploying only this modified Helm Chart available [in this reference](./yaml/values-dsc-aws-load-balancer-controller-scenario2.yaml).
 
 <br>
 
@@ -14,7 +14,7 @@ In this case, considering that your environment for the AWS Garnet Framework was
 This section covers the setup of the prerequisites of the IPS Service Provider examples of this repository, available in [this reference](../service-provider-ips/README.md).
 
 #### Changes to the original Helm chart 
-[The edited version of the IPS Service Provider example Helm Chart](./yaml/values-dsc-awl-load-balancer-controller-scenario2.yaml) contains 3 main differences for this scenario where an existing Context Broker is already deployed and must only by extended by the additional building blocks of the Data Spaces Connector:
+[The edited version of the IPS Service Provider example Helm Chart](./yaml/values-dsc-aws-load-balancer-controller-scenario2.yaml) contains 3 main differences for this scenario where an existing Context Broker is already deployed and must only by extended by the additional building blocks of the Data Spaces Connector:
 
 * Disable the deployment of the MongoDB database
 
@@ -24,7 +24,7 @@ mongodb:
   deploymentEnabled: false
 ```
 
-* Disable the deployment of the Orion-LD Context Broker
+* Disable the deployment of the Context Broker following the same steps
 
 ```shell
 orion-ld:
@@ -72,10 +72,10 @@ kubectl create namespace ips
 helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 ```
 
-* Install the Helm Chart using the provided file `./yaml/values-dsc-awl-load-balancer-controller-scenario2.yaml` [available in this repository](./yaml/values-dsc-awl-load-balancer-controller-scenario2.yaml)
+* Install the Helm Chart using the provided file `./yaml/values-dsc-aws-load-balancer-controller-scenario2.yaml` [available in this repository](./yaml/values-dsc-aws-load-balancer-controller-scenario2.yaml)
 
 ```shell
-helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller-scenario2.yaml ips-dsc dsc/data-space-connector
+helm install -n ips -f ./yaml/values-dsc-aws-load-balancer-controller-scenario2.yaml ips-dsc dsc/data-space-connector
 ```
 
 ## Other Resources - Troubleshooting

@@ -25,14 +25,14 @@ kubectl create namespace ips
 helm repo add dsc https://fiware-ops.github.io/data-space-connector/
 ```
 
-* Install the Helm Chart using the provided file `./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml` [available in this repository](./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml)
+* Install the Helm Chart using the provided file `./yaml/values-dsc-aws-load-balancer-controller-scenario1.yaml` [available in this repository](./yaml/values-dsc-aws-load-balancer-controller-scenario1.yaml)
 
 ```shell
-helm install -n ips -f ./yaml/values-dsc-awl-load-balancer-controller-scenario1.yaml ips-dsc dsc/data-space-connector
+helm install -n ips -f ./yaml/values-dsc-aws-load-balancer-controller-scenario1.yaml ips-dsc dsc/data-space-connector
 ```
 
 ### Deployment of AWS Garnet Framework IoT Module
-An AWS CDK project modified from the AWS Garnet Framwork main project is available in [this repository](./aws-garnet-iot-module/). The project was modified so ONLY the AWS Garnet Framwrork IoT Module is deployed once the CDK stacks are deployed. To integrate this module to the Context Broker deployed in the Amazon EKS Cluster, 2 main parameters must be set in the `./aws-garnet-iot-module/parameters.ts` file :
+An AWS CDK project modified from the AWS Garnet Framework main project is available in [this repository](./aws-garnet-iot-module/). The project was modified so ONLY the AWS Garnet Framwrork IoT Module is deployed once the CDK stacks are deployed. To integrate this module to the Context Broker deployed in the Amazon EKS Cluster, 2 main parameters must be set in the `./aws-garnet-iot-module/parameters.ts` file :
 
 ```shell
     // FIWARE DATA SPACE CONNECTOR PARAMETERS
