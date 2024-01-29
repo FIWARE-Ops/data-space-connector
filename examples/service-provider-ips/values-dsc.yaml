@@ -1768,14 +1768,22 @@ keycloak:
 contract-management:
   # Enable the deployment of application: contract-management
   deploymentEnabled: true
-  til:
-    ## Type of Verifiable Credential necessary for accessing the service
-    credentialType: VerifiableCredential
-    ## Claims with permissions granted to given Verifiable Credential
-    claims:
-      ## DID of the target service that is requiring the permissions
-      - target: "did:web:ips.dsba.aws.fiware.io:did"
-        ## Roles that are added/allowed for the given service
-        roles:
-          - STANDARD_CUSTOMER
-          - GOLD_CUSTOMER
+  contract-management:
+    til:
+      ## Type of Verifiable Credential necessary for accessing the service
+      credentialType: VerifiableCredential
+      ## Claims with permissions granted to given Verifiable Credential
+      claims:
+        ## DID of the target service that is requiring the permissions
+        - target: "did:web:ips.dsba.aws.fiware.io:did"
+          ## Roles that are added/allowed for the given service
+          roles:
+            - STANDARD_CUSTOMER
+            - GOLD_CUSTOMER
+    services:
+      product:
+        url: http://ips-dsc-tm-forum-api-envoy:8080
+      party:
+        url: http://ips-dsc-tm-forum-api-envoy:8080
+      til:
+        url: http://ips-dsc-trusted-issuers-list:8080
