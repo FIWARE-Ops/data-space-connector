@@ -31,13 +31,33 @@ exports.handler = async (event) => {
         if(entity_thingName != thingName){
             throw new Error(`The name ${entity_thingName} extracted from the id of the entity does not match ${thingName}`)
         }
-        if(entity.type == 'Device') {
-            throw new Error(`Type Device is not a valid type for this operation`)
+        if(entity.type == 'Thing') {
+            throw new Error(`Type Thing is not a valid type for this operation`)
         }
         if(!entity.id.startsWith(`urn:ngsi-ld:${entity.type}:`)){
             throw new Error(`Invalid id. The id must start with urn:ngsi-ld:${entity.type}: following with thingName`)
         }
 
+        for (let [key, value] of Object.entries(entity)) {
+            if(!['type', 'id', '@context'].includes(key)) {
+        
+                if( typeof value == 'object' && !Array.isArray(value)){
+                recursive_concise(key, value)
+                } else {
+                    entity[key] = {
+                        value: value
+                    }
+                }
+                
+            
+            } 
+        }
+
+        if (entity['@context']) {
+            console.log(`Removed the context:`)
+            console.log(entity['@context'])
+            delete entity['@context']
+        }
 
         const shadow_payload = {
             state: {
@@ -74,4 +94,18 @@ exports.handler = async (event) => {
     
 
 
+}
+
+
+
+const recursive_concise = (key, value) => {
+
+    if( typeof value == 'object' && !Array.isArray(value)){
+        if(['Property', 'Relationship', 'GeoProperty'].includes(value['type'])) {
+            delete value['type'] 
+        }
+        for (let [skey, svalue] of Object.entries(value)){
+                    recursive_concise(skey,svalue)
+        }
+    }
 }
