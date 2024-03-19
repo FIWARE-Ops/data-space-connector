@@ -6,6 +6,6 @@
 version: 2
 updates:
   - package-ecosystem: "docker"
-    directory: "applications/verifier"
+    directory: "applications"
     schedule:
       interval: "daily"
