@@ -30,7 +30,7 @@ jobs:
           id: match-label-bash
           run: |
             LABELS=${{ steps.pr.outputs.labels }}
-            IFS=',' read -ra LABEL <<< "$LABELS"
+            IFS='\n' read -ra LABEL <<< "$LABELS"
             for i in "${LABEL[@]}"; do
                 case $i in
                     # Will just use the first occurence
