@@ -27,7 +27,7 @@ jobs:
         name: Match semver labels
         uses: zwaldowski/match-label-action@v1
         with:
-          allowed: major,minor,patch
+          allowed: major, minor, patch
 
       - uses: zwaldowski/semver-release-action@v2
         name: Semver release
