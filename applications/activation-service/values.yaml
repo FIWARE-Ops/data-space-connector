@@ -20,21 +20,23 @@ activation-service:
   ccs:
     endpoint: "http://ccs-credentials-config-service:8080/"
     id: "my-activation-service"
-    credentials:
-      - type: "VerifiableCredential"
-        trustedParticipantsLists: [
-          "https://tir.dataspace.com"
-        ]
-        trustedIssuersLists: [
-          "http://til-trusted-issuers-list:8080"
-        ]
-      - type: "ActivationService"
-        trustedParticipantsLists: [
-          "https://tir.dataspace.com"
-        ]
-        trustedIssuersLists: [
-          "http://til-trusted-issuers-list:8080"
-        ]
+    defaultOidcScope: "default"
+    oidcScopes:
+      default:
+        - type: "VerifiableCredential"
+          trustedParticipantsLists: [
+            "https://tir.dataspace.com"
+          ]
+          trustedIssuersLists: [
+            "http://til-trusted-issuers-list:8080"
+          ]
+        - type: "ActivationService"
+          trustedParticipantsLists: [
+            "https://tir.dataspace.com"
+          ]
+          trustedIssuersLists: [
+            "http://til-trusted-issuers-list:8080"
+          ]
 
   ## AS config
   config:

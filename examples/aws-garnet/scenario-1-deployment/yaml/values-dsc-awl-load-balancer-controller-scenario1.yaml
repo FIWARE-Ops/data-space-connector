@@ -40,22 +40,24 @@ activation-service:
     ccs:
       endpoint: "http://ips-dsc-credentials-config-service:8080/"
       id: "ips-activation-service"
-      credentials:
-        - type: "VerifiableCredential"
-          trustedParticipantsLists: [
-            "https://tir.dsba.fiware.dev"
-          ]
-          trustedIssuersLists: [
-            "http://ips-dsc-trusted-issuers-list:8080"
-          ]
-        - type: "IpsActivationService"
-          trustedParticipantsLists: [
-            "https://tir.dsba.fiware.dev"
-          ]
-          trustedIssuersLists: [
-            "http://ips-dsc-trusted-issuers-list:8080"
-          ]
-
+      defaultOidcScope: "default"
+      oidcScopes:
+        default:
+          - type: "VerifiableCredential"
+            trustedParticipantsLists: [
+              "https://tir.dsba.fiware.dev"
+            ]
+            trustedIssuersLists: [
+              "http://ips-dsc-trusted-issuers-list:8080"
+            ]
+          - type: "IpsActivationService"
+            trustedParticipantsLists: [
+              "https://tir.dsba.fiware.dev"
+            ]
+            trustedIssuersLists: [
+              "http://ips-dsc-trusted-issuers-list:8080"
+            ]
+      
     ## AS config
     config:
 
