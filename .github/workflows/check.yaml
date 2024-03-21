@@ -23,15 +23,17 @@ jobs:
           java-version: '11'
           java-package: jdk
 
-      - id: bump
+      - id: match-label
+        name: Match semver labels
         uses: zwaldowski/match-label-action@v1
         with:
-          allowed: major,minor,patch
+          allowed: major, minor, patch
 
       - uses: zwaldowski/semver-release-action@v2
+        name: Semver release
         with:
           dry_run: true
-          bump: ${{ steps.bump.outputs.match }}
+          bump: ${{ steps.match-label.outputs.match }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   comment:

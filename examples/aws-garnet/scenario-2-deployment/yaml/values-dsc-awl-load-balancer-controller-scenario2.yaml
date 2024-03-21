@@ -180,7 +180,7 @@ kong:
         annotations:
           kubernetes.io/ingress.class: nginx
           cert-manager.io/cluster-issuer: letsencrypt-fiware-eks
-        ingressClassName: nginx
+        #ingressClassName: nginx
         tls: kong-ips-dsba-tls
         hostname: ips-kong.dsba.aws.fiware.io
       route:
@@ -202,9 +202,9 @@ kong:
             - tir-key
 
         services:
-          - host: "ips-dsc-orion"
+          - host: "psr8tihlz1.execute-api.eu-west-1.amazonaws.com" 
             name: "ips"
-            port: 1026
+            port: 443
             protocol: http
 
             routes:
@@ -229,7 +229,7 @@ kong:
 
 mongodb:
   # Enable the deployment of application: mongodb
-  deploymentEnabled: true
+  deploymentEnabled: false
 
   mongodb:
 
@@ -272,7 +272,7 @@ mysql:
 
 orion-ld:
   # Enable the deployment of application: orion-ld
-  deploymentEnabled: true
+  deploymentEnabled: false
 
   orion:
 
@@ -907,7 +907,7 @@ keycloak:
     # Ingress
     ingress:
       enabled: true
-      ingressClassName: nginx
+      #ingressClassName: nginx
       hostname: ips-kc.dsba.aws.fiware.io
       tls: true
       annotations:
@@ -1765,25 +1765,6 @@ keycloak:
             ]
           }
 
-contract-management:
-  # Enable the deployment of application: contract-management
-  deploymentEnabled: true
-  contract-management:
-    til:
-      ## Type of Verifiable Credential necessary for accessing the service
-      credentialType: VerifiableCredential
-      ## Claims with permissions granted to given Verifiable Credential
-      claims:
-        ## DID of the target service that is requiring the permissions
-        - target: "did:web:ips.dsba.aws.fiware.io:did"
-          ## Roles that are added/allowed for the given service
-          roles:
-            - STANDARD_CUSTOMER
-            - GOLD_CUSTOMER
-    services:
-      product:
-        url: http://ips-dsc-tm-forum-api-envoy:8080
-      party:
-        url: http://ips-dsc-tm-forum-api-envoy:8080
-      til:
-        url: http://ips-dsc-trusted-issuers-list:8080
+
+    
+  
