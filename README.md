@@ -74,4 +74,4 @@ The chart is [generated](generate.sh) on each merge to master from the current a
 ### Examples
 
 Different examples for the deployment of the FIWARE Data Space connector can be found 
-under [./examples](./examples).
+under the [./examples](./examples) directory.

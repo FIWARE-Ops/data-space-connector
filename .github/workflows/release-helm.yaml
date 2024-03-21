@@ -26,10 +26,24 @@ jobs:
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
 
+        - name: Match semver label via bash
+          id: match-label-bash
+          run: |
+            LABELS=${{ steps.pr.outputs.labels }}
+            IFS='\n' read -ra LABEL <<< "$LABELS"
+            for i in "${LABEL[@]}"; do
+                case $i in
+                    # Will just use the first occurence
+                    'major'|'minor'|'patch')
+                        echo "RELEASE_LABEL=$i" >> $GITHUB_OUTPUT
+                        break
+                esac
+            done
+          
         - uses: zwaldowski/semver-release-action@v2
           with:
             dry_run: true
-            bump: ${{ steps.pr.outputs.labels }}
+            bump: ${{ steps.match-label-bash.outputs.RELEASE_LABEL }}
             github_token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Set version output
