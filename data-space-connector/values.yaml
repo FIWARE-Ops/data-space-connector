@@ -9,8 +9,6 @@ secretsEnabled: &secretsEnabled false
 host: &host
 tlsSecret: &tlsSecret
 participant: my-provider
-tmForumProxy: &tmForumProxy proxy-tmforum-api
-tilService: &tilService til-service
 
 applications:
 
@@ -61,10 +59,6 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
-    values:
-      trusted-issuers-list:
-        service:
-          serviceNameOverride: *tilService
 
   - name: vcwaltid
     enabled: true
@@ -129,11 +123,6 @@ applications:
     destination: *destination
     helm_values:
     - values.yaml
-    values:
-      tm-forum-api:
-        apiProxy:
-          service:
-            nameOverride: *tmForumProxy
 
   - name: contract-management
     enabled: true
@@ -142,12 +131,3 @@ applications:
     destination: *destination
     helm_values:
       - values.yaml
-    values:
-      contract-management:
-        services:
-          product:
-            url: http://*tmForumProxy:8080
-          party:
-            url: http://*tmForumProxy:8080
-          til:
-            url: http://*tilService:8080

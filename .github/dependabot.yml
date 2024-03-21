@@ -4,6 +4,8 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
+
+# List of directories to scan for updates
 updates:
   - package-ecosystem: "docker"
     directory: "applications/activation-service"
