@@ -5,7 +5,7 @@ vcverifier:
     # Image
     image:
       repository: quay.io/fiware/vcverifier
-      tag: 2.5.0
+      tag: 4.0.0
       pullPolicy: Always
 
     # Logging
@@ -13,6 +13,11 @@ vcverifier:
       level: DEBUG
       pathsToSkip: 
         - "/health"
+
+    # Server config
+    #server:
+    #  # Place external host here when publishing verifier with public URL
+    #  host: https://verifier.my-url.com
 
     # Walt-id config
     ssikit:
@@ -24,6 +29,10 @@ vcverifier:
       tirAddress: https://tir.dataspace.com/v3/issuers
       # DID of organisation
       did: did:web:my-did:did
+
+    # M2M config
+    m2m:
+      authEnabled: false
 
     # Config service
     configRepo:
