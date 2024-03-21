@@ -29,7 +29,10 @@ jobs:
         - name: Match semver label via bash
           id: match-label-bash
           run: |
-            LABELS=${{ steps.pr.outputs.labels }}
+            LABELS=$(cat <<-END
+            ${{ steps.pr.outputs.labels }}
+            END
+            )
             IFS='\n' read -ra LABEL <<< "$LABELS"
             for i in "${LABEL[@]}"; do
                 case $i in
