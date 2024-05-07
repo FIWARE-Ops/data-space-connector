@@ -1,0 +1,254 @@
+generatePasswords: 
+  enabled: true
+  secretName: issuance-secret
+
+postgresql:
+  fullnameOverride: issuance-postgresql
+  auth:
+    existingSecret: issuance-secret
+    secretKeys:
+      adminPasswordKey: postgres-admin-password
+      userPasswordKey: postgres-user-password
+
+  primary:
+    initdb:
+      scripts:
+        create.sh: |
+          psql postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432 -c "CREATE DATABASE keycloak;"
+
+keycloak:
+  containerSecurityContext:
+    enabled: false
+  image:
+    registry: quay.io
+    # until 25 is released, we have to use a snapshot version
+    repository: wi_stefan/keycloak
+    tag: 25.0.0-PRE
+    pullPolicy: Always
+  command: 
+        - /bin/bash
+  args:
+    - -ec
+    - |
+      #!/bin/bash
+      source /did-material/did.env
+      /opt/keycloak/bin/kc.sh start --features oid4vc-vci --import-realm
+  service:
+    type: LoadBalancer
+    ports:
+      http: 8080
+  auth:
+    existingSecret: issuance-secret
+    passwordSecretKey: keycloak-admin
+    adminUser: keycloak-admin
+  postgresql:
+    enabled: false
+  externalDatabase:
+    host: issuance-postgresql
+
+  enableDefaultInitContainers: false
+  
+  extraVolumeMounts:
+    - name: empty-dir
+      mountPath: /opt/keycloak/lib/quarkus
+      subPath: app-quarkus-dir
+    - name: qtm-temp
+      mountPath: /qtm-tmp
+    - name: did-material
+      mountPath: /did-material
+    - name: realms
+      mountPath: /opt/keycloak/data/import
+    
+
+  extraVolumes: 
+    - name: did-material
+      emptyDir: {}
+    - name: qtm-temp
+      emptyDir: {}
+    - name: realms
+      configMap:  
+        name: test-realm-realm
+
+  extraEnvVars:
+    - name: KC_HOSTNAME
+      value: "localhost"
+    - name: KC_PROXY
+      value: "edge"
+    - name: QUARKUS_TRANSACTION_MANAGER_OBJECT_STORE_DIRECTORY
+      value: /qtm-tmp
+    - name: KC_DB_URL_HOST
+      value: issuance-postgresql
+    - name: KC_DB_URL_DATABASE
+      value: keycloak
+    - name: KC_DB_USERNAME
+      value: postgres
+    - name: STORE_PASS
+      valueFrom:
+        secretKeyRef:
+          name: issuance-secret
+          key: store-pass
+    - name: KC_DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: issuance-secret
+          key: postgres-admin-password
+    - name: KC_ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: issuance-secret
+          key: keycloak-admin
+          
+  initContainers:
+    - name: read-only-workaround
+      image: quay.io/wi_stefan/keycloak:25.0.0-PRE
+      command: 
+        - /bin/bash
+      args:
+        - -ec
+        - |
+          #!/bin/bash
+          cp -r /opt/keycloak/lib/quarkus/* /quarkus
+      volumeMounts:
+        - name: empty-dir
+          mountPath: /quarkus
+          subPath: app-quarkus-dir
+
+    - name: init-did
+      image: quay.io/wi_stefan/did-helper:0.1.1-pre-5
+      env: 
+        - name: COUNTRY
+          value: DE
+        - name: STATE
+          value: Saxony
+        - name: LOCALITY
+          value: Dresden
+        - name: ORGANIZATION
+          value: M&P DataSpace Operations Inc.
+        - name: COMMON_NAME
+          value: www.mp-dataspace.org
+        - name: STORE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: issuance-secret
+              key: store-pass
+        - name: KEY_ALIAS
+          value: didPrivateKey
+        - name: OUTPUT_FORMAT
+          value: env
+        - name: OUTPUT_FILE
+          value: /cert/did.env
+      volumeMounts:
+        - name: did-material
+          mountPath: /cert
+
+  realm:
+    import: true
+    name: test-realm
+    frontendURL: http://localhost:8080
+    clientRoles: | 
+      "did:web:test.org": [
+        {
+          "name": "LEGAL_REPRESENTATIVE",
+          "description": "Is allowed to register",
+          "clientRole": true
+        },
+        {
+          "name": "EMPLOYEE",
+          "description": "Is allowed to see",
+          "clientRole": true
+        }
+      ]
+      
+    users: |
+      {
+        "username": "test-user",
+        "enabled": true,
+        "email": "test@user.org",
+        "firstName": "Test",
+        "lastName": "Employee",
+        "credentials": [
+          {
+            "type": "password",
+            "value": "test"
+          }
+        ],
+        "clientRoles": {
+          "did:web:test.org": [
+            "EMPLOYEE"
+          ],
+          "account": [
+            "view-profile",
+            "manage-account"
+          ]
+        },
+        "groups": [
+        ]
+      }
+    clients: |
+      {
+        "clientId": "did:web:test.org",
+        "enabled": true,
+        "description": "Client to connect test.org",
+        "surrogateAuthRequired": false,
+        "alwaysDisplayInConsole": false,
+        "clientAuthenticatorType": "client-secret",
+        "defaultRoles": [],
+        "redirectUris": [],
+        "webOrigins": [],
+        "notBefore": 0,
+        "bearerOnly": false,
+        "consentRequired": false,
+        "standardFlowEnabled": true,
+        "implicitFlowEnabled": false,
+        "directAccessGrantsEnabled": false,
+        "serviceAccountsEnabled": false,
+        "publicClient": false,
+        "frontchannelLogout": false,
+        "protocol": "oid4vc",
+        "attributes": {
+          "client.secret.creation.time": "1675260539",
+          "vc.natural-person.format": "jwt_vc",
+          "vc.natural-person.scope": "NaturalPersonCredential",
+          "vc.verifiable-credential.format": "jwt_vc",
+          "vc.verifiable-credential.scope": "VerifiableCredential"
+        },
+        "protocolMappers": [
+          {
+            "name": "target-role-mapper",
+            "protocol": "oid4vc",
+            "protocolMapper": "oid4vc-target-role-mapper",
+            "config": {
+              "subjectProperty": "roles",
+              "clientId": "did:web:test.org",
+              "supportedCredentialTypes": "NaturalPersonCredential"
+            }
+          },
+          {
+            "name": "target-vc-role-mapper",
+            "protocol": "oid4vc",
+            "protocolMapper": "oid4vc-target-role-mapper",
+            "config": {
+              "subjectProperty": "roles",
+              "clientId": "did:web:test.org",
+              "supportedCredentialTypes": "VerifiableCredential"
+            }
+          },
+          {
+            "name": "email-mapper",
+            "protocol": "oid4vc",
+            "protocolMapper": "oid4vc-user-attribute-mapper",
+            "config": {
+              "subjectProperty": "email",
+              "userAttribute": "email",
+              "supportedCredentialTypes": "NaturalPersonCredential"
+            }
+          }
+        ],
+        "authenticationFlowBindingOverrides": {},
+        "fullScopeAllowed": true,
+        "nodeReRegistrationTimeout": -1,
+        "defaultClientScopes": [],
+        "optionalClientScopes": []
+      }
+     
+     
