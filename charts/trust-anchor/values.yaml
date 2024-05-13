@@ -1,0 +1,24 @@
+generatePasswords: 
+  enabled: true
+  secretName: mysql-database-secret
+
+mysql:
+  fullnameOverride: trust-anchor-mysql
+  auth:
+    existingSecret: mysql-database-secret
+  initdbScripts:
+    create.sql: |
+      CREATE DATABASE tirdb;
+
+trusted-issuers-list:
+  fullnameOverride: tir
+  database:
+    persistence: true
+    username: root
+    existingSecret: 
+      enabled: true
+      name: mysql-database-secret
+      key: mysql-root-password
+
+    host:  trust-anchor-mysql
+    name: tirdb

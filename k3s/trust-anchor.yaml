@@ -1,0 +1,11 @@
+trusted-issuers-list:
+  service:
+    type: LoadBalancer
+    port: 8080
+mysql:
+  primary:
+    persistence:
+      enabled: false
+  secondary:
+    persistence:
+      enabled: false

@@ -1,0 +1,12 @@
+vcverifier:
+  deployment:
+    verifier:
+      tirAddress: http://tir.trust-anchor.svc.cluster.local/v3/issuers
+      did: did:key:my-key
+mysql:
+  primary:
+    persistence:
+      enabled: false
+  secondary:
+    persistence:
+      enabled: false

@@ -1,0 +1,18 @@
+apiVersion: v2
+name: authentication
+description: Umbrella Chart for the authentication features of the FIWARE Data Space Connector
+type: application
+version: 0.0.1
+dependencies:
+  - name: vcverifier
+    version: 2.3.0
+    repository: https://fiware.github.io/helm-charts
+  - name: credentials-config-service
+    version: 0.1.2
+    repository: https://fiware.github.io/helm-charts
+  - name: trusted-issuers-list
+    version: 0.6.2
+    repository: https://fiware.github.io/helm-charts
+  - name: mysql
+    version: 9.4.4
+    repository: https://charts.bitnami.com/bitnami

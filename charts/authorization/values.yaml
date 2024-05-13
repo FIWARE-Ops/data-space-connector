@@ -1,0 +1,108 @@
+generatePasswords: 
+  enabled: true
+  secretName: authorization-database-secret
+
+postgresql:
+  fullnameOverride: authorization-postgresql
+  auth:
+    existingSecret: authorization-database-secret
+    secretKeys:
+      adminPasswordKey: postgres-admin-password
+      userPasswordKey: postgres-user-password
+
+  primary:
+    initdb:
+      scripts:
+        create.sh: |
+          psql postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432 -c "CREATE DATABASE pap;"
+
+odrl-pap:
+  fullnameOverride: odrl-pap
+  service: 
+    type: LoadBalancer
+    port: 8081
+  deployment:
+    image: 
+      repository: quay.io/fiware/odrl-pap
+      tag: 0.0.2-PRE-5
+  database:
+    url: jdbc:postgresql://authorization-postgresql:5432/pap
+    username: postgres
+    existingSecret:
+      enabled: true
+      name: authorization-database-secret
+      key: postgres-admin-password
+opa: 
+  resourceUrl: http://odrl-pap:8181/bundles/service/v1
+  port: 8181
+  policies: 
+    minDelay: 2
+    maxDelay: 4
+  methods: 
+    minDelay: 1
+    maxDelay: 3
+  data:  
+    minDelay: 1
+    maxDelay: 15
+
+apisix:
+  controlPlane:
+    enabled: true
+  ingressController:
+    enabled: false
+  etcd:
+    enabled: true
+    persistence:
+      enabled: false
+  dataPlane:
+    service:
+      type: LoadBalancer
+      ports:
+        http: 8082
+        https: 8443
+    extraEnvVars: []
+    extraConfig:
+      deployment:
+        role_data_plane:
+          config_provider: yaml
+    extraVolumes:
+      - name: routes
+        configMap:
+          name: apisix-routes
+      - name: opa-config
+        configMap:
+          name: opa-config
+    extraVolumeMounts:
+      - name: routes
+        mountPath: /usr/local/apisix/conf/apisix.yaml
+        subPath: apisix.yaml
+    sidecars:
+      - name: open-policy-agent
+        image: openpolicyagent/opa:0.63.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 8181
+            protocol: TCP
+        args:
+          - "run"
+          - "--ignore=.*"  # exclude hidden dirs created by Kubernetes
+          - "--server"
+          - "-l"
+          - "info"
+          - "-c"
+          - "/config/opa.yaml"
+          - "--addr"
+          - "0.0.0.0:8181"
+        volumeMounts:
+          - name: opa-config
+            mountPath: /config
+  # -- configuration to connect the upstream broker          
+  upstream:
+    url: http://my-broker:8000
+  # -- confiuration to verify the jwt, coming from the verifier 
+  oidc:
+    clientId: mySecuredService
+    discoveryEndpoint: http://verifier:3000/services/mySecuredService/.well-known/openid-configuration
+    
+
