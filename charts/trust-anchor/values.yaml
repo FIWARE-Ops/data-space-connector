@@ -36,6 +36,7 @@ trusted-issuers-list:
     existingSecret: 
       enabled: true
       name: mysql-database-secret
+      key: mysql-root-password
     # -- host of the database
     host:  trust-anchor-mysql
     # -- name of the schema inside the db
