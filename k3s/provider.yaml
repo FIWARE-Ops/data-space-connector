@@ -165,6 +165,7 @@ postgis:
       enabled: false
 
 did:
+  enabled: true
   secret: issuance-secret
   serviceType: ClusterIP
   port: 3002
