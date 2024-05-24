@@ -30,6 +30,8 @@ data:
     import /etc/coredns/custom/*.server
   NodeHosts: |
     172.17.0.2 k3s
+  # in order to make the nip.io served local host addresses also available cluster internal(e.g. to the pods), we instruct coredns
+  # to forward all such requests inside the cluster to the traefik' loadbalancer-service
   nip.db: |
     127.0.0.1.nip.io. IN SOA sns.dns.icann.org. noc.dns.icann.org. 2015082541 7200 3600 1209600 3600
     127.0.0.1.nip.io. IN NS    a.iana-servers.net.

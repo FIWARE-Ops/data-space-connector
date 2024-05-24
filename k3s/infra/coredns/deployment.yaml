@@ -1,3 +1,4 @@
+# overwrites the k3s default coredns deployment, in order to load the additional configuration
 apiVersion: apps/v1
 kind: Deployment
 metadata:
