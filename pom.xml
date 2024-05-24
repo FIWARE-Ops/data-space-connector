@@ -7,21 +7,29 @@
     <groupId>org.fiware.dataspace</groupId>
     <artifactId>connector</artifactId>
     <version>0.0.1</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>it</module>
+    </modules>
 
     <properties>
-
         <jdk.version>17</jdk.version>
         <release.version>17</release.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <version.org.apache.maven.plugins.maven-surefire-plugin>3.0.0-M5
-        </version.org.apache.maven.plugins.maven-surefire-plugin>
         <version.io.kokuwa.maven.k3s-plugin>1.2.4</version.io.kokuwa.maven.k3s-plugin>
         <version.io.kokuwa.helm-maven-plugin>6.13.0</version.io.kokuwa.helm-maven-plugin>
+        <version.org.apache.maven.plugins.maven-install>3.1.1</version.org.apache.maven.plugins.maven-install>
+        <version.org.apache.maven.plugins.maven-source>2.4</version.org.apache.maven.plugins.maven-source>
+        <version.org.apache.maven.plugins.maven-jar>3.3.0</version.org.apache.maven.plugins.maven-jar>
+        <version.org.apache.maven.plugins.maven-dependency>3.1.1</version.org.apache.maven.plugins.maven-dependency>
+        <version.org.apache.maven.plugins.maven-surefire>3.0.0</version.org.apache.maven.plugins.maven-surefire>
+        <version.org.apache.maven.plugins.maven-failsafe>3.0.0</version.org.apache.maven.plugins.maven-failsafe>
+
+        <main.basedir>${project.basedir}</main.basedir>
     </properties>
-     <build>
+
+    <build>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -38,29 +46,30 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>${version.org.apache.maven.plugins.maven-install}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
+                <version>${version.org.apache.maven.plugins.maven-source}</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>${version.org.apache.maven.plugins.maven-jar}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>${version.org.apache.maven.plugins.maven-dependency}</version>
+
             </plugin>
             <!-- disable jar/surefire -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${version.org.apache.maven.plugins.maven-surefire}</version>
                 <executions>
                     <execution>
                         <id>default-test</id>
@@ -71,7 +80,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${version.org.apache.maven.plugins.maven-failsafe}</version>
                 <configuration>
                     <failIfNoTests>false</failIfNoTests>
                 </configuration>
@@ -92,13 +101,23 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <!-- copy the charts to the target repo to keep the sources clean -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>copy-resources-trust-anchor</id>
-                        <phase>validate</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -106,74 +125,29 @@
                             <outputDirectory>${project.build.directory}/charts/trust-anchor</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/charts/trust-anchor</directory>
+                                    <directory>${main.basedir}/charts/trust-anchor</directory>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-resources-authentication</id>
-                        <phase>validate</phase>
+                        <id>copy-resources-dsc</id>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/charts/authentication</outputDirectory>
+                            <outputDirectory>${project.build.directory}/charts</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/charts/authentication</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-resources-authorization</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/charts/authorization</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/charts/authorization</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-resources-issuance</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/charts/issuance</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/charts/issuance</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-resources-data-plane</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/charts/data-plane</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/charts/data-plane</directory>
+                                    <directory>${main.basedir}/charts</directory>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
                     <execution>
                         <id>copy-resources-namespaces</id>
-                        <phase>validate</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -181,11 +155,26 @@
                             <outputDirectory>${project.build.directory}/k3s/namespaces</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/k3s/namespaces</directory>
+                                    <directory>${main.basedir}/k3s/namespaces</directory>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
+                    <execution>
+                    <id>copy-resources-infra</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${project.build.directory}/k3s/infra</outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>${main.basedir}/k3s/infra</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
                 </executions>
             </plugin>
             <!-- render the charts -->
@@ -193,7 +182,44 @@
                 <groupId>io.kokuwa.maven</groupId>
                 <artifactId>helm-maven-plugin</artifactId>
                 <version>${version.io.kokuwa.helm-maven-plugin}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
                 <executions>
+                    <execution>
+                        <id>template-dsc-provider</id>
+                        <goals>
+                            <goal>init</goal>
+                            <goal>dependency-update</goal>
+                            <goal>template</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <chartDirectory>${project.build.directory}/charts/data-space-connector</chartDirectory>
+                            <skipTemplate>false</skipTemplate>
+                            <templateGenerateName>true</templateGenerateName>
+                            <templateOutputDir>${project.build.directory}/k3s/dsc-provider</templateOutputDir>
+                            <additionalArguments>--name-template=provider --namespace=provider -f ${main.basedir}/k3s/provider.yaml
+                            </additionalArguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>template-dsc-consumer</id>
+                        <goals>
+                            <goal>init</goal>
+                            <goal>dependency-update</goal>
+                            <goal>template</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <chartDirectory>${project.build.directory}/charts/data-space-connector</chartDirectory>
+                            <skipTemplate>false</skipTemplate>
+                            <templateGenerateName>true</templateGenerateName>
+                            <templateOutputDir>${project.build.directory}/k3s/dsc-consumer</templateOutputDir>
+                            <additionalArguments>--name-template=consumer --namespace=consumer -f ${main.basedir}/k3s/consumer.yaml
+                            </additionalArguments>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>template-trust-anchor</id>
                         <goals>
@@ -201,77 +227,14 @@
                             <goal>dependency-update</goal>
                             <goal>template</goal>
                         </goals>
-                        <phase>test-compile</phase>
+                        <phase>package</phase>
                         <configuration>
                             <chartDirectory>${project.build.directory}/charts/trust-anchor</chartDirectory>
                             <skipTemplate>false</skipTemplate>
                             <templateGenerateName>true</templateGenerateName>
                             <templateOutputDir>${project.build.directory}/k3s/trust-anchor</templateOutputDir>
-                            <additionalArguments>--name-template=trust-anchor --namespace=trust-anchor -f ${project.basedir}/k3s/trust-anchor.yaml</additionalArguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>template-authentication</id>
-                        <goals>
-                            <goal>init</goal>
-                            <goal>dependency-update</goal>
-                            <goal>template</goal>
-                        </goals>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <chartDirectory>${project.build.directory}/charts/authentication</chartDirectory>
-                            <skipTemplate>false</skipTemplate>
-                            <templateGenerateName>true</templateGenerateName>
-                            <templateOutputDir>${project.build.directory}/k3s/authentication</templateOutputDir>
-                            <additionalArguments>--name-template=participant --namespace=participant -f ${project.basedir}/k3s/participant-authentication.yaml</additionalArguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>template-authorization</id>
-                        <goals>
-                            <goal>init</goal>
-                            <goal>dependency-update</goal>
-                            <goal>template</goal>
-                        </goals>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <chartDirectory>${project.build.directory}/charts/authorization</chartDirectory>
-                            <skipTemplate>false</skipTemplate>
-                            <templateGenerateName>true</templateGenerateName>
-                            <templateOutputDir>${project.build.directory}/k3s/authorization</templateOutputDir>
-                            <additionalArguments>--name-template=participant --namespace=participant -f ${project.basedir}/k3s/participant-authorization.yaml</additionalArguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>template-issuance</id>
-                        <goals>
-                            <goal>init</goal>
-                            <goal>dependency-update</goal>
-                            <goal>template</goal>
-                        </goals>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <chartDirectory>${project.build.directory}/charts/issuance</chartDirectory>
-                            <skipTemplate>false</skipTemplate>
-                            <templateGenerateName>true</templateGenerateName>
-                            <templateOutputDir>${project.build.directory}/k3s/issuance</templateOutputDir>
-                            <additionalArguments>--name-template=participant --namespace=participant -f ${project.basedir}/k3s/participant-issuance.yaml</additionalArguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>template-data-plane</id>
-                        <goals>
-                            <goal>init</goal>
-                            <goal>dependency-update</goal>
-                            <goal>template</goal>
-                        </goals>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <chartDirectory>${project.build.directory}/charts/data-plane</chartDirectory>
-                            <skipTemplate>false</skipTemplate>
-                            <templateGenerateName>true</templateGenerateName>
-                            <templateOutputDir>${project.build.directory}/k3s/data-plane</templateOutputDir>
-                            <additionalArguments>--name-template=participant --namespace=participant -f ${project.basedir}/k3s/participant-data-plane.yaml</additionalArguments>
+                            <additionalArguments>--name-template=trust-anchor --namespace=trust-anchor -f ${main.basedir}/k3s/trust-anchor.yaml
+                            </additionalArguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -280,41 +243,69 @@
                 <groupId>io.kokuwa.maven</groupId>
                 <artifactId>k3s-maven-plugin</artifactId>
                 <version>${version.io.kokuwa.maven.k3s-plugin}</version>
+                <configuration>
+                    <skip>true</skip>
+                    <portBindings>
+                        <portBinding>8080:8080</portBinding>
+                    </portBindings>
+                </configuration>
                 <executions>
                     <execution>
                         <id>create-namespaces</id>
-                        <phase>pre-integration-test</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>run</goal>
-                            <goal>image</goal>
                             <goal>apply</goal>
                         </goals>
                         <configuration>
                             <failIfExists>false</failIfExists>
                             <manifests>${project.build.directory}/k3s/namespaces</manifests>
-                            <portBindings>
-                                <portBinding>8080:8080</portBinding>
-                            </portBindings>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>apply-consumer</id>
-                        <phase>pre-integration-test</phase>
+                        <id>apply-participants</id>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>apply</goal>
                         </goals>
                         <configuration>
-                            <failIfExists>false</failIfExists>
                             <manifests>${project.build.directory}/k3s</manifests>
-                            <portBindings>
-                                <portBinding>8081:8081</portBinding>
-                                <portBinding>8080:8080</portBinding>
-                            </portBindings>
+                            <timeout>500</timeout>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>local</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.kokuwa.maven</groupId>
+                        <artifactId>helm-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.kokuwa.maven</groupId>
+                        <artifactId>k3s-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
 
 </project>
