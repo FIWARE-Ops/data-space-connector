@@ -28,7 +28,7 @@ dependencies:
   # authorization
   - name: odrl-pap
     condition: odrl-pap.enabled
-    version: 0.0.12
+    version: 0.0.22
     repository: https://fiware.github.io/helm-charts
   - name: apisix
     condition: apisix.enabled
@@ -39,7 +39,7 @@ dependencies:
     alias: scorpio
     condition: scorpio.enabled
     repository: https://fiware.github.io/helm-charts
-    version: 0.4.3
+    version: 0.4.7
   - name: postgresql
     alias: postgis
     condition: postgis.enabled

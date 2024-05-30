@@ -61,7 +61,6 @@ public class TestUtils {
         // prevent instantiation
     }
 
-
     public static String getFormDataAsString(Map<String, String> formData) {
         StringBuilder formBodyBuilder = new StringBuilder();
         for (Map.Entry<String, String> singleEntry : formData.entrySet()) {

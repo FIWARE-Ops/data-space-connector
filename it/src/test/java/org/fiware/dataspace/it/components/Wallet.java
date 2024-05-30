@@ -1,11 +1,16 @@
 package org.fiware.dataspace.it.components;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.it.E;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+import io.ipfs.multibase.Multibase;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.utils.URIBuilder;
+import org.bouncycastle.jce.interfaces.ECPublicKey;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.fiware.dataspace.it.components.model.Credential;
 import org.fiware.dataspace.it.components.model.CredentialOffer;
 import org.fiware.dataspace.it.components.model.CredentialRequest;
@@ -15,26 +20,37 @@ import org.fiware.dataspace.it.components.model.OfferUri;
 import org.fiware.dataspace.it.components.model.OpenIdConfiguration;
 import org.fiware.dataspace.it.components.model.SupportedConfiguration;
 import org.fiware.dataspace.it.components.model.TokenResponse;
-import org.keycloak.common.VerificationException;
+import org.fiware.dataspace.it.components.model.VerifiablePresentation;
+import org.keycloak.crypto.ECDSASignatureSignerContext;
+import org.keycloak.crypto.KeyUse;
+import org.keycloak.crypto.KeyWrapper;
+import org.keycloak.jose.jws.JWSBuilder;
+import org.keycloak.representations.JsonWebToken;
 
-import javax.swing.text.html.Option;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.math.BigInteger;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
+import java.security.spec.ECGenParameterSpec;
+import java.time.Clock;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static org.fiware.dataspace.it.components.TestUtils.OBJECT_MAPPER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author <a href="https://github.com/wistefan">Stefan Wiedemann</a>
  */
+@Slf4j
 public class Wallet {
 
     private static final String OPENID_CREDENTIAL_ISSUER_PATH = "/realms/test-realm/.well-known/openid-credential-issuer";
@@ -44,56 +60,112 @@ public class Wallet {
 
     private static final String SAME_DEVICE_ENDPOINT = "/api/v1/samedevice";
 
-    private static final HttpClient HTTP_CLIENT = HttpClient
-            .newBuilder()
-            // we don´t follow the redirect directly, since we are not a real wallet
-            .followRedirects(HttpClient.Redirect.NEVER)
-            .build();
+    private final Map<String, String> credentialStorage = new HashMap<>();
 
-    public String getCredentialFromIssuer(String userToken, String issuerHost, String credentialId) throws Exception {
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
+
+    private final KeyWrapper walletKey;
+    private final String did;
+
+    public Wallet() throws Exception {
+        walletKey = getECKey();
+        did = walletKey.getKid();
+    }
+
+
+    public String exchangeCredentialForToken(OpenIdConfiguration openIdConfiguration, String credentialId) throws Exception {
+        String vpToken = Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(createVPToken(did, walletKey, credentialStorage.get(credentialId)).getBytes());
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("grant_type", "vp_token")
+                .add("vp_token", vpToken)
+                .add("scope", "default")
+                .build();
+        Request tokenRequest = new Request.Builder()
+                .post(requestBody)
+                .addHeader("client_id", MPOperationsEnvironment.CLIENT_ID)
+                .url(openIdConfiguration.getTokenEndpoint())
+                .build();
+        Response tokenResponse = HTTP_CLIENT.newCall(tokenRequest).execute();
+
+        assertEquals(HttpStatus.SC_OK, tokenResponse.code(), "A token should have been responded.");
+
+        TokenResponse accessTokenResponse = OBJECT_MAPPER.readValue(tokenResponse.body().string(), TokenResponse.class);
+        assertNotNull(accessTokenResponse.getAccessToken(), "The access token should have been returned.");
+        return accessTokenResponse.getAccessToken();
+    }
+
+    private String createVPToken(String did, KeyWrapper key, String credential) {
+        VerifiablePresentation verifiablePresentation = new VerifiablePresentation();
+        verifiablePresentation.setVerifiableCredential(List.of(credential));
+        verifiablePresentation.setHolder(did);
+        key.setKid(did);
+        key.setAlgorithm("ES256");
+        key.setUse(KeyUse.SIG);
+
+        ECDSASignatureSignerContext signerContext = new ECDSASignatureSignerContext(key);
+
+        JsonWebToken jwt = new JsonWebToken()
+                .issuer(did)
+                .subject(did)
+                .iat(Clock.systemUTC().millis());
+        jwt.setOtherClaims("vp", verifiablePresentation);
+        return new JWSBuilder()
+                .type("JWT")
+                .jsonContent(jwt)
+                .sign(signerContext);
+    }
+
+
+    public void getCredentialFromIssuer(String userToken, String issuerHost, String credentialId) throws Exception {
         IssuerConfiguration issuerConfiguration = getIssuerConfiguration(issuerHost);
         OfferUri offerUri = getCredentialOfferUri(userToken, issuerHost, credentialId);
         CredentialOffer credentialOffer = getCredentialOffer(userToken, offerUri);
-        return getCredential(issuerConfiguration, credentialOffer);
+
+        var theCredential = getCredential(issuerConfiguration, credentialOffer);
+        credentialStorage.put(credentialId, theCredential);
     }
 
-    public IssuerConfiguration getIssuerConfiguration(String issuerHost) throws Exception {
-        HttpRequest configRequest = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(issuerHost + OPENID_CREDENTIAL_ISSUER_PATH))
-                .build();
-        HttpResponse<String> configResponse = HTTP_CLIENT.send(configRequest, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(HttpStatus.SC_OK, configResponse.statusCode(), "An issuer config should have been returned.");
-        return OBJECT_MAPPER.readValue(configResponse.body(), IssuerConfiguration.class);
+    public IssuerConfiguration getIssuerConfiguration(String issuerHost) throws Exception {
+
+        Request configRequest = new Request.Builder()
+                .get()
+                .url(issuerHost + OPENID_CREDENTIAL_ISSUER_PATH)
+                .build();
+        Response configResponse = HTTP_CLIENT.newCall(configRequest).execute();
+
+        assertEquals(HttpStatus.SC_OK, configResponse.code(), "An issuer config should have been returned.");
+        return OBJECT_MAPPER.readValue(configResponse.body().string(), IssuerConfiguration.class);
     }
 
     public OfferUri getCredentialOfferUri(String keycloakJwt, String issuerHost, String credentialConfigId) throws Exception {
-        URI requestUri = new URIBuilder(issuerHost + CREDENTIAL_OFFER_URI_PATH)
-                .addParameter("credential_configuration_id", credentialConfigId)
-                .build();
-        HttpRequest uriRequest = HttpRequest.newBuilder()
-                .GET()
-                .uri(requestUri)
+
+        Request request = new Request.Builder()
+                .url(issuerHost + CREDENTIAL_OFFER_URI_PATH + "?credential_configuration_id=" + credentialConfigId)
+                .get()
                 .header("Authorization", "Bearer " + keycloakJwt)
                 .build();
-        HttpResponse<String> uriResponse = HTTP_CLIENT.send(uriRequest, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(HttpStatus.SC_OK, uriResponse.statusCode(), "An uri should have been returned.");
-        return OBJECT_MAPPER.readValue(uriResponse.body(), OfferUri.class);
+        Response uriResponse = HTTP_CLIENT.newCall(request).execute();
+
+        assertEquals(HttpStatus.SC_OK, uriResponse.code(), "An uri should have been returned.");
+        return OBJECT_MAPPER.readValue(uriResponse.body().string(), OfferUri.class);
     }
 
     public CredentialOffer getCredentialOffer(String keycloakJwt, OfferUri offerUri) throws Exception {
 
-        HttpRequest uriRequest = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(offerUri.getIssuer() + offerUri.getNonce()))
+        Request uriRequest = new Request.Builder()
+                .get()
+                .url(offerUri.getIssuer() + offerUri.getNonce())
                 .header("Authorization", "Bearer " + keycloakJwt)
                 .build();
-        HttpResponse<String> offerResponse = HTTP_CLIENT.send(uriRequest, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(HttpStatus.SC_OK, offerResponse.statusCode(), "An offer should have been returned.");
-        return OBJECT_MAPPER.readValue(offerResponse.body(), CredentialOffer.class);
+        Response offerResponse = HTTP_CLIENT.newCall(uriRequest).execute();
+
+        assertEquals(HttpStatus.SC_OK, offerResponse.code(), "An offer should have been returned.");
+        return OBJECT_MAPPER.readValue(offerResponse.body().string(), CredentialOffer.class);
     }
 
     public String getTokenForOffer(IssuerConfiguration issuerConfiguration, CredentialOffer credentialOffer) throws Exception {
@@ -129,45 +201,98 @@ public class Wallet {
         credentialRequest.setCredentialIdentifier(offeredCredential.getId());
         credentialRequest.setFormat(offeredCredential.getFormat());
 
-        HttpRequest credentialHttpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(credentialEndpoint))
-                .POST(HttpRequest.BodyPublishers.ofString(OBJECT_MAPPER.writeValueAsString(credentialRequest)))
+        RequestBody credentialRequestBody = RequestBody
+                .create(
+                        com.squareup.okhttp.MediaType.parse(MediaType.APPLICATION_JSON),
+                        OBJECT_MAPPER.writeValueAsString(credentialRequest));
+        Request credentialHttpRequest = new Request.Builder()
+                .post(credentialRequestBody)
+                .url(credentialEndpoint)
                 .header("Authorization", "Bearer " + token)
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .build();
-        HttpResponse<String> credentialResponse = HTTP_CLIENT.send(credentialHttpRequest,
-                HttpResponse.BodyHandlers.ofString());
-        assertEquals(HttpStatus.SC_OK, credentialResponse.statusCode(), "A credential should have been returned.");
-        return credentialResponse.body();
+
+
+        Response credentialResponse = HTTP_CLIENT.newCall(credentialHttpRequest).execute();
+        assertEquals(HttpStatus.SC_OK, credentialResponse.code(), "A credential should have been returned.");
+        return credentialResponse.body().string();
     }
 
     public String getAccessToken(String tokenEndpoint, String preAuthorizedCode) throws Exception {
-
-        Map<String, String> tokenRequestFormData = Map.of("grant_type",
-                PRE_AUTHORIZED_GRANT_TYPE, "code",
-                preAuthorizedCode);
-        HttpRequest tokenRequest = HttpRequest.newBuilder()
-                .uri(URI.create(tokenEndpoint))
-                .POST(HttpRequest.BodyPublishers.ofString(TestUtils.getFormDataAsString(tokenRequestFormData)))
-                .header("Content-Type", MediaType.APPLICATION_FORM_URLENCODED)
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("grant_type", PRE_AUTHORIZED_GRANT_TYPE)
+                .add("code", preAuthorizedCode)
+                .build();
+        Request tokenRequest = new Request.Builder()
+                .url(tokenEndpoint)
+                .post(requestBody)
                 .build();
 
-        HttpResponse<String> tokenResponse = HTTP_CLIENT.send(tokenRequest, HttpResponse.BodyHandlers.ofString());
-        assertEquals(HttpStatus.SC_OK, tokenResponse.statusCode(), "A valid token should have been returned.");
 
-        return OBJECT_MAPPER.readValue(tokenResponse.body(), TokenResponse.class).getAccessToken();
+        Response tokenResponse = HTTP_CLIENT.newCall(tokenRequest).execute();
+        assertEquals(HttpStatus.SC_OK, tokenResponse.code(), "A valid token should have been returned.");
+
+        return OBJECT_MAPPER.readValue(tokenResponse.body().string(), TokenResponse.class).getAccessToken();
     }
 
     public OpenIdConfiguration getOpenIdConfiguration(String authorizationServer) throws Exception {
-        HttpRequest uriRequest = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(authorizationServer + OID_WELL_KNOWN_PATH))
+        Request request = new Request.Builder()
+                .get()
+                .url(authorizationServer + OID_WELL_KNOWN_PATH)
                 .build();
-        HttpResponse<String> openIdConfigResponse = HTTP_CLIENT.send(uriRequest, HttpResponse.BodyHandlers.ofString());
+        Response openIdConfigResponse = HTTP_CLIENT.newCall(request).execute();
 
-        assertEquals(HttpStatus.SC_OK, openIdConfigResponse.statusCode(), "An openId config should have been returned.");
-        return OBJECT_MAPPER.readValue(openIdConfigResponse.body(), OpenIdConfiguration.class);
+        assertEquals(HttpStatus.SC_OK, openIdConfigResponse.code(), "An openId config should have been returned.");
+        return OBJECT_MAPPER.readValue(openIdConfigResponse.body().string(), OpenIdConfiguration.class);
     }
 
+
+    private static KeyWrapper getECKey() throws Exception {
+        try {
+            Security.addProvider(new BouncyCastleProvider());
+
+            KeyPairGenerator kpGen = KeyPairGenerator.getInstance("EC", "BC");
+            ECGenParameterSpec spec = new ECGenParameterSpec("P-256");
+            kpGen.initialize(spec);
+
+            var keyPair = kpGen.generateKeyPair();
+            KeyWrapper kw = new KeyWrapper();
+            kw.setPrivateKey(keyPair.getPrivate());
+            kw.setPublicKey(keyPair.getPublic());
+            kw.setUse(KeyUse.SIG);
+            kw.setKid(generateDid(keyPair));
+            kw.setType("EC");
+            kw.setAlgorithm("ES256");
+            return kw;
+
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String generateDid(KeyPair keyPair) throws Exception {
+        if (keyPair.getPublic() instanceof ECPublicKey ecPublicKey) {
+            byte[] encodedQ = ecPublicKey.getQ().getEncoded(true);
+            byte[] codecBytes = new byte[2];
+            codecBytes[0] = HexFormat.of().parseHex("80")[0];
+            codecBytes[1] = HexFormat.of().parseHex("24")[0];
+
+            byte[] prefixed = new byte[encodedQ.length + codecBytes.length];
+            System.arraycopy(codecBytes, 0, prefixed, 0, codecBytes.length);
+            System.arraycopy(encodedQ, 0, prefixed, codecBytes.length, encodedQ.length);
+
+            String encodedKeyRaw = Multibase.encode(Multibase.Base.Base58BTC, prefixed);
+            return "did:key:" + encodedKeyRaw;
+        }
+        throw new IllegalArgumentException("Key pair is not supported.");
+    }
+
+    private static byte[] marshalCompressed(BigInteger x, BigInteger y) {
+        // we only support the P-256 curve here, thus a fixed length can be set
+        byte[] compressed = new byte[33];
+        compressed[0] = (byte) (y.testBit(0) ? 1 : 0);
+        System.arraycopy(x.toByteArray(), 0, compressed, 1, x.toByteArray().length);
+        return compressed;
+    }
 
 }

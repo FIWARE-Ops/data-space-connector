@@ -10,6 +10,11 @@ odrl-pap:
   enabled: false
 apisix:
   enabled: false
+scorpio:
+  enabled: false
+postgis:
+  enabled: false
+
 
 postgresql:
   primary:
@@ -180,8 +185,8 @@ keycloak:
         "protocol": "oid4vc",
         "attributes": {
           "client.secret.creation.time": "1675260539",
-          "vc.service-account.format": "jwt_vc",
-          "vc.service-account.scope": "ServiceAccountCredential",
+          "vc.user-credential.format": "jwt_vc",
+          "vc.user-credential.scope": "UserCredential",
           "vc.verifiable-credential.format": "jwt_vc",
           "vc.verifiable-credential.scope": "VerifiableCredential"
         },
@@ -203,7 +208,7 @@ keycloak:
             "config": {
               "subjectProperty": "roles",
               "clientId": "${CLIENT_DID}",
-              "supportedCredentialTypes": "ServiceAccountCredential"
+              "supportedCredentialTypes": "UserCredential"
             }
           },
           {
@@ -212,7 +217,37 @@ keycloak:
             "protocolMapper": "oid4vc-context-mapper",
             "config": {
               "context": "https://www.w3.org/2018/credentials/v1",
-              "supportedCredentialTypes": "VerifiableCredential,ServiceAccountCredential"
+              "supportedCredentialTypes": "VerifiableCredential,UserCredential"
+            }
+          },
+          {
+            "name": "email-mapper",
+            "protocol": "oid4vc",
+            "protocolMapper": "oid4vc-user-attribute-mapper",
+            "config": {
+              "subjectProperty": "email",
+              "userAttribute": "email",
+              "supportedCredentialTypes": "UserCredential"
+            }
+          },
+          {
+            "name": "firstName-mapper",
+            "protocol": "oid4vc",
+            "protocolMapper": "oid4vc-user-attribute-mapper",
+            "config": {
+              "subjectProperty": "firstName",
+              "userAttribute": "firstName",
+              "supportedCredentialTypes": "UserCredential"
+            }
+          },
+          {
+            "name": "lastName-mapper",
+            "protocol": "oid4vc",
+            "protocolMapper": "oid4vc-user-attribute-mapper",
+            "config": {
+              "subjectProperty": "lastName",
+              "userAttribute": "lastName",
+              "supportedCredentialTypes": "UserCredential"
             }
           }
         ],
@@ -222,15 +257,6 @@ keycloak:
         "defaultClientScopes": [],
         "optionalClientScopes": []
       }
-
-
-postgis:
-  primary:
-    persistence:
-      enabled: false
-  readReplicas:
-    persistence:
-      enabled: false
 did:
   enabled: true
   secret: issuance-secret
@@ -246,15 +272,10 @@ did:
     enabled: true
     host: did-consumer.127.0.0.1.nip.io
 
-scorpio:
-  ccs: { }
-  initContainers: [ ]
-  additionalVolumes: [ ]
-
 # register the consumer at the til. Only possible if it runs in the same environment and recommendable for demo deployments
 registration:
   enabled: true
   configMap: consumer-til-registration
   til: http://trusted-issuers-list.provider.svc.cluster.local:8080
   did: ${DID}
-  credentialsType: ServiceAccountCredential
+  credentialsType: UserCredential

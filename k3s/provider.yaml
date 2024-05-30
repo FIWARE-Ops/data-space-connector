@@ -1,10 +1,15 @@
+postgresql:
+  enabled: false
+keycloak:
+  enabled: false
+
 apisix:
   image:
       debug: true
   dataPlane:
     ingress:
       enabled: true
-      hostname: api.127.0.0.1.nip.io
+      hostname: mp-data-plane.127.0.0.1.nip.io
   catchAllRoute:
     enabled: false
   routes: |-
@@ -19,7 +24,7 @@ apisix:
     - uri: /*
       upstream:
         nodes:
-          http://data-plane-scorpio:9090: 1
+          data-plane-scorpio:9090: 1
         type: roundrobin
       plugins:
         openid-connect:
@@ -41,6 +46,8 @@ vcverifier:
         paths:
           - "/"
   deployment:
+    logging:
+      level: DEBUG
     verifier:
       tirAddress: http://tir.127.0.0.1.nip.io:8080/
       did: ${DID}
@@ -88,74 +95,6 @@ mysql:
     persistence:
       enabled: false
 
-postgresql:
-  primary:
-    persistence:
-      enabled: false
-  readReplicas:
-    persistence:
-      enabled: false
-
-keycloak:
-  ingress:
-    enabled: true
-    hostname: keycloak-provider.127.0.0.1.nip.io
-  realm:
-    frontendUrl: http://keycloak-provider.127.0.0.1.nip.io
-  args:
-    - -ec
-    - |
-      #!/bin/sh
-      export $(cat /did-material/did.env)
-      export KC_HOSTNAME=keycloak-provider.127.0.0.1.nip.io
-      /opt/keycloak/bin/kc.sh start --features oid4vc-vci --import-realm
-  initContainers:
-    - name: read-only-workaround
-      image: quay.io/wi_stefan/keycloak:25.0.0-PRE
-      command:
-        - /bin/bash
-      args:
-        - -ec
-        - |
-          #!/bin/bash
-          cp -r /opt/keycloak/lib/quarkus/* /quarkus
-      volumeMounts:
-        - name: empty-dir
-          mountPath: /quarkus
-          subPath: app-quarkus-dir
-
-    - name: get-did
-      image: ubuntu
-      command:
-        - /bin/bash
-      args:
-        - -ec
-        - |
-          #!/bin/bash
-          apt-get -y update; apt-get -y install wget
-          cd /did-material
-          wget http://did-helper:3002/did-material/cert.pfx
-          wget http://did-helper:3002/did-material/did.env
-      volumeMounts:
-        - name: did-material
-          mountPath: /did-material
-
-    - name: register-at-tir
-      image: ubuntu
-      command:
-        - /bin/bash
-      args:
-        - -ec
-        - |
-          #!/bin/bash
-          source /did-material/did.env
-          apt-get -y update; apt-get -y install curl
-          curl -X 'POST' 'http://tir.trust-anchor.svc.cluster.local:8080/issuer' -H 'Content-Type: application/json' -d "{\"did\": \"${DID}\", \"credentials\": []}"
-      volumeMounts:
-        - name: did-material
-          mountPath: /did-material
-
-
 postgis:
   primary:
     persistence:
@@ -180,12 +119,51 @@ did:
     host: did-provider.127.0.0.1.nip.io
 
 scorpio:
+  ingress:
+    enabled: true
+    # only to make it available for the test initialization
+    hosts:
+    - host: scorpio-provider.127.0.0.1.nip.io
+      paths:
+        - "/"
   ccs:
     defaultOidcScope:
-      credentialType: ServiceAccountCredential
+      credentialType: UserCredential
       trustedParticipantsLists: http://tir.trust-anchor.svc.cluster.local:8080
 
 odrl-pap:
+  deployment:
+    initContainers:
+      - name: get-did
+        image: ubuntu
+        command:
+          - /bin/bash
+        args:
+          - -ec
+          - |
+            #!/bin/bash
+            apt-get -y update; apt-get -y install wget
+            cd /did-material
+            wget http://did-helper:3002/did-material/did.env
+        volumeMounts:
+          - name: did-material
+            mountPath: /did-material
+    additionalVolumes:
+      - name: did-material
+        emptyDir: {}
+    additionalVolumeMounts:
+      - name: did-material
+        mountPath: /did-material
+    command:
+      - /bin/sh
+    args:
+      - -ec
+      - |
+        #!/bin/sh
+        source /did-material/did.env
+        export GENERAL_ORGANIZATION_DID=$DID
+        ./application -Dquarkus.http.host=0.0.0.0
+
   ingress:
     enabled: true
     hosts:

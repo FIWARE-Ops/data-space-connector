@@ -5,6 +5,10 @@ trusted-issuers-list:
       enabled: true
       hosts:
         - host: tir.127.0.0.1.nip.io
+    til:
+      enabled: true
+      hosts:
+        - host: til.127.0.0.1.nip.io
 
 mysql:
   primary:

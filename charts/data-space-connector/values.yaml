@@ -131,7 +131,8 @@ odrl-pap:
   deployment:
     image:
       repository: quay.io/fiware/odrl-pap
-      tag: 0.0.2
+      tag: 0.1.0-PRE-6
+      pullPolicy: Always
   # -- connection to the database
   database:
     # -- url to connect the db at
