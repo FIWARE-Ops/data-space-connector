@@ -197,6 +197,14 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>${version.org.apache.maven.plugins.maven-jar}</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
                         <configuration>
                             <skip>false</skip>

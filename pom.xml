@@ -56,16 +56,19 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${version.org.apache.maven.plugins.maven-jar}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>${version.org.apache.maven.plugins.maven-dependency}</version>
 
             </plugin>
             <!-- disable jar/surefire -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${version.org.apache.maven.plugins.maven-jar}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -97,7 +100,7 @@
                     </execution>
                     <execution>
                         <id>verify</id>
-                        <phase>verify</phase>
+                        <phase>integration-test</phase>
                         <goals>
                             <goal>verify</goal>
                         </goals>
