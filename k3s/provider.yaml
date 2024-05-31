@@ -1,5 +1,3 @@
-postgresql:
-  enabled: false
 keycloak:
   enabled: false
 
@@ -9,7 +7,7 @@ apisix:
   dataPlane:
     ingress:
       enabled: true
-      hostname: mp-data-plane.127.0.0.1.nip.io
+      hostname: mp-data-service.127.0.0.1.nip.io
   catchAllRoute:
     enabled: false
   routes: |-
@@ -20,20 +18,20 @@ apisix:
         type: roundrobin
       plugins:
         proxy-rewrite:
-          uri: /services/data-plane/.well-known/openid-configuration
+          uri: /services/data-service/.well-known/openid-configuration
     - uri: /*
       upstream:
         nodes:
-          data-plane-scorpio:9090: 1
+          data-service-scorpio:9090: 1
         type: roundrobin
       plugins:
         openid-connect:
           bearer_only: true
           use_jwks: true
-          client_id: data-plane
+          client_id: data-service
           client_secret: unused
           ssl_verify: false
-          discovery: http://verifier:3000/services/data-plane/.well-known/openid-configuration
+          discovery: http://verifier:3000/services/data-service/.well-known/openid-configuration
         opa:
           host: "http://localhost:8181"
           policy: policy/main
@@ -87,6 +85,21 @@ vcverifier:
           - name: alternative-conf
             mountPath: /alternative-conf
 
+      - name: register-at-tir
+        image: ubuntu
+        command:
+          - /bin/bash
+        args:
+          - -ec
+          - |
+            #!/bin/bash
+            source /did-material/did.env
+            apt-get -y update; apt-get -y install curl
+            curl -X 'POST' 'http://tir.trust-anchor.svc.cluster.local:8080/issuer' -H 'Content-Type: application/json' -d "{\"did\": \"${DID}\", \"credentials\": []}"
+        volumeMounts:
+          - name: did-material
+            mountPath: /did-material
+
 mysql:
   primary:
     persistence:
@@ -96,6 +109,14 @@ mysql:
       enabled: false
 
 postgis:
+  primary:
+    persistence:
+      enabled: false
+  readReplicas:
+    persistence:
+      enabled: false
+
+postgresql:
   primary:
     persistence:
       enabled: false

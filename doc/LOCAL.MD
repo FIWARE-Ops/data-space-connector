@@ -83,15 +83,23 @@ In order to retrieve an actual credential two ways are available:
 
 > :warning: The pre-authorized code and the offer expire within 30s for security reasons. Be fast. 
 
+> :bulb: In case you did the demo before, you can use the following snippet to unset the env-vars:
+> ```shell
+>           unset ACCESS_TOKEN; unset OFFER_URI; unset PRE_AUTHORIZED_CODE; \
+>           unset CREDENTIAL_ACCESS_TOKEN; unset VERIFIABLE_CREDENTIAL; unset HOLDER_DID; \
+>           unset VERIFIABLE_PRESENTATION; unset JWT_HEADER; unset PAYLOAD; unset SIGNATURE; unset JWT; \
+>           unset VP_TOKEN; unset DATA_SERVICE_ACCESS_TOKEN;
+> ```
+
 Get an AccessToken from Keycloak:
 ```shell
-    curl -X POST http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/openid-connect/token \
+    export ACCESS_TOKEN=$(curl -s -X POST http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/openid-connect/token \
       --header 'Accept: */*' \
       --header 'Content-Type: application/x-www-form-urlencoded' \
       --data grant_type=password \
       --data client_id=admin-cli \
       --data username=test-user \
-      --data password=test
+      --data password=test | jq '.access_token' -r); echo ${ACCESS_TOKEN}
 ```
 
 (Optional, since in the local case we know all of the values in advance)
@@ -102,32 +110,32 @@ Get the credentials issuer information:
 
 Get a credential offer uri(for the `user-credential), using the retrieved AccessToken:
 ```shell
-    curl -X GET 'http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/oid4vc/credential-offer-uri?credential_configuration_id=user-credential' \
-      --header 'Authorization: Bearer <THE_ACCESS_TOKEN>' 
+    export OFFER_URI=$(curl -s -X GET 'http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/oid4vc/credential-offer-uri?credential_configuration_id=user-credential' \
+      --header "Authorization: Bearer ${ACCESS_TOKEN}" | jq '"\(.issuer)\(.nonce)"' -r); echo ${OFFER_URI}
 ```
 
 Use the offer uri(e.g. the `issuer`and `nonce` fields), to retrieve the actual offer:
 ```shell
-    curl -X GET '<issuer><nonce>' \
-            --header 'Authorization: Bearer <THE_ACCESS_TOKEN>' 
+    export PRE_AUTHORIZED_CODE=$(curl -s -X GET ${OFFER_URI} \
+            --header "Authorization: Bearer ${ACCESS_TOKEN}" | jq '.grants."urn:ietf:params:oauth:grant-type:pre-authorized_code"."pre-authorized_code"' -r); echo ${PRE_AUTHORIZED_CODE}
 ```
 
 Exchange the pre-authorized code from the offer with an AccessToken at the authorization server:
 ```shell
-    curl -X POST http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/openid-connect/token \
+    export CREDENTIAL_ACCESS_TOKEN=$(curl -s -X POST http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/openid-connect/token \
       --header 'Accept: */*' \
       --header 'Content-Type: application/x-www-form-urlencoded' \
       --data grant_type=urn:ietf:params:oauth:grant-type:pre-authorized_code \
-      --data code=<THE_CODE>
+      --data code=${PRE_AUTHORIZED_CODE} | jq '.access_token' -r); echo ${CREDENTIAL_ACCESS_TOKEN}
 ```
 
 Use the returned access token to get the actual credential:
 ```shell
-    curl -X POST http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/oid4vc/credential \
-    --header 'Accept: */*' \
-    --header 'Content-Type: application/json' \
-    --header 'Authorization: Bearer <THE_ACCESS_TOKEN>' \
-    --data '{"credential_identifier":"user-credential", "format":"jwt_vc"}'
+    export VERIFIABLE_CREDENTIAL=$(curl -s -X POST http://keycloak-consumer.127.0.0.1.nip.io:8080/realms/test-realm/protocol/oid4vc/credential \
+      --header 'Accept: */*' \
+      --header 'Content-Type: application/json' \
+      --header "Authorization: Bearer ${CREDENTIAL_ACCESS_TOKEN}" \
+      --data '{"credential_identifier":"user-credential", "format":"jwt_vc"}' | jq '.credential' -r); echo ${VERIFIABLE_CREDENTIAL}
 ```
 
 You will receive a jwt-encoded credential to be used within the data space.
@@ -135,3 +143,202 @@ You will receive a jwt-encoded credential to be used within the data space.
 ### The Data Provider
 
 ![Provider](./img/provider.jpg)
+
+The Data Provider requires a couple of more components, in order to provide secure access to its data. It needs essentially 3 building blocks:
+
+* Data-Service: In our example case, the data is provided by an [NGSI-LD Context Broker](https://github.com/ScorpioBroker/ScorpioBroker)
+* Authentication:
+  * [VCVerifier](https://github.com/FIWARE/VCVerifier): Verifies incoming VerifiableCredentials through [OID4VP](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html) and returns a JWT token
+  * [CredentialsConfigService](https://github.com/FIWARE/credentials-config-service): Allows to configure the Trusted Lists to be used for certain credentials
+  * [TrustedIssuersList](https://github.com/FIWARE/trusted-issuers-list): Allows to specify the capabilities of certain issuers, f.e. what credentials they are allowed to issue
+* Authorization:
+  * [Apisix](https://apisix.apache.org/): An Api-Gateway that verifies the incoming JWT(provided by the verifier) and acts as Policy Enforcement Point to authorize requests based on the PDP's decision
+  * [Open Policy Agent](https://www.openpolicyagent.org/): Acts as the Policy Decision Point, to evaluate existing policies for requests and either allows or denies them.
+  * [ODRL-PAP](https://github.com/wistefan/odrl-pap): Policy Administration & Information Point, that allows to configure policies in ODRL and provides them to the Open Policy Agent(translated into rego). It can be used to offer additional infromation to be taken into account.
+* [did-helper](https://github.com/wistefan/did-helper) - a small helper application, providing the decentralized identity to be used for the local Data Space
+
+After the deployment, the provider can create a policy to allow access to its data. An example policy can be found in the [test-resources](../it/src/test/resources/policies/energyReport.json)
+It allows every participant to access entities of type ```EnergyReport```.
+
+> :warning: The PAP and Scorpio APIs are only published to make demo interactions easier. 
+> In real environments, they should never be public without any authentication/authorization framework in front of them.
+
+The policy can be created at the PAP via:
+```shell
+  curl -s -X 'POST' http://provider-pap.127.0.0.1.nip.io:8080/policy \
+    -H 'Content-Type: application/json' \
+    -d  '{ 
+            "@context": {
+              "dc": "http://purl.org/dc/elements/1.1/",
+              "dct": "http://purl.org/dc/terms/",
+              "owl": "http://www.w3.org/2002/07/owl#",
+              "odrl": "http://www.w3.org/ns/odrl/2/",
+              "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+              "skos": "http://www.w3.org/2004/02/skos/core#"
+            },
+            "@id": "https://mp-operation.org/policy/common/type",
+            "@type": "odrl:Policy",
+            "odrl:permission": {
+              "odrl:assigner": {
+                "@id": "https://www.mp-operation.org/"
+              },
+              "odrl:target": {
+                "@type": "odrl:AssetCollection",
+                "odrl:source": "urn:asset",
+                "odrl:refinement": [
+                  {
+                    "@type": "odrl:Constraint",
+                    "odrl:leftOperand": "ngsi-ld:entityType",
+                    "odrl:operator": {
+                      "@id": "odrl:eq"
+                    },
+                    "odrl:rightOperand": "EnergyReport"
+                  }
+                ]
+              },
+              "odrl:assignee": {
+                "@id": "odrl:any"
+              },
+              "odrl:action": {
+                "@id": "odrl:read"
+              }
+            }
+          }'
+```
+
+Data can be created through the NGSI-LD API itself. In order to make interaction easier, its directly available through an ingress at ```http://scorpio-provider.127.0.0.1.nip.io/ngsi-ld/v1```. In 
+real environments, no endpoint should be publicly available without beeing protected by the authorization framework.
+Create an entity via:
+```shell
+  curl -s -X POST http://scorpio-provider.127.0.0.1.nip.io:8080/ngsi-ld/v1/entities \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+      "id": "urn:ngsi-ld:EnergyReport:fms-1",
+      "type": "EnergyReport",
+      "name": {
+        "type": "Property",
+        "value": "Standard Server"
+      },
+      "consumption": {
+        "type": "Property",
+        "value": "94"
+      }
+    }'
+```
+
+## Demo Interactions
+
+Once everything is deployed and configured(e.g. the consumer received a credential - see [The Data Consumer](#the-data-consumer) - and policy/entity are setup - see [The Data Provider](#the-data-provider)),
+the consumer can access the data as following:
+
+### Authenticate via OID4VP
+
+The credential needs to be presented for authentication through [OID4VP]((https://openid.net/specs/openid-4-verifiable-presentations-1_0.html).
+Every required information for that flow can be retrieved via the standard endpoints.
+
+If you try to request the provider api without authentication, you will receive an 401:
+```shell
+   curl -s -X GET 'http://mp-data-service.127.0.0.1.nip.io:8080/ngsi-ld/v1/entities/urn:ngsi-ld:EnergyReport:fms-1'
+```
+
+The normal flow is now to request the oidc-information at the well-known endpoint:
+```shell
+  curl -s -X GET 'http://mp-data-service.127.0.0.1.nip.io:8080/.well-known/openid-configuration'
+```
+In the response, the grant type `vp_token` will be present, indicating the support for the OID4VP authentication flow:
+```json
+{
+    "issuer": "http://provider-verifier.127.0.0.1.nip.io:8080",
+    "authorization_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080",
+    "token_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080/token",
+    "jwks_uri": "http://provider-verifier.127.0.0.1.nip.io:8080/.well-known/jwks",
+    "scopes_supported": [
+        "default"
+    ],
+    "response_types_supported": [
+        "token"
+    ],
+    "response_mode_supported": [
+        "direct_post"
+    ],
+    "grant_types_supported": [
+        "authorization_code",
+        "vp_token"
+    ],
+    "subject_types_supported": [
+        "public"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "EdDSA",
+        "ES256"
+    ]
+}
+```
+
+With that information, the authentication flow at the verifier(e.g.`"http://provider-verifier.127.0.0.1.nip.io:8080`) can be started. 
+First, the credential needs to be encoded into a vp_token. If you want to do that manually, first a did and the corresponding key-material is required.
+You can create such via:
+```shell
+  docker run -v $(pwd):/cert quay.io/wi_stefan/did-helper:0.1.1
+```
+This will produce the files cert.pem, cert.pfx, private-key.pem, public-key.pem and did.json, containing all required information for the generated did:key.
+Find the did here:
+```shell
+  export HOLDER_DID=$(cat did.json | jq '.id' -r); echo ${HOLDER_DID}
+```
+
+As a next step, a VerifiablePresentation, containing the Credential has to be created:
+```shell
+  export VERIFIABLE_PRESENTATION="{
+    \"@context\": [\"https://www.w3.org/2018/credentials/v1\"],
+    \"type\": [\"VerifiablePresentation\"],
+    \"verifiableCredential\": [
+        \"${VERIFIABLE_CREDENTIAL}\"
+    ],
+    \"holder\": \"${HOLDER_DID}\"
+  }"; echo ${VERIFIABLE_PRESENTATION}
+```
+
+Now, the presentation has to be embedded into a signed JWT:
+
+Setup the header:
+```shell
+  export JWT_HEADER=$(echo -n "{\"alg\":\"ES256\", \"typ\":\"JWT\", \"kid\":\"${HOLDER_DID}\"}"| base64 -w0 | sed s/\+/-/g | sed 's/\//_/g' | sed -E s/=+$//); echo Header: ${JWT_HEADER}
+```
+Setup the payload:
+```shell
+  export PAYLOAD=$(echo -n "{\"iss\": \"${HOLDER_DID}\", \"sub\": \"${HOLDER_DID}\", \"vp\": ${VERIFIABLE_PRESENTATION}}" | base64 -w0 | sed s/\+/-/g |sed 's/\//_/g' |  sed -E s/=+$//); echo Payload: ${PAYLOAD};   
+```
+Create the signature:
+```shell
+  export SIGNATURE=$(echo -n "${JWT_HEADER}.${PAYLOAD}" | openssl dgst -sha256 -binary -sign private-key.pem | base64 -w0 | sed s/\+/-/g | sed 's/\//_/g' | sed -E s/=+$//); echo Signature: ${SIGNATURE}; 
+```
+Combine them to the JWT:
+```shell
+  export JWT="${JWT_HEADER}.${PAYLOAD}.${SIGNATURE}"; echo The Token: ${JWT}
+```
+
+The JWT representation of the JWT has to be Base64-encoded(no padding!):
+```shell
+  export VP_TOKEN=$(echo -n ${JWT} | base64 -w0 | sed s/\+/-/g | sed 's/\//_/g' | sed -E s/=+$//); echo ${VP_TOKEN}
+```
+
+The vp_token can then be exchanged for the access-token
+```shell
+    export DATA_SERVICE_ACCESS_TOKEN=$(curl -s -X POST http://provider-verifier.127.0.0.1.nip.io:8080/token \
+      --header 'Accept: */*' \
+      --header 'Content-Type: application/x-www-form-urlencoded' \
+      --header 'client_id: data-service' \
+      --data grant_type=vp_token \
+      --data vp_token=${VP_TOKEN} \
+      --data scope=default | jq '.access_token' -r ); echo ${DATA_SERVICE_ACCESS_TOKEN}
+```
+
+With that token, try to access the data again:
+```shell
+  curl -s -X GET 'http://mp-data-service.127.0.0.1.nip.io:8080/ngsi-ld/v1/entities/urn:ngsi-ld:EnergyReport:fms-1' \
+    --header 'Accept: application/json' \
+    --header "Authorization: Bearer ${DATA_SERVICE_ACCESS_TOKEN}"
+```
+

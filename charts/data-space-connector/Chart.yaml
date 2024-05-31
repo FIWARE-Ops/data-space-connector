@@ -34,7 +34,7 @@ dependencies:
     condition: apisix.enabled
     version: 3.1.0
     repository: oci://registry-1.docker.io/bitnamicharts
-  # data-plane
+  # data-service
   - name: scorpio-broker-aaio
     alias: scorpio
     condition: scorpio.enabled

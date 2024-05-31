@@ -12,7 +12,7 @@ dataplane:
     # -- should a password for the database connection of dataplane components be generated in the cluster
     enabled: true
     #-- name of the secret to put the generated password into
-    secretName: data-plane-secret
+    secretName: data-service-secret
 
 # -- configuration to be shared between the issuance components
 issuance:
@@ -268,12 +268,12 @@ postgis:
   # -- should it be enabled? set to false if one outside the chart is used.
   enabled: true
   # -- overrides the generated name, provides stable service names - this should be avoided if multiple instances are available in the same namespace
-  fullnameOverride: data-plane-postgis
+  fullnameOverride: data-service-postgis
   # -- overrides the generated name, provides stable service names - this should be avoided if multiple instances are available in the same namespace
-  nameOverride: data-plane-postgis
+  nameOverride: data-service-postgis
   ## auth configuration for the database
   auth:
-    existingSecret: data-plane-secret
+    existingSecret: data-service-secret
     secretKeys:
       adminPasswordKey: postgres-admin-password
       userPasswordKey: postgres-user-password
@@ -290,7 +290,7 @@ postgis:
 
 ## configuration of the context-broker - see https://github.com/FIWARE/helm-charts/tree/main/charts/scorpio-broker-aaio for details
 scorpio:
-  fullnameOverride: data-plane-scorpio
+  fullnameOverride: data-service-scorpio
   # -- should scorpio be enabled
   enabled: true
   ## configuration of the image to be used
@@ -302,12 +302,12 @@ scorpio:
   ## configuration of the database to be used by broker
   db:
     # -- host of the db
-    dbhost: data-plane-postgis
+    dbhost: data-service-postgis
     # -- username to be used
     user: postgres
     existingSecret:
       enabled: true
-      name: data-plane-secret
+      name: data-service-secret
       key: postgres-admin-password
   ## configuration of the readiness probe
   readinessProbe:
@@ -327,8 +327,8 @@ scorpio:
     endpoint: http://credentials-config-service:8080
     # -- configmap to get the registration information from
     configMap: scorpio-registration
-    # -- service id of the data-plane to be used
-    id: data-plane
+    # -- service id of the data-service to be used
+    id: data-service
     # -- default scope to be created for the data plane
     defaultOidcScope:
       # -- name of the scope

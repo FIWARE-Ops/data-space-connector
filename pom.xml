@@ -83,6 +83,9 @@
                 <version>${version.org.apache.maven.plugins.maven-failsafe}</version>
                 <configuration>
                     <failIfNoTests>false</failIfNoTests>
+                    <includes>
+                        <include>**/RunCucumberTest.java</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>

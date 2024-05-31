@@ -107,9 +107,9 @@ public class StepDefinitions {
         assertEquals(HttpStatus.SC_OK, HTTP_CLIENT.newCall(didCheckRequest).execute().code(), "The did should be registered at the trust-anchor.");
     }
 
-    @When("M&P Operations registers a policy to allow every participant access to its hosting offers.")
-    public void mpRegisterHostingOfferPolicy() throws Exception {
-        RequestBody policyBody = RequestBody.create(MediaType.parse("application/json"), getPolicy("hostingOffer"));
+    @When("M&P Operations registers a policy to allow every participant access to its energy reports.")
+    public void mpRegisterEnergyReportPolicy() throws Exception {
+        RequestBody policyBody = RequestBody.create(MediaType.parse("application/json"), getPolicy("energyReport"));
         Request policyCreationRequest = new Request.Builder()
                 .post(policyBody)
                 .url(MPOperationsEnvironment.PROVIDER_PAP_ADDRESS + "/policy")
@@ -119,12 +119,12 @@ public class StepDefinitions {
         createdPolicies.add(policyCreationResponse.header("Location"));
     }
 
-    @When("M&P Operations creates an hosting offer.")
-    public void createHostingOffer() throws Exception {
-        Map offerEntity = Map.of("type", "HostingOffer",
-                "id", "urn:ngsi-ld:HostingOffer:fms-1",
-                "name", Map.of("type", "Property", "value", "Fully Managed Service."),
-                "status", Map.of("type", "Property", "value", "available"));
+    @When("M&P Operations creates an energy report.")
+    public void createEnergyReport() throws Exception {
+        Map offerEntity = Map.of("type", "EnergyReport",
+                "id", "urn:ngsi-ld:EnergyReport:fms-1",
+                "name", Map.of("type", "Property", "value", "Standard Server"),
+                "consumption", Map.of("type", "Property", "value", "94"));
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), OBJECT_MAPPER.writeValueAsString(offerEntity));
 
         Request creationRequest = new Request.Builder()
@@ -132,7 +132,7 @@ public class StepDefinitions {
                 .post(requestBody)
                 .build();
         assertEquals(HttpStatus.SC_CREATED, HTTP_CLIENT.newCall(creationRequest).execute().code(), "The entity should have been created.");
-        createdEntities.add("urn:ngsi-ld:HostingOffer:fms-1");
+        createdEntities.add("urn:ngsi-ld:EnergyReport:fms-1");
     }
 
     @When("Fancy Marketplace issues a credential to its employee.")
@@ -141,8 +141,8 @@ public class StepDefinitions {
         fancyMarketplaceEmployeeWallet.getCredentialFromIssuer(accessToken, FancyMarketplaceEnvironment.CONSUMER_KEYCLOAK_ADDRESS, USER_CREDENTIAL);
     }
 
-    @Then("Fancy Marketplace' employee can access the HostingOffer.")
-    public void accessTheHostingOffers() throws Exception {
+    @Then("Fancy Marketplace' employee can access the EnergyReport.")
+    public void accessTheEnergyReport() throws Exception {
         OpenIdConfiguration openIdConfiguration = MPOperationsEnvironment.getOpenIDConfiguration();
         assertTrue(openIdConfiguration.getGrantTypesSupported().contains(GRANT_TYPE_VP_TOKEN), "The M&P environment should support vp_tokens");
         assertTrue(openIdConfiguration.getResponseModeSupported().contains(RESPONSE_TYPE_DIRECT_POST), "The M&P environment should support direct_post");
@@ -150,7 +150,7 @@ public class StepDefinitions {
 
         String accessToken = fancyMarketplaceEmployeeWallet.exchangeCredentialForToken(openIdConfiguration, USER_CREDENTIAL);
         Request authenticatedEntityRequest = new Request.Builder().get()
-                .url(MPOperationsEnvironment.PROVIDER_API_ADDRESS + "/ngsi-ld/v1/entities/urn:ngsi-ld:HostingOffer:fms-1")
+                .url(MPOperationsEnvironment.PROVIDER_API_ADDRESS + "/ngsi-ld/v1/entities/urn:ngsi-ld:EnergyReport:fms-1")
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .addHeader("Accept", "application/json")
                 .build();
