@@ -79,3 +79,13 @@ The chart is [generated](generate.sh) on each merge to master from the current a
 
 Different examples for the deployment of the FIWARE Data Space connector can be found 
 under the [./examples](./examples) directory.
+
+## Testing
+
+In order to test the [helm-charts](./charts/) provided for the FIWARE Data Space Connector, an integration-test framework based on [Cucumber](https://cucumber.io/) and [Junit5](https://junit.org/junit5/) is provided: [it](./it).
+
+The tests can be executed via: 
+```shell
+    mvn clean integration-test -Ptest
+```
+They will spin up the [Local Data Space](./doc/LOCAL.MD) and run the [test-scenarios](./it/src/test/resources/it/mvds_basic.feature) against it.
