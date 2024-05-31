@@ -188,6 +188,6 @@ odrl-pap:
   ingress:
     enabled: true
     hosts:
-      - host: provider-pap.127.0.0.1.nip.io
+      - host: pap-provider.127.0.0.1.nip.io
         paths:
           - "/"

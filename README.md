@@ -15,6 +15,7 @@ FIWARE [data-space-connector repository](https://github.com/FIWARE/data-space-co
 ### Local Deployment
 
 The FIWARE Data Space Connector provides a local deployment of a Minimal Viable Dataspace. 
+Find a detailed documentation here: [Local Deployment](./doc/LOCAL.MD)
 
 ### Deployment with ArgoCD
 

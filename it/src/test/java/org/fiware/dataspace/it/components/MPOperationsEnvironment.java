@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public abstract class MPOperationsEnvironment {
 
     public static final String DID_PROVIDER_ADDRESS = "http://did-provider.127.0.0.1.nip.io:8080";
-    public static final String PROVIDER_PAP_ADDRESS = "http://provider-pap.127.0.0.1.nip.io:8080";
+    public static final String PROVIDER_PAP_ADDRESS = "http://pap-provider.127.0.0.1.nip.io:8080";
     public static final String PROVIDER_API_ADDRESS = "http://mp-data-service.127.0.0.1.nip.io:8080";
     public static final String SCORPIO_ADDRESS = "http://scorpio-provider.127.0.0.1.nip.io:8080";
 
