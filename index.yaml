@@ -2,6 +2,59 @@ apiVersion: v1
 entries:
   data-space-connector:
   - apiVersion: v2
+    created: "2024-06-05T09:22:49.454349291Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 13.1.5
+    - condition: vcverifier.enabled
+      name: vcverifier
+      repository: https://fiware.github.io/helm-charts
+      version: 2.7.0
+    - condition: credentials-config-service.enabled
+      name: credentials-config-service
+      repository: https://fiware.github.io/helm-charts
+      version: 0.1.5
+    - condition: trusted-issuers-list.enabled
+      name: trusted-issuers-list
+      repository: https://fiware.github.io/helm-charts
+      version: 0.6.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.4.4
+    - condition: odrl-pap.enabled
+      name: odrl-pap
+      repository: https://fiware.github.io/helm-charts
+      version: 0.0.22
+    - condition: apisix.enabled
+      name: apisix
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 3.1.0
+    - alias: scorpio
+      condition: scorpio.enabled
+      name: scorpio-broker-aaio
+      repository: https://fiware.github.io/helm-charts
+      version: 0.4.7
+    - alias: postgis
+      condition: postgis.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 13.1.5
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://charts.bitnami.com/bitnami
+      version: 21.1.1
+    description: Umbrella Chart for the FIWARE Data Space Connector, combining all
+      essential parts to be used by a participant.
+    digest: 3795a2e76eb93f6e474e8e8ee4fa4b6a69bfe9e3322f3422752ec0ebe496c94a
+    name: data-space-connector
+    type: application
+    urls:
+    - https://github.com/FIWARE-Ops/data-space-connector/releases/download/data-space-connector-3.0.0/data-space-connector-3.0.0.tgz
+    version: 3.0.0
+  - apiVersion: v2
     created: "2024-03-26T10:04:19.797319529Z"
     dependencies:
     - condition: orion-ld.deploymentEnabled
@@ -2320,4 +2373,22 @@ entries:
     urls:
     - data-space-connector-0.0.1-PRE-1.tgz
     version: 0.0.1-PRE-1
-generated: "2024-03-26T10:04:19.797603503Z"
+  trust-anchor:
+  - apiVersion: v2
+    created: "2024-06-05T09:22:49.653270387Z"
+    dependencies:
+    - condition: trusted-issuers-list.enabled
+      name: trusted-issuers-list
+      repository: https://fiware.github.io/helm-charts
+      version: 0.6.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.4.4
+    description: Umbrella Chart to provide a minimal trust anchor for a FIWARE Dataspace
+    digest: d85286dfedfef51c4b56168607eba61e3f44924a8bd8901b4957f15916c34fc0
+    name: trust-anchor
+    urls:
+    - https://github.com/FIWARE-Ops/data-space-connector/releases/download/trust-anchor-0.0.1/trust-anchor-0.0.1.tgz
+    version: 0.0.1
+generated: "2024-06-05T09:22:49.653603347Z"
