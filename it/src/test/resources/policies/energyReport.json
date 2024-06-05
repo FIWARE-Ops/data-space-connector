@@ -5,8 +5,7 @@
     "owl": "http://www.w3.org/2002/07/owl#",
     "odrl": "http://www.w3.org/ns/odrl/2/",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    "skos": "http://www.w3.org/2004/02/skos/core#",
-    "TMF-PCMA": "https://tmf-open-api-table-documents.s3.eu-west-1.amazonaws.com/OpenApiTable/4.1.0/user_guides/TMF620_Product_Catalog_Management_API_v4.1.0_user_guides.pdf"
+    "skos": "http://www.w3.org/2004/02/skos/core#"
   },
   "@id": "https://mp-operation.org/policy/common/type",
   "@type": "odrl:Policy",
