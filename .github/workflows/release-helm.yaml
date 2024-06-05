@@ -9,7 +9,6 @@ jobs:
 
     deploy:
 
-      needs: [ "generate-version" ]
       runs-on: ubuntu-latest
 
       steps:
