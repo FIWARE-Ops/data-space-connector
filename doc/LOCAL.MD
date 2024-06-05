@@ -451,7 +451,7 @@ the local installation uses [did:key](https://w3c-ccg.github.io/did-method-key/)
 they are well-supported, can be resolved without any external interaction and can easily be generated within the deployment. That makes
 them a perfect fit for the local use-case. 
 All participants(e.g. the consumer and the participant) get a did generated on installation, by using the [did-helper](https://github.com/wistefan/did-helper). 
-The identities and connected key-material is automatically distributed in the cluster and set in the componets that require it.
+The identities and connected key-material is automatically distributed in the cluster and set in the components that require it.
 
 In real world data spaces, the participants should rather use stabled identities, which can be [did:key](https://w3c-ccg.github.io/did-method-key/), but also 
 more organization-focused once like [did:web](https://w3c-ccg.github.io/did-method-web/) or [did:elsi](https://alastria.github.io/did-method-elsi/).
