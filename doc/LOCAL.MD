@@ -250,7 +250,7 @@ The policy can be created at the PAP via:
 
 Data can be created through the NGSI-LD API itself. In order to make interaction easier, its directly available through
 an ingress at ```http://scorpio-provider.127.0.0.1.nip.io/ngsi-ld/v1```. In
-real environments, no endpoint should be publicly available without beeing protected by the authorization framework.
+real environments, no endpoint should be publicly available without being protected by the authorization framework.
 Create an entity via:
 
 ```shell
