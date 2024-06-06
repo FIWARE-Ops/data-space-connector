@@ -297,7 +297,7 @@ If you try to request the provider api without authentication, you will receive 
 The normal flow is now to request the oidc-information at the well-known endpoint:
 
 ```shell
-  curl -s -X GET 'http://mp-data-service.127.0.0.1.nip.io:8080/.well-known/openid-configuration'
+  export TOKEN_ENDPOINT=$(curl -s -X GET 'http://mp-data-service.127.0.0.1.nip.io:8080/.well-known/openid-configuration' | jq -r '.token_endpoint'); echo $TOKEN_ENDPOINT
 ```
 
 In the response, the grant type `vp_token` will be present, indicating the support for the OID4VP authentication flow:
@@ -306,7 +306,7 @@ In the response, the grant type `vp_token` will be present, indicating the suppo
 {
   "issuer": "http://provider-verifier.127.0.0.1.nip.io:8080",
   "authorization_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080",
-  "token_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080/token",
+  "token_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080/services/data-service/token",
   "jwks_uri": "http://provider-verifier.127.0.0.1.nip.io:8080/.well-known/jwks",
   "scopes_supported": [
     "default"
@@ -397,10 +397,9 @@ The JWT representation of the JWT has to be Base64-encoded(no padding!):
 The vp_token can then be exchanged for the access-token
 
 ```shell
-    export DATA_SERVICE_ACCESS_TOKEN=$(curl -s -X POST http://provider-verifier.127.0.0.1.nip.io:8080/token \
+    export DATA_SERVICE_ACCESS_TOKEN=$(curl -s -X POST $TOKEN_ENDPOINT \
       --header 'Accept: */*' \
       --header 'Content-Type: application/x-www-form-urlencoded' \
-      --header 'client_id: data-service' \
       --data grant_type=vp_token \
       --data vp_token=${VP_TOKEN} \
       --data scope=default | jq '.access_token' -r ); echo ${DATA_SERVICE_ACCESS_TOKEN}

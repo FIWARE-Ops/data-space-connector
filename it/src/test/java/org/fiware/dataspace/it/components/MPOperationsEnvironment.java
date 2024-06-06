@@ -21,7 +21,6 @@ public abstract class MPOperationsEnvironment {
     public static final String SCORPIO_ADDRESS = "http://scorpio-provider.127.0.0.1.nip.io:8080";
 
     public static final String OIDC_WELL_KNOWN_PATH = "/.well-known/openid-configuration";
-    public static final String CLIENT_ID = "data-service";
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

@@ -58,8 +58,6 @@ public class Wallet {
     private static final String OID_WELL_KNOWN_PATH = "/.well-known/openid-configuration";
     private static final String PRE_AUTHORIZED_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:pre-authorized_code";
 
-    private static final String SAME_DEVICE_ENDPOINT = "/api/v1/samedevice";
-
     private final Map<String, String> credentialStorage = new HashMap<>();
 
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
@@ -84,7 +82,6 @@ public class Wallet {
                 .build();
         Request tokenRequest = new Request.Builder()
                 .post(requestBody)
-                .addHeader("client_id", MPOperationsEnvironment.CLIENT_ID)
                 .url(openIdConfiguration.getTokenEndpoint())
                 .build();
         Response tokenResponse = HTTP_CLIENT.newCall(tokenRequest).execute();
