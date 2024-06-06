@@ -250,7 +250,7 @@ The policy can be created at the PAP via:
 
 Data can be created through the NGSI-LD API itself. In order to make interaction easier, its directly available through
 an ingress at ```http://scorpio-provider.127.0.0.1.nip.io/ngsi-ld/v1```. In
-real environments, no endpoint should be publicly available without being protected by the authorization framework.
+real environments, no endpoint should be publicly available without beeing protected by the authorization framework.
 Create an entity via:
 
 ```shell
@@ -297,7 +297,7 @@ If you try to request the provider api without authentication, you will receive 
 The normal flow is now to request the oidc-information at the well-known endpoint:
 
 ```shell
-  curl -s -X GET 'http://mp-data-service.127.0.0.1.nip.io:8080/.well-known/openid-configuration'
+  export TOKEN_ENDPOINT=$(curl -s -X GET 'http://mp-data-service.127.0.0.1.nip.io:8080/.well-known/openid-configuration' | jq -r '.token_endpoint'); echo $TOKEN_ENDPOINT
 ```
 
 In the response, the grant type `vp_token` will be present, indicating the support for the OID4VP authentication flow:
@@ -306,7 +306,7 @@ In the response, the grant type `vp_token` will be present, indicating the suppo
 {
   "issuer": "http://provider-verifier.127.0.0.1.nip.io:8080",
   "authorization_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080",
-  "token_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080/token",
+  "token_endpoint": "http://provider-verifier.127.0.0.1.nip.io:8080/services/data-service/token",
   "jwks_uri": "http://provider-verifier.127.0.0.1.nip.io:8080/.well-known/jwks",
   "scopes_supported": [
     "default"
@@ -397,10 +397,9 @@ The JWT representation of the JWT has to be Base64-encoded(no padding!):
 The vp_token can then be exchanged for the access-token
 
 ```shell
-    export DATA_SERVICE_ACCESS_TOKEN=$(curl -s -X POST http://provider-verifier.127.0.0.1.nip.io:8080/token \
+    export DATA_SERVICE_ACCESS_TOKEN=$(curl -s -X POST $TOKEN_ENDPOINT \
       --header 'Accept: */*' \
       --header 'Content-Type: application/x-www-form-urlencoded' \
-      --header 'client_id: data-service' \
       --data grant_type=vp_token \
       --data vp_token=${VP_TOKEN} \
       --data scope=default | jq '.access_token' -r ); echo ${DATA_SERVICE_ACCESS_TOKEN}
@@ -451,7 +450,7 @@ the local installation uses [did:key](https://w3c-ccg.github.io/did-method-key/)
 they are well-supported, can be resolved without any external interaction and can easily be generated within the deployment. That makes
 them a perfect fit for the local use-case. 
 All participants(e.g. the consumer and the participant) get a did generated on installation, by using the [did-helper](https://github.com/wistefan/did-helper). 
-The identities and connected key-material is automatically distributed in the cluster and set in the components that require it.
+The identities and connected key-material is automatically distributed in the cluster and set in the componets that require it.
 
 In real world data spaces, the participants should rather use stabled identities, which can be [did:key](https://w3c-ccg.github.io/did-method-key/), but also 
 more organization-focused once like [did:web](https://w3c-ccg.github.io/did-method-web/) or [did:elsi](https://alastria.github.io/did-method-elsi/).
