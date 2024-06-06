@@ -9,7 +9,6 @@ jobs:
 
     deploy:
 
-      needs: [ "generate-version" ]
       runs-on: ubuntu-latest
 
       steps:
@@ -36,7 +35,7 @@ jobs:
             CR_SKIP_EXISTING: true
 
     git-release:
-      needs: ["generate-version","deploy"]
+      needs: ["deploy"]
       runs-on: ubuntu-latest
 
       steps:
