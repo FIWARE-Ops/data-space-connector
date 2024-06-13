@@ -5,7 +5,7 @@ vcverifier:
     # Image
     image:
       repository: quay.io/fiware/vcverifier
-      tag: 4.0.1
+      tag: 4.3.2
       pullPolicy: Always
 
     # Logging
