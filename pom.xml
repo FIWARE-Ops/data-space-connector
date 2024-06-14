@@ -167,20 +167,20 @@
                         </configuration>
                     </execution>
                     <execution>
-                    <id>copy-resources-infra</id>
-                    <phase>prepare-package</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${project.build.directory}/k3s/infra</outputDirectory>
-                        <resources>
-                            <resource>
-                                <directory>${main.basedir}/k3s/infra</directory>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
+                        <id>copy-resources-infra</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/k3s/infra</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${main.basedir}/k3s/infra</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <!-- render the charts -->
@@ -306,6 +306,13 @@
                         <artifactId>k3s-maven-plugin</artifactId>
                         <configuration>
                             <skip>false</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
                         </configuration>
                     </plugin>
                 </plugins>
