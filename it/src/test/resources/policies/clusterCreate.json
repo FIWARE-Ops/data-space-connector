@@ -23,15 +23,29 @@
           "odrl:operator": {
             "@id": "odrl:eq"
           },
-          "odrl:rightOperand": "EnergyReport"
+          "odrl:rightOperand": "K8SCluster"
         }
       ]
     },
     "odrl:assignee": {
-      "@id": "vc:any"
+      "@type": "odrl:PartyCollection",
+      "odrl:source": "urn:user",
+      "odrl:refinement": {
+        "@type": "odrl:Constraint",
+        "odrl:leftOperand": {
+          "@id": "vc:role"
+        },
+        "odrl:operator": {
+          "@id": "odrl:hasPart"
+        },
+        "odrl:rightOperand": {
+          "@value": "OPERATOR",
+          "@type": "xsd:string"
+        }
+      }
     },
     "odrl:action": {
-      "@id": "odrl:read"
+      "@id": "odrl:use"
     }
   }
 }

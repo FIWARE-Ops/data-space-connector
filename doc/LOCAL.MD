@@ -239,7 +239,7 @@ The policy can be created at the PAP via:
                 ]
               },
               "odrl:assignee": {
-                "@id": "odrl:any"
+                "@id": "vc:any"
               },
               "odrl:action": {
                 "@id": "odrl:read"
