@@ -89,3 +89,10 @@ The tests can be executed via:
     mvn clean integration-test -Ptest
 ```
 They will spin up the [Local Data Space](./doc/LOCAL.MD) and run the [test-scenarios](./it/src/test/resources/it/mvds_basic.feature) against it.
+
+
+## Additional Resources
+
+Following is a list with additional resources about the FIWARE Data Space Connector and Data Spaces in general:
+* [FIWARE Webinar about Data Spaces, its roles and components (by Stefan Wiedemann)](https://www.youtube.com/watch?v=hm5qMlhpK0g)
+
