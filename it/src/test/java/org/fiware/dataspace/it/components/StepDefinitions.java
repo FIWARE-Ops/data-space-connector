@@ -17,6 +17,7 @@ import org.apache.http.HttpStatus;
 import org.awaitility.Awaitility;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.fiware.dataspace.it.components.model.OpenIdConfiguration;
+import org.fiware.dataspace.it.components.model.Policy;
 import org.fiware.dataspace.tmf.model.CharacteristicVO;
 import org.fiware.dataspace.tmf.model.OrderItemActionTypeVO;
 import org.fiware.dataspace.tmf.model.OrganizationCreateVO;
@@ -171,8 +172,16 @@ public class StepDefinitions {
         organizationResponse.body().close();
     }
 
-    private void cleanUpPolicies() {
-        createdPolicies.forEach(policyId -> {
+    private void cleanUpPolicies() throws Exception {
+        Request getPolicies = new Request.Builder()
+                .url(MPOperationsEnvironment.PROVIDER_PAP_ADDRESS + "/policy")
+                .get().build();
+        Response policyResponse = HTTP_CLIENT.newCall(getPolicies).execute();
+
+        List<Policy> policies = OBJECT_MAPPER.readValue(policyResponse.body().string(), new TypeReference<List<Policy>>() {
+        });
+
+        policies.forEach(policyId -> {
             Request deletionRequest = new Request.Builder()
                     .url(MPOperationsEnvironment.PROVIDER_PAP_ADDRESS + "/policy/" + policyId)
                     .delete()
@@ -226,6 +235,10 @@ public class StepDefinitions {
     public void fmNotAllowedToCreateCluster() throws Exception {
         assertThrows(AssertionFailedError.class, () ->
                 getAccessTokenForFancyMarketplace(OPERATOR_CREDENTIAL, OPERATOR_SCOPE), "Fancy Marketplace is not allowed to use the operator credential.");
+        String userToken = getAccessTokenForFancyMarketplace(USER_CREDENTIAL, DEFAULT_SCOPE);
+        Request createClusterRequest = createK8SClusterRequest(userToken);
+        Response creationResponse = HTTP_CLIENT.newCall(createClusterRequest).execute();
+        assertEquals(HttpStatus.SC_FORBIDDEN, creationResponse.code(), "The creation should not be allowed.");
     }
 
     private static Request createK8SClusterRequest(String accessToken) throws IOException {
@@ -277,7 +290,7 @@ public class StepDefinitions {
                 .brand("M&P Operations")
                 .version("1.0.0")
                 .lifecycleStatus("ACTIVE")
-                .name("M&P KS");
+                .name("M&P K8S");
         RequestBody specificationRequestBody = RequestBody.create(MediaType.parse("application/json"), OBJECT_MAPPER.writeValueAsString(pscVo));
         Request specificationRequest = new Request.Builder()
                 .post(specificationRequestBody)

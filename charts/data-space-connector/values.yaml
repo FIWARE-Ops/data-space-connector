@@ -70,10 +70,6 @@ vcverifier:
   m2m:
     # -- we do not need authentication here
     authEnabled: false
-  deployment:
-    image:
-      tag: 4.3.3-pre-39
-      pullPolicy: Always
 
 # -- configuration for the credentials-config-service to be deployed as part of the connector, see https://github.com/FIWARE/helm-charts/tree/main/charts/credentials-config-service for all options
 credentials-config-service:
@@ -135,7 +131,7 @@ odrl-pap:
   deployment:
     image:
       repository: quay.io/fiware/odrl-pap
-      tag: 0.1.1-PRE-7
+      tag: 0.1.2-PRE-8
       pullPolicy: Always
   # -- connection to the database
   database:
