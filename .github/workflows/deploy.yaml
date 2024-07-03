@@ -71,11 +71,11 @@ jobs:
 
       - name: Download values for participant
         run: |
-          cd data-space-connector/
+          cd argocd/data-space-connector/
           wget -O values-participant.yaml ${{ env.GITOPS_REPO }}/${{ env.NAMESPACE }}/${{ matrix.participant }}/${{ env.VALUES_DIR }}/values.yaml
           cat values-participant.yaml
 
       - name: Deploy applications
         run: |
-          cd data-space-connector/
+          cd argocd/data-space-connector/
           helm template ${{ secrets.OVERWRITE_VALUES }} -f values-participant.yaml . | oc -n argocd apply -f -

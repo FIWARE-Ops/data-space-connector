@@ -14,7 +14,7 @@ applications:
 
   - name: mysql
     enabled: true
-    source_path: applications/mysql
+    source_path: argocd/applications/mysql
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -22,7 +22,7 @@ applications:
 
   - name: mongodb
     enabled: true
-    source_path: applications/mongodb
+    source_path: argocd/applications/mongodb
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -30,7 +30,7 @@ applications:
 
   - name: postgres
     enabled: true
-    source_path: applications/postgres
+    source_path: argocd/applications/postgres
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -38,7 +38,7 @@ applications:
 
   - name: orion
     enabled: true
-    source_path: applications/orion-ld
+    source_path: argocd/applications/orion-ld
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -46,7 +46,7 @@ applications:
 
   - name: credentials-config-service
     enabled: true
-    source_path: applications/credentials-config-service
+    source_path: argocd/applications/credentials-config-service
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -54,7 +54,7 @@ applications:
 
   - name: trusted-issuers-list
     enabled: true
-    source_path: applications/trusted-issuers-list
+    source_path: argocd/applications/trusted-issuers-list
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -62,7 +62,7 @@ applications:
 
   - name: vcwaltid
     enabled: true
-    source_path: applications/vcwaltid
+    source_path: argocd/applications/vcwaltid
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -70,7 +70,7 @@ applications:
 
   - name: verifier
     enabled: true
-    source_path: applications/verifier
+    source_path: argocd/applications/verifier
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -78,7 +78,7 @@ applications:
 
   - name: keycloak
     enabled: true
-    source_path: applications/keycloak
+    source_path: argocd/applications/keycloak
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -86,7 +86,7 @@ applications:
 
   - name: keyrock
     enabled: true
-    source_path: applications/keyrock
+    source_path: argocd/applications/keyrock
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -94,7 +94,7 @@ applications:
 
   - name: dsba-pdp
     enabled: true
-    source_path: applications/dsba-pdp
+    source_path: argocd/applications/dsba-pdp
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -102,7 +102,7 @@ applications:
 
   - name: kong
     enabled: true
-    source_path: applications/kong
+    source_path: argocd/applications/kong
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -110,7 +110,7 @@ applications:
 
   - name: activation-service
     enabled: true
-    source_path: applications/activation-service
+    source_path: argocd/applications/activation-service
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -118,7 +118,7 @@ applications:
 
   - name: tm-forum-api
     enabled: true
-    source_path: applications/tm-forum-api
+    source_path: argocd/applications/tm-forum-api
     source_ref: *branch
     destination: *destination
     helm_values:
@@ -126,7 +126,7 @@ applications:
 
   - name: contract-management
     enabled: true
-    source_path: applications/contract-management
+    source_path: argocd/applications/contract-management
     source_ref: *branch
     destination: *destination
     helm_values:
