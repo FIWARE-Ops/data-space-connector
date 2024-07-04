@@ -7,7 +7,7 @@ other frameworks.
 <summary><strong>Contents</strong></summary>
 
 - [Deployment of service providers](#deployment-of-service-providers)
-  - [Local deployment of Minimal Viable Dataspace (helm/k3s)](#local)
+  - [Local deployment of Minimal Viable Dataspace (helm/k3s)](#local-deployment-of-minimal-viable-dataspace-helmk3s)
   - [Packet Delivery Company (ArgoCD)](#packet-delivery-company-argocd)
 - [Integration with AWS Garnet Framework](#integration-with-aws-garnet-framework-formerly-aws-smart-territory-framework)
 
