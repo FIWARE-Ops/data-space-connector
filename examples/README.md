@@ -30,7 +30,7 @@ energy report entities.
 The example uses [k3s](https://k3s.io/) and helm for deployment.
 
 More information can be found here:
-* [Local Deployment](../doc/LOCAL.md)
+* [Local Deployment](../doc/LOCAL.MD)
 
 
 
