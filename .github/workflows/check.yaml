@@ -36,7 +36,7 @@ jobs:
       - name: Eval
         run: |
           .github/build/install.sh
-          ./.github/scripts/eval.sh
+          .github/scripts/eval.sh
 
   check-labels:
     runs-on: ubuntu-latest
