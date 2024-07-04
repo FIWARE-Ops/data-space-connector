@@ -50,21 +50,9 @@ Also have a look at the [examples](#examples).
 
 Configurations for all sub-charts (and sub-dependencies) can be managed through the top-level [values.yaml](./charts/data-space-connector/values.yaml) of the chart. It contains the default values of each [application](./argocd/applications/) and additional parameter shared between the components. The configuration of the applications can be changed under the key ```<APPLICATION_NAME>```, please see the individual applications and there sub-charts for the available options.  
 Example:
-In order to change the image-tag of [Keycloak](./argocd/applications/keycloak/) and the issuer did-helper config used by it, the values.yaml looks as following:
+In order to change the image-tag of [Keycloak](./argocd/applications/keycloak/), the values.yaml looks as following:
 ```yaml
 keycloak:
-    # configuration directly in the application chart, extending the original keycloak chart
-    did:
-	  enabled: true
-	  secret: issuance-secret
-	  serviceType: ClusterIP
-	  port: 3001
-	  cert:
-		  country: BE
-		  state: BRUSSELS
-		  locality: Brussels
-		  organization: Fancy Marketplace Co.
-		  commonName: www.fancy-marketplace.biz
     # configuration for the keycloak-sub-chart. Its used as a dependency to the application, thus all config is accessible under the dependency name
     keycloak:
         image:
