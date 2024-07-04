@@ -7,8 +7,57 @@ on:
 
 jobs:
 
-    deploy:
+    generate-version:
+      name: "Generate version"
+      runs-on: ubuntu-latest
 
+      outputs:
+        version: ${{ steps.out.outputs.version }}
+
+      steps:
+        - uses: actions/checkout@v2
+
+        - uses: actions/setup-java@v1
+          with:
+            java-version: '17'
+            java-package: jdk
+
+        - id: pr
+          uses: actions-ecosystem/action-get-merged-pull-request@v1.0.1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Match semver label via bash
+          id: match-label-bash
+          run: |
+            LABELS=$(cat <<-END
+            ${{ steps.pr.outputs.labels }}
+            END
+            )
+            IFS='\n' read -ra LABEL <<< "$LABELS"
+            for i in "${LABEL[@]}"; do
+                case $i in
+                    # Will just use the first occurence
+                    'major'|'minor'|'patch')
+                        echo "RELEASE_LABEL=$i" >> $GITHUB_OUTPUT
+                        break
+                esac
+            done
+          
+        - uses: zwaldowski/semver-release-action@v2
+          with:
+            dry_run: true
+            bump: ${{ steps.match-label-bash.outputs.RELEASE_LABEL }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Set version output
+          id: out
+          run: echo "::set-output name=version::$(echo ${VERSION})"
+
+    deploy:
+      name: "Release charts"
+      needs:
+        - "generate-version"
       runs-on: ubuntu-latest
 
       steps:
@@ -35,7 +84,8 @@ jobs:
             CR_SKIP_EXISTING: true
 
     git-release:
-      needs: ["deploy"]
+      name: "Create Git Release"
+      needs: ["generate-version", "deploy"]
       runs-on: ubuntu-latest
 
       steps:

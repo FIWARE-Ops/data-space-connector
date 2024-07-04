@@ -155,10 +155,6 @@ jobs:
               yq e -i '.version = "'$major.$minor.$patch'"' charts/$c/Chart.yaml
           done
 
-      - name: generate docs
-        run:
-          docker run --rm --volume "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:latest
-
       - name: Commit files
         continue-on-error: true
         run: |
@@ -166,7 +162,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git status
           echo commit
-          git commit -m "Update helm documentation" -a
+          git commit -m "Update helm chart versions" -a
           echo status update
           git status
 
