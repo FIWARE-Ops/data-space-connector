@@ -12,8 +12,37 @@ on:
       - main
 
 jobs:
-  check:
+
+  lint:
     runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Lint
+        run: ./.github/scripts/lint.sh
+
+  eval:
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '>=1.17.0'
+        
+      - name: Eval
+        run: |
+          .github/build/install.sh
+          ./.github/scripts/eval.sh
+
+  check-labels:
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - eval
 
     steps:
       - uses: actions/checkout@v2
