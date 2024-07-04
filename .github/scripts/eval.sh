@@ -13,4 +13,8 @@ do
  fi
 done
 
+if [ $RETURN_VAL -eq 0 ]; then
+    echo "Chart evaluation successful !!!"
+fi
+
 exit $RETURN_VAL
