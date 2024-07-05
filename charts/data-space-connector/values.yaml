@@ -131,7 +131,7 @@ odrl-pap:
   deployment:
     image:
       repository: quay.io/fiware/odrl-pap
-      tag: 0.1.2-PRE-8
+      tag: 0.1.3-PRE-8
       pullPolicy: Always
   # -- connection to the database
   database:
@@ -144,6 +144,10 @@ odrl-pap:
       enabled: true
       name: database-secret
       key: postgres-admin-password
+  additionalEnvVars:
+    - name: QUARKUS_LOG_LEVEL
+      value: "INFO"
+
 
 # -- configuration for the open-policy-agent to be deployed as part of the connector, as a sidecar to apisix
 opa:
@@ -194,6 +198,8 @@ apisix:
         # -- allows to configure apisix through a yaml file
         role_data_plane:
           config_provider: yaml
+      apisix:
+        extra_lua_path: /extra/apisix/plugins/?.lua
     # -- extra volumes
     # we need `routes` to declaratively configure the routes
     # and the config for the opa sidecar
@@ -204,11 +210,20 @@ apisix:
       - name: opa-config
         configMap:
           name: opa-config
+      - name: opa-lua
+        configMap:
+          name: opa-lua
     # -- extra volumes to be mounted
     extraVolumeMounts:
       - name: routes
         mountPath: /usr/local/apisix/conf/apisix.yaml
         subPath: apisix.yaml
+      - name: opa-lua
+        mountPath: /usr/local/apisix/apisix/plugins/opa/helper.lua
+        subPath: helper.lua
+      - name: opa-lua
+        mountPath: /usr/local/apisix/apisix/plugins/opa.lua
+        subPath: opa.lua
     # -- sidecars to be deployed for apisix
     sidecars:
       # -- we want to deploy the open-policy-agent as a pep

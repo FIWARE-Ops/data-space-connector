@@ -13,6 +13,7 @@ Feature: The Data Space should support a basic data exchange between registered 
     And  M&P Operations offers a managed kubernetes.
     And M&P Operations allows self-registration of organizations.
     And M&P Operations allows to buy its offerings.
+    And M&P Operations allows operators to create clusters.
     And Fancy Marketplace is registered as a participant in the data space.
     And Fancy Marketplace issues an operator credential to its employee.
     And Fancy Marketplace issues a user credential to its employee.

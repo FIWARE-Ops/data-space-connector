@@ -40,6 +40,7 @@ apisix:
         opa:
           host: "http://localhost:8181"
           policy: policy/main
+          with_body: true
     - uri: /.well-known/openid-configuration
       host: mp-tmf-api.127.0.0.1.nip.io
       upstream:
@@ -66,6 +67,7 @@ apisix:
         opa:
           host: "http://localhost:8181"
           policy: policy/main
+          with_body: true
 
 vcverifier:
   ingress:

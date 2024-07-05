@@ -570,76 +570,74 @@ In addition to the policies for accessing the TMForum-APIS, another one to handl
   curl -s -X 'POST' http://pap-provider.127.0.0.1.nip.io:8080/policy \
     -H 'Content-Type: application/json' \
     -d  '{
-            "@context": {
+              "@context": {
                 "dc": "http://purl.org/dc/elements/1.1/",
                 "dct": "http://purl.org/dc/terms/",
                 "owl": "http://www.w3.org/2002/07/owl#",
                 "odrl": "http://www.w3.org/ns/odrl/2/",
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
                 "skos": "http://www.w3.org/2004/02/skos/core#"
-            },
-            "@id": "https://mp-operation.org/policy/common/type",
-            "@type": "odrl:Policy",
-            "odrl:permission": {
+              },
+              "@id": "https://mp-operation.org/policy/common/type",
+              "@type": "odrl:Policy",
+              "odrl:permission": {
                 "odrl:assigner": {
-                    "@id": "https://www.mp-operation.org/"
+                  "@id": "https://www.mp-operation.org/"
                 },
                 "odrl:target": {
-                    "@type": "odrl:AssetCollection",
-                    "odrl:source": "urn:asset",
-                    "odrl:refinement": [
-                        {
-                            "@type": "odrl:Constraint",
-                            "odrl:leftOperand": "ngsi-ld:entityType",
-                            "odrl:operator": {
-                                "@id": "odrl:eq"
-                            },
-                            "odrl:rightOperand": "K8SCluster"
-                        }
-                    ]
+                  "@type": "odrl:AssetCollection",
+                  "odrl:source": "urn:asset",
+                  "odrl:refinement": [
+                    {
+                      "@type": "odrl:Constraint",
+                      "odrl:leftOperand": "ngsi-ld:entityType",
+                      "odrl:operator": {
+                        "@id": "odrl:eq"
+                      },
+                      "odrl:rightOperand": "K8SCluster"
+                    }
+                  ]
                 },
                 "odrl:assignee": {
-                    "@type": "odrl:PartyCollection",
-                    "odrl:source": "urn:user",
-                    "odrl:refinement": [
-                        {
-                            "@type": "odrl:LogicalConstraint",
-                            "odrl:and": [
-                                {
-                                    "@type": "odrl:Constraint",
-                                    "odrl:leftOperand": {
-                                        "@id": "vc:role"
-                                    },
-                                    "odrl:operator": {
-                                        "@id": "odrl:hasPart"
-                                    },
-                                    "odrl:rightOperand": {
-                                        "@value": "OPERATOR",
-                                        "@type": "xsd:string"
-                                    }
-                                },
-                                {
-                                    "@type": "odrl:Constraint",
-                                    "odrl:leftOperand": {
-                                        "@id": "vc:type"
-                                    },
-                                    "odrl:operator": {
-                                        "@id": "odrl:hasPart"
-                                    },
-                                    "odrl:rightOperand": {
-                                        "@value": "OperatorCredential",
-                                        "@type": "xsd:string"
-                                    }
-                                }
-                            ]
+                  "@type": "odrl:PartyCollection",
+                  "odrl:source": "urn:user",
+                  "odrl:refinement": {
+                    "@type": "odrl:LogicalConstraint",
+                    "odrl:and": [
+                      {
+                        "@type": "odrl:Constraint",
+                        "odrl:leftOperand": {
+                          "@id": "vc:role"
+                        },
+                        "odrl:operator": {
+                          "@id": "odrl:hasPart"
+                        },
+                        "odrl:rightOperand": {
+                          "@value": "OPERATOR",
+                          "@type": "xsd:string"
                         }
+                      },
+                      {
+                        "@type": "odrl:Constraint",
+                        "odrl:leftOperand": {
+                          "@id": "vc:type"
+                        },
+                        "odrl:operator": {
+                          "@id": "odrl:hasPart"
+                        },
+                        "odrl:rightOperand": {
+                          "@value": "OperatorCredential",
+                          "@type": "xsd:string"
+                        }
+                      }
                     ]
+                  }
                 },
                 "odrl:action": {
-                    "@id": "odrl:use"
+                  "@id": "odrl:use"
                 }
-            }
-        }'
+              }
+            }'
 ```
 Since initially only "UserCredentials" are allowed to be issued for the consumer inside the providers' Trusted-Issuers-List, no "OperatorCredentials"
 are accepted before an order was created. Thus, the policy effectively restricts the cluster creation to participants that bought access and assigned
@@ -701,7 +699,7 @@ steps are equal to the description in the [OID4VP Authentication chapter](#authe
 
 In order to prove that not every user can just create a cluster, try the following:
 
-1. Try creation with the USER_CREDENTIAL
+1. Try creation with the USER_CREDENTIAL - it should result in a 403
 ```shell
   export ACCESS_TOKEN=$(./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $USER_CREDENTIAL default); echo ${ACCESS_TOKEN}
   curl -X POST http://mp-data-service.127.0.0.1.nip.io:8080/ngsi-ld/v1/entities \
@@ -724,6 +722,107 @@ In order to prove that not every user can just create a cluster, try the followi
         "value": "1.26.0"        
       }
     }'
+```
+2. Try access with the OPERATOR_CREDENTIAL - no token will be returned:
+```shell
+    ./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $OPERATOR_CREDENTIAL operator
+```
+
+> :bulb: For easier access, the identity(in form of the did) of the consumer is available at ```http://did-consumer.127.0.0.1.nip.io:8080/did-material/did.env```.
+
+3. Export the Fancy Marketplace's did:
+```shell
+    export CONSUMER_DID=$(curl -X GET http://did-consumer.127.0.0.1.nip.io:8080/did-material/did.env | cut -d'=' -f2); echo ${CONSUMER_DID} 
+```
+
+4. Register Fancy Marketplace at M&P Operations:
+```shell
+  export ACCESS_TOKEN=$(./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $USER_CREDENTIAL default); echo ${ACCESS_TOKEN}
+  export FANCY_MARKETPLACE_ID=$(curl -X POST http://mp-tmf-api.127.0.0.1.nip.io:8080/tmf-api/party/v4/organization \
+    -H 'Accept: */*' \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+    -d "{
+      \"name\": \"Fancy Marketplace Inc.\",
+      \"partyCharacteristic\": [
+        {
+          \"name\": \"did\",
+          \"value\": \"${CONSUMER_DID}\" 
+        }
+      ]
+    }" | jq '.id' -r); echo ${FANCY_MARKETPLACE_ID} 
+```
+As a result of the operation, Fancy Marketplace Inc. is registered in M&P Operations customer system and has a customer id.
+
+5. Buy access. In order to buy access, a ProductOrder, referencing the offering from M&P Operations has to be created. A typical 
+marketplace implementation would take care of that and handle potential payments. For the sample use-case, we continue to communicate 
+with the TMForum-APIs directly.
+    1. List offerings
+    ```shell
+        export ACCESS_TOKEN=$(./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $USER_CREDENTIAL default)
+        curl -X GET http://mp-tmf-api.127.0.0.1.nip.io:8080/tmf-api/productCatalogManagement/v4/productOffering -H "Authorization: Bearer ${ACCESS_TOKEN}"
+    ```
+    2. To accept the offering, one has to be choosen(in the example, only one exists) and its id needs to be extracted:
+    ```shell
+        export ACCESS_TOKEN=$(./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $USER_CREDENTIAL default)
+        export OFFER_ID=$(curl -X GET http://mp-tmf-api.127.0.0.1.nip.io:8080/tmf-api/productCatalogManagement/v4/productOffering -H "Authorization: Bearer ${ACCESS_TOKEN}" | jq '.[0].id' -r); echo ${OFFER_ID}
+
+    ```
+   3. Create the order:
+   ```shell
+      export ACCESS_TOKEN=$(./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $USER_CREDENTIAL default)
+      curl -X POST http://mp-tmf-api.127.0.0.1.nip.io:8080/tmf-api/productOrderingManagement/v4/productOrder \
+      -H 'Accept: */*' \
+      -H 'Content-Type: application/json' \
+      -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+      -d "{
+          \"productOrderItem\": [
+            {
+              \"id\": \"random-order-id\",
+              \"action\": \"add\",
+              \"productOffering\": {
+                \"id\" :  \"${OFFER_ID}\"
+              }
+            }  
+          ],
+          \"relatedParty\": [
+            {
+              \"id\": \"${FANCY_MARKETPLACE_ID}\"
+            }
+          ]}"
+   ```
+   Once the order is created, TMForum will notify the ContractManagement to create an entry in the TrustedIssuersList, 
+   allowing Fancy Marketplace to access M&P Operation's services with an ```Operator Credential``` 
+6. Create a cluster as a Fancy Marketplace Operator:
+```shell
+  export ACCESS_TOKEN=$(./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $OPERATOR_CREDENTIAL operator)
+  curl -X POST http://mp-data-service.127.0.0.1.nip.io:8080/ngsi-ld/v1/entities \
+    -H 'Accept: */*' \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+    -d '{
+      "id": "urn:ngsi-ld:K8SCluster:fancy-marketplace",
+      "type": "K8SCluster",
+      "name": {
+        "type": "Property",
+        "value": "Fancy Marketplace Cluster"
+      },
+      "numNodes": {
+        "type": "Property",
+        "value": "3"
+      },
+      "k8sVersion": {
+        "type": "Property",
+        "value": "1.26.0"        
+      }
+    }'
+```
+7. Verify that it now exists:
+```shell
+  export ACCESS_TOKEN=$(./doc/scripts/get_access_token_oid4vp.sh http://mp-data-service.127.0.0.1.nip.io:8080 $OPERATOR_CREDENTIAL operator)
+  curl -X GET http://mp-data-service.127.0.0.1.nip.io:8080/ngsi-ld/v1/entities/urn:ngsi-ld:K8SCluster:fancy-marketplace \
+    -H 'Accept: */*' \
+    -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
 
 ## Deployment details

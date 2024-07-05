@@ -30,7 +30,7 @@
     "odrl:assignee": {
       "@type": "odrl:PartyCollection",
       "odrl:source": "urn:user",
-      "odrl:constraint": {
+      "odrl:refinement": {
         "@type": "odrl:LogicalConstraint",
         "odrl:and": [
           {

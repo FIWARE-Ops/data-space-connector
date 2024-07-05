@@ -183,11 +183,12 @@ public class StepDefinitions {
 
         policies.forEach(policyId -> {
             Request deletionRequest = new Request.Builder()
-                    .url(MPOperationsEnvironment.PROVIDER_PAP_ADDRESS + "/policy/" + policyId)
+                    .url(MPOperationsEnvironment.PROVIDER_PAP_ADDRESS + "/policy/" + policyId.getId())
                     .delete()
                     .build();
             try {
-                HTTP_CLIENT.newCall(deletionRequest).execute();
+                Response r = HTTP_CLIENT.newCall(deletionRequest).execute();
+                log.warn(r.body().string());
             } catch (IOException e) {
                 // just log
                 log.warn("Was not able to clean up policy {}.", policyId);
@@ -324,7 +325,7 @@ public class StepDefinitions {
 
         OrganizationCreateVO organizationCreateVO = new OrganizationCreateVO()
                 .organizationType("Consumer")
-                .name("Fany Marketplace Inc.")
+                .name("Fancy Marketplace Inc.")
                 .partyCharacteristic(List.of(didCharacteristic));
 
         RequestBody organizationCreateBody = RequestBody.create(MediaType.parse("application/json"), OBJECT_MAPPER.writeValueAsString(organizationCreateVO));
@@ -380,6 +381,11 @@ public class StepDefinitions {
     @When("M&P Operations registers a policy to allow every participant access to its energy reports.")
     public void mpRegisterEnergyReportPolicy() throws Exception {
         createPolicyAtMP("energyReport");
+    }
+
+    @When("M&P Operations allows operators to create clusters.")
+    public void mpRegisterClusterCreatePolicy() throws Exception {
+        createPolicyAtMP("clusterCreate");
     }
 
     @When("M&P Operations creates an energy report.")
