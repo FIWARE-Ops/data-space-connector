@@ -7,27 +7,30 @@ other frameworks.
 <summary><strong>Contents</strong></summary>
 
 - [Deployment of service providers](#deployment-of-service-providers)
-  - [IPS Service Provider (helm)](#ips-service-provider-helm)
+  - [Local deployment of Minimal Viable Dataspace (helm/k3s)](#local-deployment-of-minimal-viable-dataspace-helmk3s)
   - [Packet Delivery Company (ArgoCD)](#packet-delivery-company-argocd)
 - [Integration with AWS Garnet Framework](#integration-with-aws-garnet-framework-formerly-aws-smart-territory-framework)
 
 </details>
 
 
+
 ## Deployment of service providers
 
-### IPS Service Provider (helm)
+### Local deployment of Minimal Viable Dataspace (helm/k3s)
 
-This is an example of a data service provider, providing a fictitious digital service 
-for packet delivery services as a company called `IPS`. 
+This is an example of a "Minimal Viable Dataspace", consisting of a fictitious data service 
+provider called M&P Operations Inc. (using the FIWARE Data Space Connector), a data service consumer 
+called Fancy Marketplace Co. and the 
+data space's trust anchor.
 
-The service is provided by the orion-ld ontext Broker via the NGSI-LD API, offering 
-access to the entities of certain delivery orders.
+The service is provided by the Scorpio Context via the NGSI-LD API, offering access to 
+energy report entities.
 
-The example uses plain helm for the deployment.
+The example uses [k3s](https://k3s.io/) and helm for deployment.
 
 More information can be found here:
-* [./service-provider-ips](./service-provider-ips)
+* [Local Deployment](../doc/LOCAL.MD)
 
 
 
@@ -35,7 +38,7 @@ More information can be found here:
 
 This is an example of a data service provider called Packet Delivery Company (PDC).
 
-Basically, it's identical to IPS above, but deployment is performed via 
+The deployment is performed via 
 [GitOps pattern](https://www.gitops.tech/) and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 
 The configuration can be found at the 
