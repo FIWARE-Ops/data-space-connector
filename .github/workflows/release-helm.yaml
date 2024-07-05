@@ -34,6 +34,7 @@ jobs:
             ${{ steps.pr.outputs.labels }}
             END
             )
+            echo $LABELS
             IFS='\n' read -ra LABEL <<< "$LABELS"
             for i in "${LABEL[@]}"; do
                 echo $i
