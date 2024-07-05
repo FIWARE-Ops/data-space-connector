@@ -19,6 +19,14 @@ apisix:
       plugins:
         proxy-rewrite:
           uri: /services/data-service/.well-known/openid-configuration
+    - uri: /.well-known/data-space-configuration
+      upstream:
+        nodes:
+          dsconfig:3002: 1
+        type: roundrobin
+      plugins:
+        proxy-rewrite:
+          uri: /.well-known/data-space-configuration/data-space-configuration.yaml
     - uri: /*
       upstream:
         nodes:
@@ -138,6 +146,19 @@ did:
   ingress:
     enabled: true
     host: did-provider.127.0.0.1.nip.io
+
+dataSpaceConfig:
+  enabled: true
+  serviceType: ClusterIP
+  port: 3002
+  supportedModels:
+    - "https://raw.githubusercontent.com/smart-data-models/dataModel.Consumption/master/ConsumptionPoint/schema.json"
+    - "https://raw.githubusercontent.com/smart-data-models/dataModel.Consumption/master/ConsumptionCost/schema.json"
+  supportedProtocols:
+    - http
+    - https
+  authenticationProtocols:
+    - oid4vp
 
 scorpio:
   ingress:

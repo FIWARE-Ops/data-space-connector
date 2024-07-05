@@ -633,21 +633,13 @@ registration:
 
 # -- configuration for the .well-known/data-space-configuration endpoint document
 dataSpaceConfig:
-  enabled: true
+  enabled: false
 
   # -- Kubernetes Service type
   serviceType: ClusterIP
 
   # -- Kubernetes Service port
   port: 3002
-
-  # -- Ingress configuration
-  ingress:
-    # -- Enable Ingress?
-    enabled: false
-
-    # -- Hostname for Ingress
-    host: "my-host.org"
 
   # -- Supported data models by the service (array of links to JSON schemas)
   supportedModels: []
