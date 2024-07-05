@@ -630,3 +630,22 @@ did:
 # -- configuration for registering a participant at the til, will most probably only be used in demonstrational enviornments
 registration:
   enabled: false
+
+# -- configuration for the .well-known/data-space-configuration endpoint document
+dataSpaceConfig:
+  enabled: false
+
+  # -- Kubernetes Service type
+  serviceType: ClusterIP
+
+  # -- Kubernetes Service port
+  port: 3002
+
+  # -- Supported data models by the service (array of links to JSON schemas)
+  supportedModels: []
+
+  # -- Supported protocols (e.g.: http,https)
+  supportedProtocols: []
+
+  # -- Supported authentication protocols (e.g.: oid4vp)
+  authenticationProtocols: []
