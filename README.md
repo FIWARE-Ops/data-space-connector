@@ -48,19 +48,11 @@ The chart is available at the repository ```https://fiware-ops.github.io/data-sp
 structure and type of the required VCs, internal hostnames of the different connector components and providing the configuration of the DID and keys/certs.  
 Also have a look at the [examples](#examples).
 
-The chart also contains the [argo-cd applications support](./data-space-connector/templates/), thus it can be used to generate argo-deployments, too. In plain Helm deployments, this should be disabled in the values.yaml:
-```yaml
-argoApplications: false
-```
-
-Configurations for all sub-charts(and sub-dependencies) can be managed through the top-level values.yaml of the chart. It contains the default values of each [application](./applications/). The configuration of the applications can be changed under the key ```<APPLICATION_NAME>```, please see the individual applications and there sub-charts for the available options. 
+Configurations for all sub-charts (and sub-dependencies) can be managed through the top-level [values.yaml](./charts/data-space-connector/values.yaml) of the chart. It contains the default values of each [application](./argocd/applications/) and additional parameter shared between the components. The configuration of the applications can be changed under the key ```<APPLICATION_NAME>```, please see the individual applications and there sub-charts for the available options.  
 Example:
-In order to change the image-tag of [Keycloak](./applications/keycloak/) and the issuer did used by it, the values.yaml looks as following:
+In order to change the image-tag of [Keycloak](./argocd/applications/keycloak/), the values.yaml looks as following:
 ```yaml
 keycloak:
-    # configuration directly in the application chart, extending the original keycloak chart
-    didConfig:
-        domain: "my-new-did-domain.org"
     # configuration for the keycloak-sub-chart. Its used as a dependency to the application, thus all config is accessible under the dependency name
     keycloak:
         image:
@@ -89,3 +81,10 @@ The tests can be executed via:
     mvn clean integration-test -Ptest
 ```
 They will spin up the [Local Data Space](./doc/LOCAL.MD) and run the [test-scenarios](./it/src/test/resources/it/mvds_basic.feature) against it.
+
+
+## Additional Resources
+
+Following is a list with additional resources about the FIWARE Data Space Connector and Data Spaces in general:
+* [FIWARE Webinar about Data Spaces, its roles and components (by Stefan Wiedemann)](https://www.youtube.com/watch?v=hm5qMlhpK0g)
+

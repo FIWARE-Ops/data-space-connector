@@ -8,63 +8,63 @@ version: 2
 # List of directories to scan for updates
 updates:
   - package-ecosystem: "docker"
-    directory: "applications/activation-service"
+    directory: "argocd/applications/activation-service"
     schedule:
       interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/contract-management"
+    directory: "argocd/applications/contract-management"
     schedule:
       interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/credentials-config-service"
+    directory: "argocd/applications/credentials-config-service"
     schedule:
       interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/dsba-pdp"
-    schedule:
-      interval: "daily"
-  #- package-ecosystem: "docker"
-  #  directory: "applications/keycloak"
-  #  schedule:
-  #    interval: "daily"
-  #- package-ecosystem: "docker"
-  #  directory: "applications/keyrock"
-  #  schedule:
-  #    interval: "daily"
-  - package-ecosystem: "docker"
-    directory: "applications/kong"
+    directory: "argocd/applications/dsba-pdp"
     schedule:
       interval: "daily"
   #- package-ecosystem: "docker"
-  #  directory: "applications/mongodb"
+  #  directory: "argocd/applications/keycloak"
   #  schedule:
   #    interval: "daily"
   #- package-ecosystem: "docker"
-  #  directory: "applications/mysql"
+  #  directory: "argocd/applications/keyrock"
   #  schedule:
   #    interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/orion-ld"
+    directory: "argocd/applications/kong"
     schedule:
       interval: "daily"
   #- package-ecosystem: "docker"
-  #  directory: "applications/postgres"
+  #  directory: "argocd/applications/mongodb"
+  #  schedule:
+  #    interval: "daily"
+  #- package-ecosystem: "docker"
+  #  directory: "argocd/applications/mysql"
   #  schedule:
   #    interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/tm-forum-api"
+    directory: "argocd/applications/orion-ld"
+    schedule:
+      interval: "daily"
+  #- package-ecosystem: "docker"
+  #  directory: "argocd/applications/postgres"
+  #  schedule:
+  #    interval: "daily"
+  - package-ecosystem: "docker"
+    directory: "argocd/applications/tm-forum-api"
     schedule:
       interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/trusted-issuers-list"
+    directory: "argocd/applications/trusted-issuers-list"
     schedule:
       interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/vcwaltid"
+    directory: "argocd/applications/vcwaltid"
     schedule:
       interval: "daily"
   - package-ecosystem: "docker"
-    directory: "applications/verifier"
+    directory: "argocd/applications/verifier"
     schedule:
       interval: "daily"
   
