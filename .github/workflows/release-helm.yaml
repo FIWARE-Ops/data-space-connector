@@ -34,17 +34,13 @@ jobs:
             ${{ steps.pr.outputs.labels }}
             END
             )
-            echo "Outputs"
-            echo "${{ steps.pr.outputs.title }}"
-            echo "Run with labels"
-            echo "$LABELS"            
             IFS='\n' read -ra LABEL <<< "$LABELS"
             for i in "${LABEL[@]}"; do
                 echo $i
                 case $i in
                     # Will just use the first occurence
                     'major'|'minor'|'patch')
-                        echo "::set-output name=release-label::$i"
+                        echo "RELEASE_LABEL=$i" >> $GITHUB_OUTPUT
                         break
                 esac
             done
@@ -52,7 +48,7 @@ jobs:
         - uses: zwaldowski/semver-release-action@v2
           with:
             dry_run: true
-            bump: ${{ steps.match-label-bash.outputs.release-label }}
+            bump: ${{ steps.match-label-bash.outputs.RELEASE_LABEL }}
             github_token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Set version output
