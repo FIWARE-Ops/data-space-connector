@@ -39,7 +39,7 @@ jobs:
                 case $i in
                     # Will just use the first occurence
                     'major'|'minor'|'patch')
-                        echo "RELEASE_LABEL=$i" >> $GITHUB_OUTPUT
+                        echo "::set-output name=release_label::$i"
                         break
                 esac
             done
@@ -47,7 +47,7 @@ jobs:
         - uses: zwaldowski/semver-release-action@v2
           with:
             dry_run: true
-            bump: ${{ steps.match-label-bash.outputs.RELEASE_LABEL }}
+            bump: ${{ steps.match-label-bash.outputs.release_label }}
             github_token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Set version output
