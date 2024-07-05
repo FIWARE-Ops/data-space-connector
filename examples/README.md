@@ -44,6 +44,8 @@ The deployment is performed via
 The configuration can be found at the 
 [fiware-gitops repository](https://github.com/FIWARE-Ops/fiware-gitops/tree/master/aws/dsba/packet-delivery/data-space-connector).
 
+**Note,** that this is currently being reworked and above repository does not contain the latest configuration.
+
 
 
 
