@@ -26,7 +26,11 @@ apisix:
         type: roundrobin
       plugins:
         proxy-rewrite:
-          uri: /.well-known/data-space-configuration/data-space-configuration.yaml
+          uri: /.well-known/data-space-configuration/data-space-configuration.json
+        response-rewrite:
+          headers:
+            set:
+              content-type: application/json
     - uri: /*
       upstream:
         nodes:

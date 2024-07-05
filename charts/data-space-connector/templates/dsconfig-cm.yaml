@@ -7,10 +7,10 @@ metadata:
   labels:
     {{ include "dsc.labels" . | nindent 4 }}
 data:
-  data-space-configuration.yaml: |-
+  data-space-configuration.json: |-
     {
       "supported_models": {{ .Values.dataSpaceConfig.supportedModels | toJson }},
       "supported_protocols": {{ .Values.dataSpaceConfig.supportedProtocols | toJson }},
-      "authentication_protocols": {{ .Values.dataSpaceConfig.authenticationProtocols | toJson }},
+      "authentication_protocols": {{ .Values.dataSpaceConfig.authenticationProtocols | toJson }}
     }
 {{- end }}
