@@ -35,7 +35,7 @@ jobs:
             END
             )
             echo "Outputs"
-            echo ${{ steps.pr.outputs.labels }}
+            echo "${{ steps.pr.outputs.title }}"
             echo "Run with labels"
             echo "$LABELS"            
             IFS='\n' read -ra LABEL <<< "$LABELS"
