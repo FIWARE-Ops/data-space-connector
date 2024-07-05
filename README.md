@@ -17,23 +17,9 @@ FIWARE [data-space-connector repository](https://github.com/FIWARE/data-space-co
 The FIWARE Data Space Connector provides a local deployment of a Minimal Viable Dataspace. 
 Find a detailed documentation here: [Local Deployment](./doc/LOCAL.MD)
 
-### Deployment with ArgoCD
-
-The FIWARE Data Space Connector is a [Helm](https://helm.sh) chart using a gitops-approach, following 
-the [app-of-apps pattern](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping), with [ArgoCD](https://argo-cd.readthedocs.io/en/stable/). 
-
-This repository already provides a [deployment Github action](.github/workflows/deploy.yaml) compatible with OpenShift clusters, performing deployments out of 
-a branch created in the format `deploy/<TARGET_NAMESPACE>` and pulling the `values.yaml` from a specified gitops repository. It also requires to set the 
-following ENVs for the Github action, `OPENSHIFT_SERVER` and `OPENSHIFT_TOKEN`, specifying the OpenShift target URL and access token, respectively.  
-For deployment, simply fork this repository, adapt the configuration of the action to your setup and set the necessary ENVs. After creating a 
-`deploy/<TARGET_NAMESPACE>` branch, it will perform the deployment to the specified namespace.
-
-For a different cluster flavor, the GitHub action needs to be modified before to be compatible.
-
-
 ### Deployment with Helm
 
-Even though a gitops-approach, following the app-of-apps pattern, with ArgoCD, is the preferred way to deploy the Data-Space-Connector, not everyone has it available. Therefore, the Data-Space-Connector is also provided as an [Umbrella-Chart](https://helm.sh/docs/howto/charts_tips_and_tricks/#complex-charts-with-many-dependencies), containing all the sub-charts and their dependencies.
+The Data-Space-Connector is a [Helm Umbrella-Chart](https://helm.sh/docs/howto/charts_tips_and_tricks/#complex-charts-with-many-dependencies), containing all the sub-charts of the different components and their dependencies.
 
 The chart is available at the repository ```https://fiware-ops.github.io/data-space-connector/```. You can install it via:
 
@@ -48,7 +34,7 @@ The chart is available at the repository ```https://fiware-ops.github.io/data-sp
 structure and type of the required VCs, internal hostnames of the different connector components and providing the configuration of the DID and keys/certs.  
 Also have a look at the [examples](#examples).
 
-Configurations for all sub-charts (and sub-dependencies) can be managed through the top-level [values.yaml](./charts/data-space-connector/values.yaml) of the chart. It contains the default values of each [application](./argocd/applications/) and additional parameter shared between the components. The configuration of the applications can be changed under the key ```<APPLICATION_NAME>```, please see the individual applications and there sub-charts for the available options.  
+Configurations for all sub-charts (and sub-dependencies) can be managed through the top-level [values.yaml](./charts/data-space-connector/values.yaml) of the chart. It contains the default values of each component and additional parameter shared between the components. The configuration of the applications can be changed under the key ```<APPLICATION_NAME>```, please see the individual applications and there sub-charts for the available options.  
 Example:
 In order to change the image-tag of [Keycloak](./argocd/applications/keycloak/), the values.yaml looks as following:
 ```yaml
