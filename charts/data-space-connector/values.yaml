@@ -143,9 +143,6 @@ odrl-pap:
       enabled: true
       name: database-secret
       key: postgres-admin-password
-  additionalEnvVars:
-    - name: QUARKUS_LOG_LEVEL
-      value: "INFO"
 
 
 # -- configuration for the open-policy-agent to be deployed as part of the connector, as a sidecar to apisix
