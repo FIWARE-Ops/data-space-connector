@@ -172,6 +172,8 @@ apisix:
   enabled: true
   # -- configuration in regard to the apisix control plane
   controlPlane:
+    # -- resources config to be set
+    resourcesPreset: micro
     # -- should it be enabled
     enabled: true
   # -- configuration in regard to the apisix ingressController
@@ -188,6 +190,8 @@ apisix:
       enabled: false
   # -- configuration in regard to the apisix dataplane
   dataPlane:
+    # -- resources config to be set
+    resourcesPreset: micro
     # -- configuration for extra configmaps to be deployed
     extraConfig:
       deployment:
