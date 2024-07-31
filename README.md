@@ -1,5 +1,10 @@
 # FIWARE Data Space Connector
 
+> :warning: Please note, that this repository has been archived.  
+> The implementation, charts, deployment recipes and an extensive documentation of the FIWARE 
+> Data Space Connector can be all found at the 
+> FIWARE [data-space-connector repository](https://github.com/FIWARE/data-space-connector).
+
 The FIWARE Data Space Connector is an integrated suite of components implementing DSBA Technical Convergence recommendations, every organization participating 
 in a data space should deploy to “connect” to a data space.
 
